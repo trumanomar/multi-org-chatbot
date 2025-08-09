@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import 'package:flutter/material.dart';
+>>>>>>> 6b806192b45fe7050369ec60a42d165860519246
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/main.dart'; // make sure 'frontend' matches your project name in pubspec.yaml
 
