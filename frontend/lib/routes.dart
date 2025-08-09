@@ -4,13 +4,13 @@ import 'screens/admin_dashboard.dart';
 import 'screens/upload_screen.dart';
 
 class AppRoutes {
-  static const String login = '/login';
-  static const String adminDashboard = '/admin';
-  static const String upload = '/upload';
+  static const root = '/';
+  static const dashboard = '/dashboard';
+  static const upload = '/upload';
 }
 
-Map<String, WidgetBuilder> routes = {
-  AppRoutes.login: (context) => const LoginScreen(),
-  AppRoutes.adminDashboard: (context) => const AdminDashboard(),
-  AppRoutes.upload: (context) => const UploadScreen(),
+final Map<String, WidgetBuilder> appRoutes = {
+  AppRoutes.root: (_) => const LoginScreen(),
+  AppRoutes.dashboard: (_) => const AdminDashboard(),
+  AppRoutes.upload: (_) => const UploadScreen(),
 };

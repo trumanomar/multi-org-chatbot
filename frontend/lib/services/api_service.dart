@@ -68,6 +68,16 @@ class ApiService {
       return true;
     }
 
+  Future<bool> healthCheck() async {
+  final url = Uri.parse('$baseUrl/health');
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    return true;
+  }
+  return false;
+}
+
     final token = await _storage.read(key: 'token');
     final uri = Uri.parse('$baseUrl/admin/upload');
 
