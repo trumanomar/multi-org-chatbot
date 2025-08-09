@@ -1,0 +1,5 @@
+/backend/venv/
+/backend/app/__pycache__/
+/backend/app/DB.py
+/backend/app/docs.py
+/backend/samples/
