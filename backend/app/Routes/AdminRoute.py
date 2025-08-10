@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File
 import os
-from app.VectorDB.DB import vectorstore
+from app.VectorDB.DB import vectorstore,embedding_function
 from app.utilis.utils import load_and_split
 from tempfile import NamedTemporaryFile
 
@@ -16,11 +16,16 @@ async def upload_files(files: list[UploadFile] = File(...)):
             tmp.write(content)
             tmp_path = tmp.name
         docs = load_and_split(tmp_path)
+
         for doc in docs:
+         #embedding_vector = embedding_function.embed_query(doc.page_content)
+
          doc.metadata["source_file"] = file.filename
+         #doc.metadata["embedding_vector"] = embedding_vector
    
         all_docs.extend(docs)
         os.remove(tmp_path)
     vectorstore.add_documents(all_docs)
     vectorstore.persist()
+    
     return {"message": f"Indexed {len(all_docs)} chunks from {len(files)} file(s)"}
