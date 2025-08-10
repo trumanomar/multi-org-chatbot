@@ -16,6 +16,9 @@ async def upload_files(files: list[UploadFile] = File(...)):
             tmp.write(content)
             tmp_path = tmp.name
         docs = load_and_split(tmp_path)
+        for doc in docs:
+         doc.metadata["source_file"] = file.filename
+   
         all_docs.extend(docs)
         os.remove(tmp_path)
     vectorstore.add_documents(all_docs)
