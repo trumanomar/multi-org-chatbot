@@ -1,7 +1,7 @@
 from fastapi import FastAPI
+from app.Routes import AdminRoute as admin_routes, getdata as getdata_routes
 
-app = FastAPI()
+app = FastAPI(title="Document Chatbot API")
 
-@app.get("/")
-def read_root():
-    return {"message": "Backend is running"}
+app.include_router(admin_routes.router)
+app.include_router(getdata_routes.router)
