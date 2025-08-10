@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
-<<<<<<< HEAD
-=======
+// ignore: unused_import
 import '../routes.dart';
->>>>>>> 6b806192b45fe7050369ec60a42d165860519246
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
