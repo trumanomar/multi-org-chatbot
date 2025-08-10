@@ -10,6 +10,9 @@ async def index():
 @app.get("/api/chat", response_class=JSONResponse)
 async def chat():
     return HTMLResponse(open("frontend/lib/screens/chat.dart", "r").read())
+@app.get("/api/uplode",response_class=JSONResponse)
+async def upload():
+    return HTMLResponse(open("frontend/lib/screens/upload.dart", "r").read())
 
 
     
