@@ -1,0 +1,1 @@
+pip install fastapi uvicorn python-multipart sentence-transformers langchain langchain-community langchain-chroma langchain-huggingface pypdf

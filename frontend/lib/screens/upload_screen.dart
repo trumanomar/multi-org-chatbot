@@ -13,8 +13,8 @@ class UploadScreen extends StatefulWidget {
 class _UploadScreenState extends State<UploadScreen> {
   final _api = ApiService();
   String? _filename;
-  String? _path;           // desktop/native
-  Uint8List? _bytes;       // web
+  String? _path;     // desktop/native
+  Uint8List? _bytes; // web
   bool _uploading = false;
 
   Future<void> _pick() async {
@@ -24,11 +24,11 @@ class _UploadScreenState extends State<UploadScreen> {
       withData: kIsWeb, // get bytes on web
     );
     if (result == null) return;
-    final file = result.files.single;
+    final f = result.files.single;
     setState(() {
-      _filename = file.name;
-      _path = file.path;   // null on web
-      _bytes = file.bytes; // non-null on web
+      _filename = f.name;
+      _path = f.path;      // null on web
+      _bytes = f.bytes;    // non-null on web
     });
   }
 
@@ -36,17 +36,20 @@ class _UploadScreenState extends State<UploadScreen> {
     if (_filename == null) return;
     setState(() => _uploading = true);
 
-    final ok = await _api.uploadFile(
+    final res = await _api.uploadFile(
       filename: _filename!,
-      filepath: _path,
-      fileBytes: _bytes,
+      filepath: _path,      // used on desktop/native
+      fileBytes: _bytes,    // used on web
     );
 
     setState(() => _uploading = false);
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(ok ? 'Uploaded!' : 'Upload failed')),
-    );
+
+    final ok = res != null && res['status'] != 'error';
+    final msg = ok
+        ? (res?['message'] ?? 'Uploaded')
+        : 'Upload failed (${res?['code'] ?? ''}) ${res?['body'] ?? ''}';
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override
@@ -64,7 +67,10 @@ class _UploadScreenState extends State<UploadScreen> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: (_filename == null || _uploading) ? null : _upload,
-            child: _uploading ? const CircularProgressIndicator() : const Text('Upload'),
+            child: _uploading
+                ? const SizedBox(
+                    width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                : const Text('Upload'),
           ),
         ]),
       ),
