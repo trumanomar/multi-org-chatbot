@@ -9,7 +9,6 @@ from app.Routes import Uploadroute as upload_routes
 from app.Routes.ChatRoute import router as chat_router 
 
 
-
 app = FastAPI(title="Document Chatbot API")
 
 app.add_middleware(
@@ -27,4 +26,5 @@ async def health():
 
 app.include_router(upload_routes.router)   # /admin/upload
 app.include_router(basic_routes.router)    # /probe, /probe_scores
-app.include_router(chat_router)  # /chat
+app.include_router(chat_router)  # /
+#app.include_router(get_docs.router)  # /admin/docs
