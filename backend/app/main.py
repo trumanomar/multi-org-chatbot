@@ -2,12 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-load_dotenv()  # Load .env variables
+load_dotenv() 
 
-# Adjust names/casing to your repo (routes vs Routes, Uploadroute vs AdminRoute)
-from app.routes import BasicRoutes as basic_routes
-from app.routes import Uploadroute as upload_routes  # or AdminRoute if that's your filename
-from app.routes.ChatRoute import router as chat_router 
+from app.Routes import BasicRoutes as basic_routes
+from app.Routes import Uploadroute as upload_routes  
+from app.Routes.ChatRoute import router as chat_router 
 
 
 
