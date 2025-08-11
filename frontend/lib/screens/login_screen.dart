@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import '../services/api_service.dart';
-// ignore: unused_import
-import '../routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,47 +7,54 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _api = ApiService();
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _loading = false;
 
   Future<void> _doLogin() async {
+    // Directly navigate without doing any API call
     setState(() => _loading = true);
-    final ok = await _api.loginAdmin(_email.text.trim(), _password.text.trim());
+    await Future.delayed(const Duration(milliseconds: 300)); // small delay for UI
     setState(() => _loading = false);
+
     if (!mounted) return;
-    if (ok) {
-      Navigator.pushReplacementNamed(context, '/dashboard');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login failed')),
-      );
-    }
+    Navigator.pushReplacementNamed(context, '/dashboard');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Admin Login')),
+      appBar: AppBar(title: const Text('Admin Login (Bypassed)')),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 380),
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              TextField(controller: _email, decoration: const InputDecoration(labelText: 'Email')),
-              const SizedBox(height: 12),
-              TextField(controller: _password, obscureText: true, decoration: const InputDecoration(labelText: 'Password')),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _loading ? null : _doLogin,
-                  child: _loading ? const CircularProgressIndicator() : const Text('Sign in'),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _email,
+                  decoration: const InputDecoration(labelText: 'Email'),
                 ),
-              ),
-            ]),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _password,
+                  obscureText: true,
+                  decoration: const InputDecoration(labelText: 'Password'),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _loading ? null : _doLogin,
+                    child: _loading
+                        ? const CircularProgressIndicator()
+                        : const Text('Sign in'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -6,102 +6,81 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  // ---- flip this to false when backend stubs are live ----
-  static const bool useStubs = true;
-
   final _storage = const FlutterSecureStorage();
   final String baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://127.0.0.1:8000';
 
-  // ---------- HEALTH ----------
+  // -------- Health ----------
   Future<bool> healthCheck() async {
-    if (useStubs) {
-      await Future.delayed(const Duration(milliseconds: 300));
-      return true;
-    }
     try {
       final res = await http.get(Uri.parse('$baseUrl/health'));
       if (res.statusCode != 200) return false;
       final data = jsonDecode(res.body);
-      // accept either {ok:true} or {status:"ok"}
       return data['ok'] == true || data['status'] == 'ok';
     } catch (_) {
       return false;
     }
   }
 
-  // ---------- LOGIN ----------
-  Future<bool> loginAdmin(String email, String password) async {
-    if (useStubs) {
-      // pretend login succeeded and store a fake token/org
-      await Future.delayed(const Duration(milliseconds: 500));
-      await _storage.write(key: 'token', value: 'fake-jwt');
-      await _storage.write(key: 'org_id', value: 'demo-org');
-      await _storage.write(key: 'role', value: 'admin');
-      return true;
-    }
-
-    final uri = Uri.parse('$baseUrl/auth/login');
-    final res = await http.post(
-      uri,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
-    );
-
-    if (res.statusCode == 200) {
-      final data = jsonDecode(res.body);
-      await _storage.write(key: 'token', value: data['access_token']);
-      await _storage.write(key: 'org_id', value: data['org_id'] ?? 'demo-org');
-      await _storage.write(key: 'role', value: data['role'] ?? 'admin');
-      return true;
-    }
-    return false;
+  // ORG_ID helper (currently unused by /admin/upload, kept for future)
+  Future<String?> getOrgId() async {
+    return dotenv.env['ORG_ID'] ?? 'demo-org';
   }
 
-  // ---------- UPLOAD ----------
-  Future<bool> uploadFile({
+  // -------- Upload (matches: files: list[UploadFile]) ----------
+  Future<Map<String, dynamic>?> uploadFile({
     required String filename,
-    String? filepath,         // desktop/native
-    List<int>? fileBytes,     // web
+    String? filepath,        // desktop/native
+    List<int>? fileBytes,    // web
   }) async {
-    if (useStubs) {
-      await Future.delayed(const Duration(milliseconds: 500));
-      return true;
-    }
-
-  Future<bool> healthCheck() async {
-  final url = Uri.parse('$baseUrl/health');
-  final response = await http.get(url);
-
-  if (response.statusCode == 200) {
-    return true;
-  }
-  return false;
-}
-
-    final token = await _storage.read(key: 'token');
     final uri = Uri.parse('$baseUrl/admin/upload');
-
     final req = http.MultipartRequest('POST', uri);
-    if (token != null) req.headers['Authorization'] = 'Bearer $token';
 
+    // IMPORTANT: backend expects the field name 'files' (plural), even for one file
     if (kIsWeb) {
-      if (fileBytes == null) return false;
+      if (fileBytes == null) {
+        return {"status": "error", "body": "No file bytes"};
+      }
       req.files.add(http.MultipartFile.fromBytes(
-        'file',
+        'files', // <-- must be 'files'
         fileBytes,
         filename: filename,
         contentType: MediaType('application', 'octet-stream'),
       ));
     } else {
-      if (filepath == null) return false;
+      if (filepath == null) {
+        return {"status": "error", "body": "No file path"};
+      }
       req.files.add(await http.MultipartFile.fromPath(
-        'file',
+        'files', // <-- must be 'files'
         filepath,
         filename: filename,
       ));
     }
 
-    final res = await req.send();
-    return res.statusCode == 200;
+    final streamed = await req.send();
+    final resp = await http.Response.fromStream(streamed);
+
+    // Helpful while wiring things up:
+    // ignore: avoid_print
+    print('UPLOAD status=${resp.statusCode} body=${resp.body}');
+
+    if (resp.statusCode == 200) {
+      // Backend returns: {"message": "Indexed X chunks from Y file(s)"}
+      return jsonDecode(resp.body) as Map<String, dynamic>;
+    }
+    return {"status": "error", "code": resp.statusCode, "body": resp.body};
+  }
+
+  // -------- Chat ----------
+  Future<Map<String, dynamic>?> chatQuery(String message) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/chat/query'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'message': message}),
+    );
+    if (res.statusCode == 200) {
+      return jsonDecode(res.body) as Map<String, dynamic>;
+    }
+    return null;
   }
 }
