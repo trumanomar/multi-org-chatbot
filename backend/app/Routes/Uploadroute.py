@@ -1,41 +1,54 @@
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, UploadFile, File, HTTPException
 import os
-from app.VectorDB.DB import vectorstore,embedding_function
-from app.utilis.utils import load_and_split
 from tempfile import NamedTemporaryFile
-from app.VectorDB.DB import add_documents, persist
+
+from app.utilis.utils import load_and_split
+from app.VectorDB.DB import add_documents, persist  # use the helpers; no need for vectorstore here
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
-BATCH_SIZE = 20  # no of documents to store in each batch
+BATCH_SIZE = 64  # not used in this simple helper path; see batching version below
+
 @router.post("/upload")
 async def upload_files(files: list[UploadFile] = File(...)):
+    if not files:
+        raise HTTPException(status_code=400, detail="No files uploaded")
+
     total_chunks = 0
+    file_counts = []
+
     for file in files:
         suffix = os.path.splitext(file.filename)[-1]
+        # Save to a temp file
         with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
             content = await file.read()
             tmp.write(content)
             tmp_path = tmp.name
 
-        docs = load_and_split(tmp_path)
-        
-#Add metadata to each document
-        for doc in docs:
-            doc.metadata["source_file"] = file.filename
+        try:
+            # Split into LangChain Documents
+            docs = load_and_split(tmp_path) or []
 
-#Add documents to the vector store in batches
-        for i in range(0, len(docs), BATCH_SIZE):
-            batch = docs[i:i+BATCH_SIZE]
-            vectorstore.add_documents(batch)
+            # Overwrite metadata["source"] to the user-facing filename (+page)
+            for d in docs:
+                page = d.metadata.get("page")
+                d.metadata["source"] = f"{file.filename}#page={page + 1}" if page is not None else file.filename
 
-# Safely persist if the method exists
-        if hasattr(vectorstore, "persist"):
-            vectorstore.persist()
+            # Add to vector store and persist
+            if docs:
+                add_documents(docs)
+                persist()
 
-        total_chunks += len(docs)
-        os.remove(tmp_path)
+            total_chunks += len(docs)
+            file_counts.append({"filename": file.filename, "chunks": len(docs)})
 
-    return {"message": f"Indexed {total_chunks} chunks from {len(files)} file(s)"}
+        finally:
+            # Always remove the temp file
+            try:
+                os.remove(tmp_path)
+            except FileNotFoundError:
+                pass
 
-
-#Health check endpoint
+    return {
+        "message": f"Indexed {total_chunks} chunks from {len(files)} file(s)",
+        "files": file_counts,
+    }
