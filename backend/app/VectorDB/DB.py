@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-from typing import List
-
-from langchain.vectorstores import Chroma
-from langchain.embeddings import HuggingFaceEmbeddings
-
-=======
 # backend/app/VectorDB/DB.py
 
 from __future__ import annotations
@@ -18,7 +11,6 @@ from langchain_huggingface import HuggingFaceEmbeddings
 # (Loaders are here if you need them in this module later)
 # from langchain_community.document_loaders import PyPDFLoader, TextLoader, Docx2txtLoader
 
->>>>>>> 6d9ceb8768babb98fab896b71721555f845faf00
 from app.config import PERSIST_DIR, EMBEDDING_MODEL
 
 # Ensure persist directory exists
@@ -32,11 +24,6 @@ vectorstore = Chroma(
     persist_directory=PERSIST_DIR,
     embedding_function=embedding_function,
 )
-<<<<<<< HEAD
-vectorstore = Chroma(persist_directory=PERSIST_DIR, embedding_function=embedding_function)
-
-
-=======
 
 def add_documents(docs) -> None:
     """
@@ -95,4 +82,3 @@ def reset_index() -> None:
         embedding_function=embedding_function,
     )
     vectorstore = new_store
->>>>>>> 6d9ceb8768babb98fab896b71721555f845faf00
