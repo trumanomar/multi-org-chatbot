@@ -1,0 +1,21 @@
+# secrets
+.env
+
+# python build/user stuff
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.pytest_cache/
+
+# mac/win/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+
+# vector db persistence (adjust if your PERSIST_DIR differs)
+storage/
+chroma/
+data/index/
