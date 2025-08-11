@@ -1,0 +1,7 @@
+/backend/venv
+/bakend/vector_db
+frontend/.env
+backend/.env
+backend/models/
+backend/vector_db/
+*.sqlite3
