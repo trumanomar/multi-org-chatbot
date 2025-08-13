@@ -47,7 +47,7 @@ class _UploadScreenState extends State<UploadScreen> {
 
     final ok = res != null && res['status'] != 'error';
     final msg = ok
-        ? (res?['message'] ?? 'Uploaded')
+        ? (res['message'] ?? 'Uploaded')
         : 'Upload failed (${res?['code'] ?? ''}) ${res?['body'] ?? ''}';
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }

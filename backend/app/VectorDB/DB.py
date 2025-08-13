@@ -16,6 +16,7 @@ vectorstore = Chroma(
     embedding_function=embedding_function,
 )
 
+
 def add_documents(docs) -> None:
     """Append new documents to the existing vectorstore."""
     if not docs:
