@@ -36,6 +36,7 @@ async def upload_files(files: list[UploadFile] = File(...), db: Session = Depend
                 user_id=1,  # Replace with actual user ID
                 domain_id=1,  # Replace with actual domain ID
             )
+            #make chunks from the document and read different types of files
             docs_chunks = load_and_split(tmp_path) or []
 
             chunks = save_chunks(
