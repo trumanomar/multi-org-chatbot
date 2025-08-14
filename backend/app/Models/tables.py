@@ -1,0 +1,66 @@
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, TIMESTAMP
+from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
+from app.DB.db import Base
+
+# --- Domain Table ---
+class Domain(Base):
+    __tablename__ = 'domains'
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), nullable=False, unique=True)
+    created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
+    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=False)
+
+    # Relationships
+    users = relationship("User", back_populates="domain", cascade="all, delete")
+    docs = relationship("Docs", back_populates="domain", cascade="all, delete")
+
+
+# --- User Table ---
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(50), nullable=False, unique=True)
+    email = Column(String(100), nullable=False, unique=True)
+    password = Column(String(255), nullable=False)
+    role_based = Column(String(50), nullable=False)
+    domain_id = Column(Integer, ForeignKey('domains.id'), nullable=False)
+    created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
+    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=False)
+
+    # Relationships
+    domain = relationship("Domain", back_populates="users")
+    docs = relationship("Docs", back_populates="user", cascade="all, delete")
+    chunks = relationship("Chunk", back_populates="user", cascade="all, delete")
+
+
+# --- Docs Table ---
+class Docs(Base):
+    __tablename__ = 'docs'
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    domain_id = Column(Integer, ForeignKey('domains.id'), nullable=False)
+    created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
+
+    # Relationships
+    domain = relationship("Domain", back_populates="docs")
+    user = relationship("User", back_populates="docs")
+    chunks = relationship("Chunk", back_populates="doc", cascade="all, delete")
+
+
+# --- Chunks Table ---
+class Chunk(Base):
+    __tablename__ = 'chunks'
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(Text, nullable=False)
+    meta_data = Column(Text, nullable=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    domain_id = Column(Integer, ForeignKey('domains.id'), nullable=False)
+    doc_id = Column(Integer, ForeignKey('docs.id'), nullable=False)
+    created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
+    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=False)
+
+    # Relationships
+    user = relationship("User", back_populates="chunks")
+    doc = relationship("Docs", back_populates="chunks")
