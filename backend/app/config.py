@@ -1,8 +1,20 @@
 import os
+from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PERSIST_DIR = os.getenv("PERSIST_DIR", os.path.join(BASE_DIR, "..", "..", "chroma_data"))
 
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
+# SECURITY
+SECRET_KEY = os.getenv("SECRET_KEY", "5f856c27780c41d2968b04433957b7decc003706b2a7949f72e44593bb3ad6f4")
+ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
+ACCESS_TOKEN_EXPIRE_DELTA = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
+# DB
+DATABASE_URL = os.getenv("DATABASE_URL", "mysql+pymysql://root:12345678@HOST:3306/chatbot_rag")
+
+# Hardcoded Super Admin (not in DB)
+SUPER_ADMIN_EMAIL = os.getenv("SUPER_ADMIN_EMAIL", "sadmin@gmail.com")
+SUPER_ADMIN_PASSWORD = os.getenv("SUPER_ADMIN_PASSWORD", "123456")
 os.makedirs(PERSIST_DIR, exist_ok=True)

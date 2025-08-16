@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Text, ForeignKey, TIMESTAMP
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.DB.db import Base
+import enum
 
 # --- Domain Table ---
 class Domain(Base):
@@ -64,3 +65,9 @@ class Chunk(Base):
     # Relationships
     user = relationship("User", back_populates="chunks")
     doc = relationship("Docs", back_populates="chunks")
+
+#Role
+class RoleEnum(str, enum.Enum):
+    super_admin = "super_admin"
+    admin = "admin"
+    user = "user"

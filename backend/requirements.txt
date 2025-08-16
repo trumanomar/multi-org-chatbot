@@ -13,3 +13,9 @@ python-dotenv>=1.0.1
 cryptography
 pymysql
 sqlalchemy
+python-jose[cryptography]
+pydantic
+python-multipart
+typing
+pandas
+passlib[bcrypt]
