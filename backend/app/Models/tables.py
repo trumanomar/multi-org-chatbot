@@ -64,3 +64,18 @@ class Chunk(Base):
     # Relationships
     user = relationship("User", back_populates="chunks")
     doc = relationship("Docs", back_populates="chunks")
+class Feedback(Base):
+    __tablename__ = 'feedback'
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    domain_id = Column(Integer, ForeignKey('domains.id'), nullable=False)
+    doc_id = Column(Integer, ForeignKey('docs.id'), nullable=False)
+    content = Column(Text, nullable=False)
+    rating = Column(Integer, nullable=False)
+    question = Column(Text, nullable=False)
+    created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)    
+    user = relationship("User", back_populates="feedbacks")
+
+    @property
+    def user_name(self):
+        return self.user.username if self.user else None

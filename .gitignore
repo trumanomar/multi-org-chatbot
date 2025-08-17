@@ -5,3 +5,4 @@ backend/.env
 backend/models/
 backend/vector_db/
 *.sqlite3
+
