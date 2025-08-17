@@ -1,6 +1,6 @@
 # open mysql workbench 
- --- create database chatbot_rag;
-# on terminal 
+  create database chatbot_rag;
+# create tables 
    cd backend
    python - m app.DB.create_table
 # to run fastapi
