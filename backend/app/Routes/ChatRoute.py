@@ -1,18 +1,14 @@
 # backend/app/routes/ChatRoute.py
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, Field
 from typing import Any, Dict, List
 import os
-
-# Vector search helpers (module-level)
-from app.VectorDB import DB as vectordb
-
-# OpenAI-compatible SDK (works with OpenAI, Ollama, LM Studio, Groq via base_url)
 from openai import OpenAI
+from app.VectorDB import DB as vectordb
+from app.auth.dependencies import get_current_principal, Principal, require_user, require_admin_or_super
 
 router = APIRouter(tags=["Chat"])
 
-# ---------- Schemas ----------
 class ChatQuery(BaseModel):
     message: str = Field(..., description="User question")
     k: int = Field(5, ge=1, le=50, description="Top-K retrieved chunks")
@@ -134,14 +130,18 @@ def debug_env():
     }
 
 @router.post("/chat/query", response_model=ChatAnswer)
-def chat_query(payload: ChatQuery):
+def chat_query(payload: ChatQuery, principal: Principal = Depends(get_current_principal)):
     q = payload.message.strip()
     if not q:
         raise HTTPException(status_code=400, detail="Empty message")
 
-    raw = vectordb.search_similar(q, payload.k)
-    hits = [_normalize_hit(h) for h in (raw or []) if h is not None]
+    # super_admin can search globally; others are scoped
+    if principal.role == "super_admin" or principal.domain_id is None:
+        raw = vectordb.search_similar(q, payload.k)
+    else:
+        raw = vectordb.search_similar_for_domain(q, principal.domain_id, payload.k)
 
+    hits = [_normalize_hit(h) for h in (raw or []) if h is not None]
     if not hits or not any((h.get("page_content") or "").strip() for h in hits):
         return ChatAnswer(answer="I couldn’t find this in the knowledge base.", sources=[])
 

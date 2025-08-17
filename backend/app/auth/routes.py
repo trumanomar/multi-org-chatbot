@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from app.DB.db import get_db
 from app.auth.schemas import LoginRequest, TokenResponse
+from app.auth.dependencies import get_current_principal, Principal
 from app.Models.tables import User
 from app.auth.utils import verify_password, create_access_token
 from app.config import (
@@ -11,6 +12,11 @@ from app.config import (
     SUPER_ADMIN_EMAIL,
     SUPER_ADMIN_PASSWORD,
 )
+
+debug = APIRouter(prefix="/auth", tags=["Auth"])
+@debug.get("/me")
+def me(principal: Principal = Depends(get_current_principal)):
+    return {"sub": principal.sub, "role": principal.role, "domain_id": principal.domain_id}
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -43,3 +49,5 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
     )
     redirect = "/admin/dashboard" if user.role_based == "admin" else "/user/dashboard"
     return {"access_token": token, "role": user.role_based, "redirect": redirect}
+
+    
