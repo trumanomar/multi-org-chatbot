@@ -1,17 +1,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+
 from app.auth import routes as auth_routes
+from app.auth import super_admin_route, admin_route
 from app.Routes import BasicRoutes as basic_routes
-from app.Routes import Uploadroute as upload_routes  
-from app.Routes.ChatRoute import router as chat_router 
-from app.auth import super_admin_route 
-from app.auth import admin_route
-load_dotenv() 
+from app.Routes import Uploadroute as upload_routes
+from app.Routes.ChatRoute import router as chat_router
+
+load_dotenv()
 
 app = FastAPI(title="Document Chatbot API")
-
-app.include_router(auth_routes.router, prefix="/auth", tags=["Auth"])
 
 app.add_middleware(
     CORSMiddleware,
@@ -25,11 +24,10 @@ app.add_middleware(
 async def health():
     return {"ok": True}
 
-
-app.include_router(upload_routes.router)   # /admin/upload
-app.include_router(basic_routes.router)    # /probe, /probe_scores
-app.include_router(chat_router)
-app.include_router(auth_routes.router)
-app.include_router(super_admin_route.router, prefix="/super-admin", tags=["Super Admin"])
-app.include_router(admin_route.router, prefix="/admin", tags=["Admin"])
- # /
+# ── Include routers (prefixes are defined IN the modules themselves) ──
+app.include_router(auth_routes.router)          # routes.py has prefix="/auth"
+app.include_router(super_admin_route.router)    # super_admin_route.py will have prefix="/super-admin"
+app.include_router(admin_route.router)          # admin_route.py has prefix="/admin"
+app.include_router(upload_routes.router)        # Uploadroute.py has prefix="/admin"
+app.include_router(basic_routes.router)         # /probe, /probe_scores
+app.include_router(chat_router)                 # defines /chat/*

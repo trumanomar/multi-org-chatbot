@@ -23,6 +23,18 @@ def add_documents(docs) -> None:
         return
     vectorstore.add_documents(docs)
 
+def search_similar(query: str, k: int = 5, where: dict | None = None):
+    """Return top-k similar Documents (optionally filtered by metadata)."""
+    return vectorstore.similarity_search(query, k=k, filter=where)
+
+def search_with_scores(query: str, k: int = 5, where: dict | None = None):
+    """Return top-k similar Documents with similarity scores (optionally filtered)."""
+    return vectorstore.similarity_search_with_score(query, k=k, filter=where)
+
+def search_similar_for_domain(query: str, domain_id: int, k: int = 5):
+    # Chroma supports metadata filtering
+    return vectorstore.similarity_search(query, k=k, filter={"domain_id": domain_id})
+
 def persist() -> None:
     """Save current index to disk."""
     if hasattr(vectorstore, "persist"):
