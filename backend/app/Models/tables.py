@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Text, ForeignKey, TIMESTAMP
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.DB.db import Base
+import enum
 
 # --- Domain Table ---
 class Domain(Base):
@@ -14,7 +15,7 @@ class Domain(Base):
     # Relationships
     users = relationship("User", back_populates="domain", cascade="all, delete")
     docs = relationship("Docs", back_populates="domain", cascade="all, delete")
-
+    feedback = relationship("Feedback", back_populates="domain", cascade="all, delete")
 
 # --- User Table ---
 class User(Base):
@@ -32,7 +33,7 @@ class User(Base):
     domain = relationship("Domain", back_populates="users")
     docs = relationship("Docs", back_populates="user", cascade="all, delete")
     chunks = relationship("Chunk", back_populates="user", cascade="all, delete")
-
+    feedbacks = relationship("Feedback", back_populates="user", cascade="all, delete")
 
 # --- Docs Table ---
 class Docs(Base):
@@ -47,7 +48,6 @@ class Docs(Base):
     domain = relationship("Domain", back_populates="docs")
     user = relationship("User", back_populates="docs")
     chunks = relationship("Chunk", back_populates="doc", cascade="all, delete")
-
 
 # --- Chunks Table ---
 class Chunk(Base):
@@ -64,18 +64,25 @@ class Chunk(Base):
     # Relationships
     user = relationship("User", back_populates="chunks")
     doc = relationship("Docs", back_populates="chunks")
+
 class Feedback(Base):
     __tablename__ = 'feedback'
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     domain_id = Column(Integer, ForeignKey('domains.id'), nullable=False)
-    doc_id = Column(Integer, ForeignKey('docs.id'), nullable=False)
     content = Column(Text, nullable=False)
     rating = Column(Integer, nullable=False)
     question = Column(Text, nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)    
     user = relationship("User", back_populates="feedbacks")
+    domain = relationship("Domain", back_populates="feedback")
 
     @property
     def user_name(self):
         return self.user.username if self.user else None
+
+#Role
+class RoleEnum(str, enum.Enum):
+    super_admin = "super_admin"
+    admin = "admin"
+    user = "user"

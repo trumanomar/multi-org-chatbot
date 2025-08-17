@@ -13,3 +13,12 @@ python-dotenv>=1.0.1
 cryptography
 pymysql
 sqlalchemy
+python-jose[cryptography]
+pydantic
+python-multipart
+pandas
+bcrypt==4.1.2
+passlib[bcrypt]>=1.7.4
+typing-extensions>=4.12.2
+email-validator
+pydantic[email]

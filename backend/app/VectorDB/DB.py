@@ -23,6 +23,27 @@ def add_documents(docs) -> None:
         return
     vectorstore.add_documents(docs)
 
+def search_similar(query: str, k: int = 5, where: dict | None = None):
+    """Return top-k similar Documents (optionally filtered by metadata)."""
+    return vectorstore.similarity_search(query, k=k, filter=where)
+
+def search_with_scores(query: str, k: int = 5, where: dict | None = None):
+    """Return top-k similar Documents with similarity scores (optionally filtered)."""
+    return vectorstore.similarity_search_with_score(query, k=k, filter=where)
+
+def delete_chunks_vectors(doc_ids: List[int]) -> int:
+    """
+    Delete vectors from ChromaDB based on document IDs.
+    Returns the number of vectors deleted.
+    """
+    try:
+        # Delete vectors where doc_id matches any of the provided IDs
+        vectorstore.delete(where={"doc_id": {"$in": doc_ids}})
+        return len(doc_ids)
+    except Exception as e:
+        print(f"Error deleting vectors: {e}")
+        return 0
+
 def persist() -> None:
     """Save current index to disk."""
     if hasattr(vectorstore, "persist"):
@@ -58,3 +79,17 @@ def reset_index() -> None:
         persist_directory=PERSIST_DIR,
         embedding_function=embedding_function,
     )
+from typing import List
+
+def search_similar_for_domain(question: str, domain_id: int, top_k: int = 5) -> List[str]:
+    """
+    Search for most relevant chunks within a specific domain.
+    """
+    results = collection.query(
+        query_texts=[question],
+        n_results=top_k,
+        where={"domain_id": domain_id}  # filter by domain
+    )
+    
+    chunks = results["documents"][0] if results["documents"] else []
+    return chunks
