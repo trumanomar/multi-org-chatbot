@@ -1,4 +1,4 @@
-from app.VectorDB.DB import vectorstore
+from VectorDB.DB import vectorstore
 
 count = vectorstore._collection.count()
 print(f"Total vectors: {count}")
