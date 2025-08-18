@@ -14,7 +14,6 @@ class SuperAdminShell extends ConsumerWidget {
     return AppNavSidebar(
       title: 'Super Admin',
       currentPath: path,
-      child: child,
       onLogout: () async {
         await ref.read(authControllerProvider.notifier).logout();
         if (context.mounted) context.go('/login');
@@ -25,6 +24,7 @@ class SuperAdminShell extends ConsumerWidget {
         NavItem('Create Admin', Icons.admin_panel_settings, '/s/admin-create'),
         NavItem('Test Chat', Icons.chat, '/s/chat-test'),
       ],
+      child: child,
     );
   }
 }

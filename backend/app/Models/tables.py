@@ -50,7 +50,6 @@ class Docs(Base):
     domain = relationship("Domain", back_populates="docs")
     user = relationship("User", back_populates="docs")
     chunks = relationship("Chunk", back_populates="doc", cascade="all, delete")
-    feedbacks = relationship("Feedback", back_populates="doc", cascade="all, delete")
 
 
 # --- Chunks Table ---
@@ -63,7 +62,6 @@ class Chunk(Base):
     domain_id = Column(Integer, ForeignKey('domains.id'), nullable=False)
     doc_id = Column(Integer, ForeignKey('docs.id'), nullable=False)
     
-    vector_id = Column(String(128), nullable=True, index=True)
 
     created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=False)
@@ -77,7 +75,6 @@ class Feedback(Base):
     # foreign keys
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     domain_id = Column(Integer, ForeignKey('domains.id'), nullable=False)
-    doc_id = Column(Integer, ForeignKey('docs.id'), nullable=False)
 
     # payload
     content = Column(Text, nullable=False)
@@ -85,14 +82,9 @@ class Feedback(Base):
     question = Column(Text, nullable=False)
 
     created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
-    # NEW: keep consistency with other tables
-    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=False)
 
-    # Relationships
     user = relationship("User", back_populates="feedbacks")
-    # NEW: wire up these sides so future queries are easy
     domain = relationship("Domain", back_populates="feedbacks")
-    doc = relationship("Docs", back_populates="feedbacks")
 
     @property
     def user_name(self):

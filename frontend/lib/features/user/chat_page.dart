@@ -63,7 +63,11 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 
       if (!mounted) return;
       setState(() {
-        _msgs.add(_Msg(role: 'assistant', text: answer));
+        _msgs.add(_Msg(
+          role: 'assistant', 
+          text: answer,
+          question: q, // Store the question for feedback
+        ));
       });
     } on DioException catch (e) {
       if (!mounted) return;
@@ -92,6 +96,206 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         );
       }
     }
+  }
+
+  Future<void> _submitFeedback(int messageIndex, int rating, String comment) async {
+    try {
+      final jwt = ref.read(authControllerProvider).jwt!;
+      final dio = ApiClient(token: jwt.token).dio;
+      final msg = _msgs[messageIndex];
+
+      await dio.post(
+        '/feedback/post',
+        data: {
+          'content': comment,
+          'rating': rating,
+          'question': msg.question ?? msg.text,
+        },
+        options: ApiClient.jsonOpts,
+      );
+
+      setState(() {
+        _msgs[messageIndex] = msg.copyWith(
+          feedbackRating: rating,
+          feedbackComment: comment,
+          feedbackSubmitted: true,
+        );
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Feedback submitted successfully!')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to submit feedback: $e')),
+        );
+      }
+    }
+  }
+
+  void _showFeedbackDialog(int messageIndex) {
+    final msg = _msgs[messageIndex];
+    int rating = msg.feedbackRating ?? 5;
+    final commentController = TextEditingController(text: msg.feedbackComment ?? '');
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Rate this Response'),
+        content: StatefulBuilder(
+          builder: (context, setState) => Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('How would you rate this response?'),
+              const SizedBox(height: 16),
+              
+              // Star Rating
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  final starIndex = index + 1;
+                  return GestureDetector(
+                    onTap: () => setState(() => rating = starIndex),
+                    child: Icon(
+                      Icons.star,
+                      size: 40,
+                      color: starIndex <= rating ? Colors.amber : Colors.grey[300],
+                    ),
+                  );
+                }),
+              ),
+              const SizedBox(height: 16),
+              
+              // Comment field
+              TextField(
+                controller: commentController,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'Add a comment (optional)',
+                  hintText: 'Tell us what you think about this response...',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _submitFeedback(messageIndex, rating, commentController.text.trim());
+            },
+            child: const Text('Submit'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessage(int index) {
+    final m = _msgs[index];
+    final theme = Theme.of(context);
+    final isUser = m.role == 'user';
+
+    return Align(
+      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 6),
+        padding: const EdgeInsets.all(12),
+        constraints: const BoxConstraints(maxWidth: 820),
+        decoration: BoxDecoration(
+          color: isUser
+              ? theme.colorScheme.primary.withOpacity(.10)
+              : theme.colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isUser
+                ? theme.colorScheme.primary.withOpacity(.25)
+                : theme.dividerColor.withOpacity(.2),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SelectableText(
+              m.text,
+              style: TextStyle(
+                color: isUser
+                    ? theme.colorScheme.onSurface
+                    : theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            
+            // Feedback section for assistant messages only
+            if (!isUser && !m.text.startsWith('Error:')) ...[
+              const SizedBox(height: 12),
+              const Divider(height: 1),
+              const SizedBox(height: 8),
+              
+              if (m.feedbackSubmitted) ...[
+                // Show submitted feedback
+                Row(
+                  children: [
+                    const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                    const SizedBox(width: 4),
+                    const Text('Feedback submitted', style: TextStyle(color: Colors.green, fontSize: 12)),
+                    const SizedBox(width: 8),
+                    Row(
+                      children: List.generate(5, (starIndex) {
+                        return Icon(
+                          Icons.star,
+                          size: 14,
+                          color: starIndex < (m.feedbackRating ?? 0) ? Colors.amber : Colors.grey[300],
+                        );
+                      }),
+                    ),
+                    if (m.feedbackComment?.isNotEmpty == true) ...[
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          m.feedbackComment!,
+                          style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ] else ...[
+                // Show feedback button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Was this response helpful?',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    TextButton.icon(
+                      onPressed: () => _showFeedbackDialog(index),
+                      icon: const Icon(Icons.star_border, size: 16),
+                      label: const Text('Rate'),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        minimumSize: const Size(0, 0),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ],
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -127,37 +331,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               controller: _scrollCtrl,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               itemCount: _msgs.length,
-              itemBuilder: (_, i) {
-                final m = _msgs[i];
-                final isUser = m.role == 'user';
-                return Align(
-                  alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    padding: const EdgeInsets.all(12),
-                    constraints: const BoxConstraints(maxWidth: 820),
-                    decoration: BoxDecoration(
-                      color: isUser
-                          ? theme.colorScheme.primary.withOpacity(.10)
-                          : theme.colorScheme.surfaceVariant,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isUser
-                            ? theme.colorScheme.primary.withOpacity(.25)
-                            : theme.dividerColor.withOpacity(.2),
-                      ),
-                    ),
-                    child: SelectableText(
-                      m.text,
-                      style: TextStyle(
-                        color: isUser
-                            ? theme.colorScheme.onSurface
-                            : theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                );
-              },
+              itemBuilder: (_, i) => _buildMessage(i),
             ),
           ),
           SafeArea(
@@ -203,5 +377,35 @@ class _ChatPageState extends ConsumerState<ChatPage> {
 class _Msg {
   final String role;
   final String text;
-  _Msg({required this.role, required this.text});
+  final String? question;
+  final int? feedbackRating;
+  final String? feedbackComment;
+  final bool feedbackSubmitted;
+
+  _Msg({
+    required this.role,
+    required this.text,
+    this.question,
+    this.feedbackRating,
+    this.feedbackComment,
+    this.feedbackSubmitted = false,
+  });
+
+  _Msg copyWith({
+    String? role,
+    String? text,
+    String? question,
+    int? feedbackRating,
+    String? feedbackComment,
+    bool? feedbackSubmitted,
+  }) {
+    return _Msg(
+      role: role ?? this.role,
+      text: text ?? this.text,
+      question: question ?? this.question,
+      feedbackRating: feedbackRating ?? this.feedbackRating,
+      feedbackComment: feedbackComment ?? this.feedbackComment,
+      feedbackSubmitted: feedbackSubmitted ?? this.feedbackSubmitted,
+    );
+  }
 }
