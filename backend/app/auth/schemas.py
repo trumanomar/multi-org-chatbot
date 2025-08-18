@@ -44,10 +44,24 @@ class CreateAdminRequest(BaseModel):
     username: str
     email: EmailStr
     password: str
+    domain_id:int
 
 class CreateUserRequest(BaseModel):
     username: str
-    email: EmailStr  # required
+    email: EmailStr
     password: str
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "username": "user1",
+                "email": "user1@example.com",
+                "password": "user1234"
+            }
+        }
+    }
+    
+class CreateDomainRequest(BaseModel):
+    name: str = Field(..., min_length=1) 
 
 
