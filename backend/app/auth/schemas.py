@@ -65,3 +65,19 @@ class CreateDomainRequest(BaseModel):
     name: str = Field(..., min_length=1) 
 
 
+class FeedbackCreate(BaseModel):
+    content: str
+    rating: int
+    question: str
+    
+
+
+class FeedbackResponse(BaseModel):
+    id: int
+    user_id: int
+    content: str
+    rating: int
+    question: str
+
+    class Config:
+        orm_mode = True

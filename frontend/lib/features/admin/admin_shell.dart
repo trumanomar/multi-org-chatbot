@@ -14,7 +14,6 @@ class AdminShell extends ConsumerWidget {
     return AppNavSidebar(
       title: 'Admin',
       currentPath: path,
-      child: child,
       onLogout: () async {
         await ref.read(authControllerProvider.notifier).logout();
         if (context.mounted) context.go('/login');
@@ -27,6 +26,7 @@ class AdminShell extends ConsumerWidget {
         NavItem('Feedback', Icons.reviews, '/a/feedback'),
         NavItem('Chat Test', Icons.chat, '/a/chat-test'),
       ],
+      child: child,
     );
   }
 }

@@ -11,8 +11,9 @@ SECRET_KEY = os.getenv("SECRET_KEY") or os.getenv("JWT_SECRET", "dev-secret")
 ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
 ACCESS_TOKEN_EXPIRE_DELTA = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-DATABASE_URL = os.getenv("DATABASE_URL", "mysql+pymysql://root:12345678@HOST:3306/chatbot_rag")
+DATABASE_URL = os.getenv("DATABASE_URL", "mysql+pymysql://root@HOST:3306/chatbot")
 
 # Accept both spellings
 SUPER_ADMIN_EMAIL = os.getenv("SUPER_ADMIN_EMAIL") or os.getenv("SUPERADMIN_EMAIL", "sadmin@gmail.com")
