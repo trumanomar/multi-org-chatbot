@@ -33,7 +33,7 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
         return {
             "access_token": token,
             "role": "super_admin",
-            "redirect": "/super-admin/dashboard",
+            "redirect": "/s/dashboard",
         }
 
     # DB-backed users/admins
