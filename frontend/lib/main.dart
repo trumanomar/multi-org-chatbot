@@ -1,31 +1,25 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'routes.dart';
-import 'services/api_service.dart';
+import 'app_theme.dart';
+import 'routing/app_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  final api = ApiService();
-  try {
-    final isHealthy = await api.healthCheck();
-    print('Backend health: $isHealthy');
-  } catch (e) {
-    print('Health check failed: $e');
-  }
-  runApp(const App());
+  runApp(const ProviderScope(child: App()));
 }
 
-class App extends StatelessWidget {
+class App extends ConsumerWidget {
   const App({super.key});
-
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Admin Panel',
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(appRouterProvider);
+    return MaterialApp.router(
+      title: 'Org Mind Hive',
       debugShowCheckedModeBanner: false,
-      routes: appRoutes,                 // uses the variable exported above
-      initialRoute: AppRoutes.root,      // '/'
+      theme: AppTheme.light,
+      routerConfig: router,
     );
   }
 }

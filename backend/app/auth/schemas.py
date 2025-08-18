@@ -53,7 +53,9 @@ class CreateUserRequest(BaseModel):
     username: str
     email: EmailStr
     password: str
+    domain_id:int
 
+<<<<<<< HEAD
 class CreateDomainRequest(BaseModel):
     name: str
 
@@ -89,5 +91,24 @@ class FeedbackResponse(BaseModel):
         
     
         
+=======
+class CreateUserRequest(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+>>>>>>> 05c442592b57776dae5c4587a0e474f22d3cb1c8
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "username": "user1",
+                "email": "user1@example.com",
+                "password": "user1234"
+            }
+        }
+    }
+    
+class CreateDomainRequest(BaseModel):
+    name: str = Field(..., min_length=1) 
 
 

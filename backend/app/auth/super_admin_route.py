@@ -1,3 +1,4 @@
+# app/auth/super_admin_route.py
 from fastapi import Depends, APIRouter, HTTPException, status
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_425_TOO_EARLY
@@ -7,8 +8,25 @@ from app.Models.tables import Domain, User, RoleEnum
 from app.auth.utils import hash_password
 from app.auth.schemas import CreateSuperAdminRequest
 
-from fastapi import APIRouter
+from pydantic import BaseModel, EmailStr
+
+from app.DB.db import get_db
+from app.auth.dependencies import require_super_admin, get_current_principal, Principal
+from app.Models.tables import Domain, User, RoleEnum, Docs, Chunk
+from app.auth.utils import hash_password
+from app.auth.schemas import CreateAdminRequest as _CreateAdminReq, CreateDomainRequest as _CreateDomainReq  # optional if you already had them
+
 router = APIRouter(prefix="/super-admin", tags=["Super Admin"])
+
+# ---------- Schemas (light) ----------
+class DomainCreate(BaseModel):
+    name: str
+
+class CreateAdminRequest(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+    domain_id: int
 
 @router.get("/dashboard")
 def dashboard(_=Depends(require_super_admin)):
