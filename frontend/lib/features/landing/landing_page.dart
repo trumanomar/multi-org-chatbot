@@ -7,7 +7,7 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Org Mind Hive"),
+        title: const Text("Chat Assistant"),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
