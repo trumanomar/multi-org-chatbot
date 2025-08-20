@@ -15,6 +15,7 @@ router = APIRouter(prefix="/super-admin", tags=["Super Admin"])
 # ---------- Schemas (light) ----------
 class DomainCreate(BaseModel):
     name: str
+    active: bool = True
 
 class CreateAdminRequest(BaseModel):
     username: str
@@ -33,9 +34,9 @@ def create_domain(
     db: Session = Depends(get_db),
     _sa: Principal = Depends(require_super_admin),
 ):
-    if db.query(Domain).filter(Domain.name == data.name).first():
+    if db.query(Domain).filter(Domain.name == data.name,Domain.active==data.active).first():
         raise HTTPException(status_code=400, detail="Domain already exists")
-    d = Domain(name=data.name)
+    d = Domain(name=data.name,active=data.active)
     db.add(d)
     db.commit()
     db.refresh(d)

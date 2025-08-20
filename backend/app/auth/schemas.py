@@ -63,6 +63,7 @@ class CreateUserRequest(BaseModel):
     
 class CreateDomainRequest(BaseModel):
     name: str = Field(..., min_length=1) 
+    active: bool = True
 
 
 class FeedbackCreate(BaseModel):

@@ -13,7 +13,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60")
 ACCESS_TOKEN_EXPIRE_DELTA = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-DATABASE_URL = os.getenv("DATABASE_URL", "mysql+pymysql://root@HOST:3306/chatbot")
+DATABASE_URL = os.getenv("DATABASE_URL", "mysql+pymysql://root@HOST:3306/chatbot_rag")
 
 # Accept both spellings
 SUPER_ADMIN_EMAIL = os.getenv("SUPER_ADMIN_EMAIL") or os.getenv("SUPERADMIN_EMAIL", "sadmin@gmail.com")

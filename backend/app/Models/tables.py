@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, TIMESTAMP
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, TIMESTAMP,Boolean
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.DB.db import Base
@@ -9,6 +9,8 @@ class Domain(Base):
     __tablename__ = 'domains'
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False, unique=True)
+    active=Column(Boolean, default=True)
+
     created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=False)
 
@@ -16,6 +18,7 @@ class Domain(Base):
     users = relationship("User", back_populates="domain", cascade="all, delete")
     docs = relationship("Docs", back_populates="domain", cascade="all, delete")
     feedbacks = relationship("Feedback", back_populates="domain", cascade="all, delete")
+    chat_sessions = relationship("ChatSession", back_populates="domain", cascade="all, delete")
 
 
 # --- User Table ---
@@ -35,6 +38,8 @@ class User(Base):
     docs = relationship("Docs", back_populates="user", cascade="all, delete")
     chunks = relationship("Chunk", back_populates="user", cascade="all, delete")
     feedbacks = relationship("Feedback", back_populates="user", cascade="all, delete")
+    chat_sessions = relationship("ChatSession", back_populates="user", cascade="all, delete")
+    chat_messages = relationship("ChatMessage", back_populates="user", cascade="all, delete")
 
 
 # --- Docs Table ---
@@ -44,6 +49,8 @@ class Docs(Base):
     name = Column(String(255), nullable=False)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     domain_id = Column(Integer, ForeignKey('domains.id'), nullable=False)
+    active=Column(Boolean, default=True)
+
     created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
 
     # Relationships
@@ -89,6 +96,29 @@ class Feedback(Base):
     @property
     def user_name(self):
         return self.user.username if self.user else None
+class ChatSession(Base):
+    __tablename__ = 'chat_sessions'  
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    domain_id = Column(Integer, ForeignKey('domains.id'), nullable=False)
+    created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
+    
+    user = relationship("User", back_populates="chat_sessions")
+    domain = relationship("Domain", back_populates="chat_sessions")
+    chat_messages = relationship("ChatMessage", back_populates="chat_session", cascade="all, delete")
+
+
+class ChatMessage(Base):
+    __tablename__ = 'chat_messages' 
+    id = Column(Integer, primary_key=True, index=True)
+    session_id = Column(Integer, ForeignKey('chat_sessions.id'), nullable=False) 
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    question = Column(Text, nullable=False)
+    answer = Column(Text, nullable=False)
+    created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
+    
+    chat_session = relationship("ChatSession", back_populates="chat_messages")
+    user = relationship("User", back_populates="chat_messages")
 
 
 #Role
