@@ -21,6 +21,7 @@ backend/.mypy_cache/
 backend/.ruff_cache/
 backend/*.sqlite
 backend/*.db
+backend/multi_models/
 
 # Flutter / frontend
 frontend/.dart_tool/
@@ -37,3 +38,4 @@ frontend/ios/Flutter/Flutter.framework
 frontend/android/.gradle/
 frontend/android/build/
 frontend/web/.dart_tool/
+./vector_db

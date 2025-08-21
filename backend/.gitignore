@@ -1,6 +1,6 @@
 # secrets
 app/.env
-
+backend/multi_models/
 # python build/user stuff
 venv/
 __pycache__/

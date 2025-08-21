@@ -6,10 +6,10 @@ from typing import Optional, Dict, Any, List
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
-from app.config import PERSIST_DIR, EMBEDDING_MODEL
+from app.config import PERSIST_DIR, MODEL_PATH
 
 # --- Embeddings & vectorstore -------------------------------------------------
-embedding_function = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
+embedding_function = HuggingFaceEmbeddings(model_name=MODEL_PATH)
 
 # Always load existing vectorstore if it exists
 vectorstore = Chroma(
