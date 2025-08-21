@@ -1,6 +1,7 @@
 # secrets
 app/.env
 backend/multi_models/
+backend/vector_db/
 # python build/user stuff
 venv/
 __pycache__/
@@ -19,3 +20,4 @@ Thumbs.db
 storage/
 chroma/
 data/index/
+newchroma_db/
