@@ -1,14 +1,23 @@
-# backend/app/routes/ChatRoute.py
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 from typing import Any, Dict, List
 import os
-from openai import OpenAI
+
+# Vector search helpers (module-level)
 from app.VectorDB import DB as vectordb
-from app.auth.dependencies import get_current_principal, Principal, require_user, require_admin_or_super
+from app.utilis.greetings import (
+    is_greeting,
+    detect_language,
+    make_greeting_response,
+    localized_not_found,
+)
+
+# OpenAI-compatible SDK (works with OpenAI, Ollama, LM Studio, Groq via base_url)
+from openai import OpenAI
 
 router = APIRouter(tags=["Chat"])
 
+# ---------- Schemas ----------
 class ChatQuery(BaseModel):
     message: str = Field(..., description="User question")
     k: int = Field(5, ge=1, le=50, description="Top-K retrieved chunks")
@@ -130,21 +139,30 @@ def debug_env():
     }
 
 @router.post("/chat/query", response_model=ChatAnswer)
-def chat_query(payload: ChatQuery, principal: Principal = Depends(get_current_principal)):
+def chat_query(payload: ChatQuery):
     q = payload.message.strip()
     if not q:
         raise HTTPException(status_code=400, detail="Empty message")
 
-    # super_admin can search globally; others are scoped
-    if principal.role == "super_admin" or principal.domain_id is None:
-        raw = vectordb.search_similar(q, payload.k)
-    else:
-        raw = vectordb.search_similar_for_domain(q, principal.domain_id, payload.k)
+    # Detect greeting; if yes, respond in same language and short-circuit
+    greeting_lang = is_greeting(q)
+    if greeting_lang:
+        return ChatAnswer(answer=make_greeting_response(greeting_lang), sources=[])
 
+    # Detect user language for possible localized fallbacks
+    user_lang = detect_language(q)
+
+    raw = vectordb.search_similar(q, payload.k)
     hits = [_normalize_hit(h) for h in (raw or []) if h is not None]
+
     if not hits or not any((h.get("page_content") or "").strip() for h in hits):
-        return ChatAnswer(answer="I couldn’t find this in the knowledge base.", sources=[])
+        return ChatAnswer(answer=localized_not_found(user_lang), sources=[])
 
     context = _build_context(hits)
-    answer = _answer_with_openai(context, q)
-    return ChatAnswer(answer=answer or "I couldn’t find this in the knowledge base.", sources=_extract_sources(hits))
+    answer = _answer_with_openai(context, q) or "I couldn’t find this in the knowledge base."
+
+    # If the model/stub returned the fallback phrase, localize it
+    if (answer or "").strip() == "I couldn’t find this in the knowledge base.":
+        answer = localized_not_found(user_lang)
+
+    return ChatAnswer(answer=answer, sources=_extract_sources(hits))

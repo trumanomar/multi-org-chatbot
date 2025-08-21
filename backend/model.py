@@ -1,5 +1,4 @@
 from sentence_transformers import SentenceTransformer,util
-
 # # تحميل الموديل من HuggingFace
 
 # model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
@@ -11,5 +10,5 @@ from sentence_transformers import SentenceTransformer,util
 sentences = ["This is an example sentence", "Each sentence is converted"]
 
 model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
-model.save("./backend/multi_models/paraphrase-multilingual-MiniLM-L12-v2")
+model.save("./multi_models/paraphrase-multilingual-MiniLM-L12-v2")
 print("saved successfully /multi_models/paraphrase-multilingual-MiniLM-L12-v2")
