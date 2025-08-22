@@ -30,6 +30,7 @@ class User(Base):
     password = Column(String(255), nullable=False)
     role_based = Column(String(50), nullable=False)
     domain_id = Column(Integer, ForeignKey('domains.id'), nullable=False)
+
     created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now(), nullable=False)
 
