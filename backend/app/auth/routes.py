@@ -1,7 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from datetime import timedelta
-
 from app.DB.db import get_db
 from app.auth.schemas import LoginRequest, TokenResponse
 from app.auth.dependencies import get_current_principal, Principal
@@ -47,6 +45,7 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
         domain_id=user.domain_id,
         expires_delta=ACCESS_TOKEN_EXPIRE_DELTA,
     )
+  
     redirect = "/admin/dashboard" if user.role_based == "admin" else "/user/dashboard"
     return {"access_token": token, "role": user.role_based, "redirect": redirect}
 
