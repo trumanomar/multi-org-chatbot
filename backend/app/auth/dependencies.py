@@ -6,6 +6,7 @@ from app.config import SECRET_KEY, ALGORITHM, SUPER_ADMIN_EMAIL
 from app.DB.db import get_db
 from app.Models.tables import User, RoleEnum
 from typing import Optional
+from datetime import datetime, timedelta
 
 bearer_scheme = HTTPBearer(auto_error=False)
 
@@ -76,3 +77,16 @@ def enforce_same_domain_query(query, model, principal: Principal):
     if principal.role != RoleEnum.super_admin.value:
         return query.filter(model.domain_id == principal.domain_id)
     return query
+def create_reset_token(username: str, expires_minutes: int = 15) -> str:
+    expire = datetime.utcnow() + timedelta(minutes=expires_minutes)
+    to_encode = {"sub": username, "exp": expire}
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+def verify_reset_token(token: str) -> Optional[str]:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload.get("sub")
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.PyJWTError:
+        return None

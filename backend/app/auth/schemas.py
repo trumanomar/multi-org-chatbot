@@ -82,3 +82,21 @@ class FeedbackResponse(BaseModel):
 
     class Config:
         orm_mode = True
+class changePasswordRequest(BaseModel):
+    password: str
+    new_password: str
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "password": "current_password",
+                "new_password": "new_password1234"
+            }
+        }
+    }  
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str  
+class ForgotPasswordRequest(BaseModel):
+    username: str    
+
