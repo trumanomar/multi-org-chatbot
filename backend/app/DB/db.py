@@ -15,7 +15,7 @@ load_dotenv(BACKEND_ROOT / ".env")
 DATABASE_URL = (
     os.getenv("DATABASE_URL")
     or os.getenv("SQLALCHEMY_DATABASE_URL")
-    or "mysql+pymysql://root:12345678@127.0.0.1:3306/chatbot_rag"
+    or "mysql+pymysql://root:12345678@localhost:3306/chatbot_rag"
 )
 
 # Create engine (pre_ping avoids stale connections)

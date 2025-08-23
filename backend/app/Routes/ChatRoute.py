@@ -1,7 +1,13 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, Field
 from typing import Any, Dict, List
 import os
+from sqlalchemy.orm import Session
+
+# Database imports
+from app.DB.db import get_db
+from app.Models.tables import ChatSession, ChatMessage, User
+from app.auth.dependencies import get_current_principal, get_current_user_db
 
 # Vector search helpers (module-level)
 from app.VectorDB import DB as vectordb
@@ -25,6 +31,8 @@ class ChatQuery(BaseModel):
 class ChatAnswer(BaseModel):
     answer: str
     sources: List[Dict[str, str]]
+    session_id: int
+    message_id: int
 
 # ---------- Prompt ----------
 SYSTEM_INSTRUCTIONS = (
@@ -139,15 +147,37 @@ def debug_env():
     }
 
 @router.post("/chat/query", response_model=ChatAnswer)
-def chat_query(payload: ChatQuery):
+def chat_query(
+    payload: ChatQuery, 
+    principal = Depends(get_current_principal),
+    user: User = Depends(get_current_user_db),
+    db: Session = Depends(get_db)
+):
     q = payload.message.strip()
     if not q:
         raise HTTPException(status_code=400, detail="Empty message")
 
-    # Detect greeting; if yes, respond in same language and short-circuit
+    # Detect greeting; if yes, respond in same language but still save to history
     greeting_lang = is_greeting(q)
     if greeting_lang:
-        return ChatAnswer(answer=make_greeting_response(greeting_lang), sources=[])
+        answer = make_greeting_response(greeting_lang)
+        # Save chat session and message even for greetings
+        session = ChatSession(user_id=user.id, domain_id=principal.domain_id)
+        db.add(session)
+        db.commit()
+        db.refresh(session)
+
+        message = ChatMessage(
+            session_id=session.id,
+            user_id=user.id,
+            question=q,
+            answer=answer,
+        )
+        db.add(message)
+        db.commit()
+        db.refresh(message)
+
+        return ChatAnswer(answer=answer, sources=[], session_id=session.id, message_id=message.id)
 
     # Detect user language for possible localized fallbacks
     user_lang = detect_language(q)
@@ -156,7 +186,24 @@ def chat_query(payload: ChatQuery):
     hits = [_normalize_hit(h) for h in (raw or []) if h is not None]
 
     if not hits or not any((h.get("page_content") or "").strip() for h in hits):
-        return ChatAnswer(answer=localized_not_found(user_lang), sources=[])
+        answer = localized_not_found(user_lang)
+        # Save chat session and message even when no hits found
+        session = ChatSession(user_id=user.id, domain_id=principal.domain_id)
+        db.add(session)
+        db.commit()
+        db.refresh(session)
+
+        message = ChatMessage(
+            session_id=session.id,
+            user_id=user.id,
+            question=q,
+            answer=answer,
+        )
+        db.add(message)
+        db.commit()
+        db.refresh(message)
+
+        return ChatAnswer(answer=answer, sources=[], session_id=session.id, message_id=message.id)
 
     context = _build_context(hits)
     answer = _answer_with_openai(context, q) or "I couldn’t find this in the knowledge base."
@@ -165,4 +212,57 @@ def chat_query(payload: ChatQuery):
     if (answer or "").strip() == "I couldn’t find this in the knowledge base.":
         answer = localized_not_found(user_lang)
 
-    return ChatAnswer(answer=answer, sources=_extract_sources(hits))
+    # Save chat session and message
+    session = ChatSession(user_id=user.id, domain_id=principal.domain_id)
+    db.add(session)
+    db.commit()
+    db.refresh(session)
+
+    message = ChatMessage(
+        session_id=session.id,
+        user_id=user.id,
+        question=q,
+        answer=answer,
+    )
+    db.add(message)
+    db.commit()
+    db.refresh(message)
+
+    return ChatAnswer(answer=answer, sources=_extract_sources(hits), session_id=session.id, message_id=message.id)
+
+# ---------- Chat History Endpoints ----------
+@router.get("/chat/sessions/{user_id}")
+def get_user_chat_sessions(user_id: int, db: Session = Depends(get_db)):
+    """Get all chat sessions for a user"""
+    sessions = db.query(ChatSession).filter(ChatSession.user_id == user_id).order_by(ChatSession.created_at.desc()).all()
+    return sessions
+
+@router.get("/chat/messages/{session_id}")
+def get_chat_messages(session_id: int, db: Session = Depends(get_db)):
+    """Get all messages for a specific chat session"""
+    messages = db.query(ChatMessage).filter(ChatMessage.session_id == session_id).order_by(ChatMessage.created_at.asc()).all()
+    return messages
+
+@router.get("/chat/history/{user_id}")
+def get_user_chat_history(user_id: int, limit: int = 50, db: Session = Depends(get_db)):
+    """Get recent chat history for a user with pagination"""
+    # Get recent sessions
+    sessions = db.query(ChatSession).filter(ChatSession.user_id == user_id).order_by(ChatSession.created_at.desc()).limit(limit).all()
+    
+    history = []
+    for session in sessions:
+        messages = db.query(ChatMessage).filter(ChatMessage.session_id == session.id).order_by(ChatMessage.created_at.asc()).all()
+        history.append({
+            "session_id": session.id,
+            "created_at": session.created_at,
+            "messages": [
+                {
+                    "id": msg.id,
+                    "question": msg.question,
+                    "answer": msg.answer,
+                    "created_at": msg.created_at
+                } for msg in messages
+            ]
+        })
+    
+    return history
