@@ -55,7 +55,19 @@ def list_domains(
             {"id": d.id, "name": d.name, "created_at": d.created_at} for d in domains
         ]
     }
-
+# delete domain    
+@router.delete("/domain/{domain_id}")
+def delete_domain(
+    domain_id: int,
+    db: Session = Depends(get_db),
+    _sa: Principal = Depends(require_super_admin),
+):
+    domain = db.query(Domain).get(domain_id)
+    if not domain:
+        raise HTTPException(status_code=404, detail="Domain not found")
+    db.delete(domain)
+    db.commit()
+    return {"message": "Domain deleted"}
 # ---------- Admins ----------
 @router.post("/admin/create")
 def create_admin(

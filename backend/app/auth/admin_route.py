@@ -95,7 +95,51 @@ def list_docs(
             }
         )
     return {"docs": out}  # ← stable envelope
-
+#delete users
+@router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)])
+def delete_user(
+    user_id: int,
+    db: Session = Depends(get_db),
+    principal: Principal = Depends(get_current_principal),
+):
+    user = enforce_same_domain_query(db.query(User), User, principal).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    db.delete(user)
+    db.commit()
+    return {"message": "User deleted successfully"}
+#update role
+@router.put("/users/role/{user_id}",status_code=status.HTTP_204_NO_CONTENT,dependencies=[Depends(require_admin)])
+def update_role(
+    user_id: int,
+    new_role: RoleEnum,
+    db: Session = Depends(get_db),
+    principal: Principal = Depends(get_current_principal),
+):
+    user = enforce_same_domain_query(db.query(User), User, principal).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if new_role not in [RoleEnum.user, RoleEnum.admin]:
+        raise HTTPException(status_code=400, detail="Invalid role")
+    user.role_based = new_role.value
+    db.commit()
+    return {"message": "User role updated successfully"}
+#update email
+@router.put("/users/{user_id}/email",status_code=status.HTTP_204_NO_CONTENT,dependencies=[Depends(require_admin)])
+def update_email(
+    user_id: int,
+    new_email: str,
+    db: Session = Depends(get_db),
+    principal: Principal = Depends(get_current_principal),
+):
+    user = enforce_same_domain_query(db.query(User), User, principal).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if db.query(User).filter(User.email == new_email).first():
+        raise HTTPException(status_code=400, detail="Email already in use")
+    user.email = new_email
+    db.commit()
+    return {"message": "User email updated successfully"}
 @router.get("/chunks", dependencies=[Depends(require_admin)])
 def list_chunks(
     doc_id: int = Query(..., ge=1),
