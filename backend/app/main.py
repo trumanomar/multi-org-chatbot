@@ -21,7 +21,15 @@ app = FastAPI(title="Document Chatbot API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # tighten in prod
+    # Allow common local dev origins explicitly so credentials/authorization work
+    allow_origins=[
+        "http://localhost",
+        "https://localhost",
+        "http://127.0.0.1",
+        "https://127.0.0.1",
+    ],
+    # Match localhost/127.0.0.1 with any port (Flutter web dev server)
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

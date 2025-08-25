@@ -1,17 +1,23 @@
 name: frontend
 description: "A new Flutter project."
 publish_to: 'none'
-
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.8.1
+  sdk: ">=3.2.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  http: ^1.2.2
 
+  # Speech-to-text (with web glue)
+  speech_to_text: ^6.6.0
+  flutter_web_plugins:
+    sdk: flutter
+
+  # HTTP
+  http: ^1.2.2
+  dio: ^5.5.0
 
   # UI & Icons
   cupertino_icons: ^1.0.8
@@ -21,16 +27,13 @@ dependencies:
   go_router: ^14.2.0
   flutter_riverpod: ^2.5.1
 
-  # HTTP & Auth
-  dio: ^5.5.0
+  # Auth/storage/config
   jwt_decoder: ^2.0.1
-
-  # Config & Storage
   flutter_dotenv: ^5.2.1
   flutter_secure_storage: ^9.2.4
   shared_preferences: ^2.3.2
 
-  # JSON & Code generation
+  # JSON/codegen
   json_annotation: ^4.8.1
 
   # File upload

@@ -8,11 +8,10 @@ class ApiClient {
 
   static const _defaultBase = 'http://127.0.0.1:8000';
 
-  // Trim trailing slashes just in case
   String get baseUrl =>
       (dotenv.env['API_BASE_URL'] ?? _defaultBase).trim().replaceAll(RegExp(r'/+$'), '');
 
-  BaseOptions _options({
+  BaseOptions _opts({
     Duration? connect,
     Duration? receive,
     Duration? send,
@@ -26,23 +25,21 @@ class ApiClient {
         if (token != null && token!.isNotEmpty) 'Authorization': 'Bearer $token',
         'Accept': 'application/json',
       },
-      // We want the response body even on 4xx/5xx for better error messages
       validateStatus: (code) => code != null && code >= 200 && code < 600,
       responseType: ResponseType.json,
     );
   }
 
   Dio get dio {
-    final d = Dio(_options());
+    final d = Dio(_opts());
     if (kDebugMode) {
       d.interceptors.add(LogInterceptor(requestBody: true, responseBody: false));
     }
     return d;
   }
 
-  /// Use this for long-running calls (e.g., /chat/query with Ollama).
   Dio get dioWithLongTimeout {
-    final d = Dio(_options(
+    final d = Dio(_opts(
       connect: const Duration(seconds: 20),
       receive: const Duration(seconds: 120),
       send: const Duration(seconds: 60),
@@ -54,10 +51,7 @@ class ApiClient {
   }
 
   static final jsonOpts = Options(
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
+    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
     responseType: ResponseType.json,
   );
 }

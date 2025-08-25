@@ -1,6 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dio/dio.dart';
 import '../../providers/auth_provider.dart';
 import '../../data/api_client.dart';
 
@@ -13,20 +13,40 @@ class CreateDomainPage extends ConsumerStatefulWidget {
 class _CreateDomainPageState extends ConsumerState<CreateDomainPage> {
   final _form = GlobalKey<FormState>();
   final _name = TextEditingController();
-  String? _status;
   bool _loading = false;
+  String? _error;
+  String? _ok;
 
   Future<void> _submit() async {
     if (!_form.currentState!.validate()) return;
-    setState(() => _loading = true);
+    setState(() { _loading = true; _error = null; _ok = null; });
+
     try {
       final jwt = ref.read(authControllerProvider).jwt!;
       final dio = ApiClient(token: jwt.token).dio;
-      // If your backend exposes POST /super-admin/domain/create
-      final res = await dio.post('/super-admin/domain/create', data: {'name': _name.text.trim()});
-      setState(() => _status = res.data['message']?.toString() ?? 'Created');
+
+      Response resp;
+      try {
+        resp = await dio.post('/super-admin/domain/create',
+            data: {'name': _name.text.trim()},
+            options: ApiClient.jsonOpts);
+      } on DioException catch (e) {
+        if (e.response?.statusCode == 404) {
+          // try alt endpoint
+          resp = await dio.post('/super-admin/domains',
+              data: {'name': _name.text.trim()},
+              options: ApiClient.jsonOpts);
+        } else {
+          rethrow;
+        }
+      }
+
+      if (!mounted) return;
+      setState(() => _ok = 'Created: ${resp.data}');
     } on DioException catch (e) {
-      setState(() => _status = 'Error: ${e.response?.data ?? e.message}');
+      setState(() => _error = e.response?.data?.toString() ?? e.message ?? 'Failed');
+    } catch (e) {
+      setState(() => _error = e.toString());
     } finally {
       setState(() => _loading = false);
     }
@@ -34,35 +54,48 @@ class _CreateDomainPageState extends ConsumerState<CreateDomainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Create Domain')),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 520),
-          child: Card(
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Create Domain', style: Theme.of(context).textTheme.headlineSmall),
+          const SizedBox(height: 12),
+          if (_error != null)
+            Container(
+              width: double.infinity,
+              color: Colors.red.shade50,
+              padding: const EdgeInsets.all(12),
+              child: Text(_error!, style: const TextStyle(color: Colors.red)),
+            ),
+          if (_ok != null)
+            Container(
+              width: double.infinity,
+              color: Colors.green.shade50,
+              padding: const EdgeInsets.all(12),
+              child: Text(_ok!, style: const TextStyle(color: Colors.green)),
+            ),
+          const SizedBox(height: 8),
+          Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Form(
                 key: _form,
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
                     TextFormField(
                       controller: _name,
-                      decoration: const InputDecoration(labelText: 'Domain Name'),
-                      validator: (v) => v!.isEmpty ? 'Required' : null,
+                      decoration: const InputDecoration(labelText: 'Organization name'),
+                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter name' : null,
                     ),
                     const SizedBox(height: 16),
-                    if (_status != null)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(_status!),
-                      ),
                     FilledButton(
                       onPressed: _loading ? null : _submit,
                       child: _loading
                           ? const SizedBox(
-                              width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                              width: 16, height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
                           : const Text('Create'),
                     ),
                   ],
@@ -70,7 +103,7 @@ class _CreateDomainPageState extends ConsumerState<CreateDomainPage> {
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
