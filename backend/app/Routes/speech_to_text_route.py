@@ -4,20 +4,36 @@ import speech_recognition as sr
 router = APIRouter(tags=["Speech-to-Text"])
 
 @router.get("/speech-to-text/mic")
-def speech_to_text_mic():
+def recognize_speech():
     r = sr.Recognizer()
+
+    with sr.Microphone() as source:
+        print("🎤 قول أي حاجة (عربي أو إنجليزي)...")
+        r.adjust_for_ambient_noise(source, duration=1)  
+        
+        try:
+            audio = r.listen(source, timeout=10, phrase_time_limit=15)
+        except Exception as e:
+            print("⚠️ Error while listening:", e)
+            return ""
+
+    text = ""
     try:
-        with sr.Microphone() as mic:
-            r.adjust_for_ambient_noise(mic, duration=1)
-            print("🎤 Listening... speak now!")
-            audio = r.listen(mic, timeout=5, phrase_time_limit=10)
-
-        text = r.recognize_google(audio, language="en-US")  # change to "ar-EG" for Arabic
-        return {"transcription": text}
-
-    except sr.WaitTimeoutError:
-        raise HTTPException(status_code=408, detail="No speech detected (timeout).")
+        text = r.recognize_google(audio, language="ar-EG")
+        print("✅ Recognized (Arabic):", text)
     except sr.UnknownValueError:
-        raise HTTPException(status_code=400, detail="Speech not understood.")
+        try:
+            text = r.recognize_google(audio, language="en-US")
+            print("✅ Recognized (English):", text)
+        except sr.UnknownValueError:
+            print("❌ Could not understand audio")
+        except sr.RequestError as e:
+            print("⚠️ Could not request results;", e)
     except sr.RequestError as e:
-        raise HTTPException(status_code=503, detail=f"Google API error: {e}")
+        print("⚠️ Could not request results;", e)
+
+    return {"text": text}
+
+
+if __name__ == "__main__":
+    recognize_speech()

@@ -9,6 +9,7 @@ from app.Models.tables import User, RoleEnum, Docs, Chunk
 from app.auth.utils import hash_password
 from app.auth.dependencies import (
     require_admin,
+    require_admin_or_super,
     get_current_user_db,
     get_current_principal,
     enforce_same_domain_query,
@@ -22,24 +23,80 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 # USERS
 # -------------------------------------------------------------------------
 
-@router.post("/create_user", dependencies=[Depends(require_admin)])
+@router.get("/domains", dependencies=[Depends(require_admin_or_super)])
+def get_admin_domains(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user_db),
+    principal: Principal = Depends(get_current_principal),
+):
+    """Get domain information for the current admin or super admin"""
+    from app.Models.tables import Domain
+    
+    if principal.role == RoleEnum.super_admin.value:
+        # Super admin can see all domains
+        domains = db.query(Domain).order_by(Domain.id).all()
+        return {
+            "domains": [
+                {
+                    "id": domain.id,
+                    "name": domain.name,
+                    "created_at": domain.created_at.isoformat() if domain.created_at else None,
+                }
+                for domain in domains
+            ]
+        }
+    else:
+        # Regular admin can only see their own domain
+        domain = db.query(Domain).filter(Domain.id == principal.domain_id).first()
+        if not domain:
+            raise HTTPException(status_code=404, detail="Domain not found")
+        
+        return {
+            "domains": [
+                {
+                    "id": domain.id,
+                    "name": domain.name,
+                    "created_at": domain.created_at.isoformat() if domain.created_at else None,
+                }
+            ]
+        }
+
+@router.post("/create_user", dependencies=[Depends(require_admin_or_super)])
 def create_user(
     request: CreateUserRequest,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user_db),
+    principal: Principal = Depends(get_current_principal),
 ):
-    if current_user.role_based != RoleEnum.admin.value:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only org admins can create users")
+    # Both admin and super_admin can create users
+    if principal.role not in [RoleEnum.admin.value, RoleEnum.super_admin.value]:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only admins and super admins can create users")
 
     if db.query(User).filter(User.username == request.username).first():
         raise HTTPException(status_code=400, detail="Username already registered")
+
+    # Domain validation logic
+    if principal.role == RoleEnum.admin.value:
+        # Regular admins can only create users in their own domain
+        if request.domain_id != principal.domain_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, 
+                detail="You can only create users in your own domain"
+            )
+    # Super admins can create users in any domain (no domain restriction)
+
+    # Verify the domain exists
+    from app.Models.tables import Domain
+    domain = db.query(Domain).filter(Domain.id == request.domain_id).first()
+    if not domain:
+        raise HTTPException(status_code=400, detail="Invalid domain_id")
 
     user = User(
         username=request.username,
         email=request.email,
         password=hash_password(request.password),
         role_based=RoleEnum.user.value,
-        domain_id=current_user.domain_id,
+        domain_id=request.domain_id,
     )
     db.add(user)
     db.commit()

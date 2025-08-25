@@ -9,6 +9,7 @@ from app.auth import super_admin_route, admin_route
 from app.Routes import BasicRoutes as basic_routes
 from app.Routes import Uploadroute as upload_routes
 from app.Routes.ChatRoute import router as chat_router
+from app.Routes.ChatHistoryRoute import router as chat_history_router
 from app.Feedback.routes import get_route,post_route
 from app.Routes.docs_is_activations import router as docs_activation_router
 from app.Routes.domain_is_actications import router as domain_activation_router
@@ -46,4 +47,5 @@ app.include_router(change_password_router)  # change_password.py has prefix="/au
 app.include_router(reset_password_router)   # reset_password.py has prefix="/auth"
 app.include_router(forget_password_router)
 app.include_router(sst_router)                    # speech_to_text.py has prefix="/speech-to-text"
+app.include_router(chat_history_router)          # chat_history.py has prefix="/chat-history"
 

@@ -23,6 +23,7 @@ import '../features/admin/docs_page.dart';
 import '../features/admin/doc_detail_page.dart';
 import '../features/admin/users_page.dart';
 import '../features/admin/feedback_page.dart';
+import '../features/admin/create_user_page.dart';
 
 // Super Admin
 import '../features/superadmin/super_admin_shell.dart';
@@ -83,6 +84,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/a/dashboard',
             builder: (_, __) => const AdminDashboardPage(),
+          ),
+          GoRoute(
+            path: '/a/create-user',
+            builder: (_, __) => const CreateUserPage(),
           ),
           GoRoute(
             path: '/a/upload',

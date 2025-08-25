@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../providers/auth_provider.dart';
 import '../../data/api_client.dart';
@@ -310,7 +311,50 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Admin Dashboard', style: Theme.of(context).textTheme.headlineSmall),
+        Row(
+          children: [
+            Icon(
+              Icons.admin_panel_settings,
+              size: 32,
+              color: Theme.of(context).primaryColor,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Admin Dashboard',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'Admin and Super Admin roles can create users',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            FilledButton.icon(
+              onPressed: () {
+                print('Create User button pressed! Navigating to /a/create-user');
+                try {
+                  // Navigate to create user page
+                  GoRouter.of(context).go('/a/create-user');
+                } catch (e) {
+                  print('Navigation error: $e');
+                  // Fallback to Navigator if GoRouter fails
+                  Navigator.of(context).pushNamed('/a/create-user');
+                }
+              },
+              icon: const Icon(Icons.person_add, size: 20),
+              label: const Text('Create User'),
+            ),
+          ],
+        ),
         const SizedBox(height: 16),
         if (_loading) const LinearProgressIndicator(),
         if (_error != null)

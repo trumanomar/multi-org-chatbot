@@ -12,10 +12,14 @@ router=APIRouter(prefix="/user", tags=["user"])
 def forgot_password(data: ForgotPasswordRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == data.username).first()
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
+        raise HTTPException(status_code=404, detail="المستخدم غير موجود")
+    
     token = create_reset_token(user.username)
-
-    # في الواقع: تبعته إيميل
-    # للتجربة: هنرجعه في response
-    return {"reset_token": token, "message": "Use this token to reset your password"}
+    
+   
+    return {
+        "reset_token": token, 
+        "message": f"استخدم هذا التوكين لإعادة تعيين كلمة المرور للمستخدم: {user.username}",
+        "expires_in": "30 minutes",
+        "username": user.username
+    }

@@ -20,6 +20,7 @@ class AdminShell extends ConsumerWidget {
       },
       items: const [
         NavItem('Dashboard', Icons.monitor, '/a/dashboard'),
+        NavItem('Create User', Icons.person_add, '/a/create-user'),
         NavItem('Upload', Icons.upload_file, '/a/upload'),
         NavItem('Docs', Icons.description, '/a/docs'),
         NavItem('Users', Icons.people, '/a/users'),

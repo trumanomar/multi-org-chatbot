@@ -50,13 +50,15 @@ class CreateUserRequest(BaseModel):
     username: str
     email: EmailStr
     password: str
+    domain_id: int
 
     model_config = {
         "json_schema_extra": {
             "example": {
                 "username": "user1",
                 "email": "user1@example.com",
-                "password": "user1234"
+                "password": "user1234",
+                "domain_id": 1
             }
         }
     }

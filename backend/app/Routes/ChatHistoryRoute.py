@@ -9,7 +9,7 @@ from app.DB.db import get_db
 from app.Models.tables import ChatSession, ChatMessage, User, Domain
 from app.auth.dependencies import get_current_principal, get_current_user_db
 
-router = APIRouter(tags=["Chat History"])
+router = APIRouter(prefix="/chat-history", tags=["Chat History"])
 
 # ---------- Schemas ----------
 class ChatSessionResponse(BaseModel):
@@ -41,7 +41,7 @@ class ChatAnalytics(BaseModel):
     recent_activity: List[dict]
 
 # ---------- Routes ----------
-@router.get("/chat/sessions", response_model=List[ChatSessionResponse])
+@router.get("/sessions", response_model=List[ChatSessionResponse])
 def get_chat_sessions(
     user_id: Optional[int] = Query(None, description="Filter by user ID (admin only)"),
     domain_id: Optional[int] = Query(None, description="Filter by domain ID (admin only)"),
@@ -87,7 +87,7 @@ def get_chat_sessions(
     
     return result
 
-@router.get("/chat/sessions/{session_id}/messages", response_model=List[ChatMessageResponse])
+@router.get("/sessions/{session_id}/messages", response_model=List[ChatMessageResponse])
 def get_session_messages(
     session_id: int,
     db: Session = Depends(get_db)
@@ -107,7 +107,7 @@ def get_session_messages(
         created_at=msg.created_at.isoformat()
     ) for msg in messages]
 
-@router.get("/chat/history", response_model=List[ChatHistoryResponse])
+@router.get("/history", response_model=List[ChatHistoryResponse])
 def get_user_chat_history(
     limit: int = Query(20, ge=1, le=100, description="Number of recent sessions to return"),
     principal = Depends(get_current_principal),
@@ -140,7 +140,7 @@ def get_user_chat_history(
     
     return history
 
-@router.get("/chat/analytics", response_model=ChatAnalytics)
+@router.get("/analytics", response_model=ChatAnalytics)
 def get_user_chat_analytics(
     days: int = Query(30, ge=1, le=365, description="Number of days to analyze"),
     principal = Depends(get_current_principal),
@@ -192,7 +192,7 @@ def get_user_chat_analytics(
         recent_activity=recent_activity
     )
 
-@router.delete("/chat/sessions/{session_id}")
+@router.delete("/sessions/{session_id}")
 def delete_chat_session(
     session_id: int,
     principal = Depends(get_current_principal),
@@ -215,7 +215,7 @@ def delete_chat_session(
     
     return {"message": "Session deleted successfully"}
 
-@router.get("/chat/search")
+@router.get("/search")
 def search_chat_history(
     query: str = Query(..., description="Search term"),
     user_id: Optional[int] = Query(None, description="Filter by user ID (admin only)"),
@@ -255,7 +255,7 @@ def search_chat_history(
     
     return results
 
-@router.get("/chat/my-sessions", response_model=List[ChatSessionResponse])
+@router.get("/my-sessions", response_model=List[ChatSessionResponse])
 def get_my_chat_sessions(
     limit: int = Query(20, ge=1, le=100, description="Number of recent sessions to return"),
     offset: int = Query(0, ge=0, description="Number of sessions to skip"),
