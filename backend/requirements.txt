@@ -24,3 +24,5 @@ email-validator
 pydantic[email]
 deep-translator
 langdetect
+SpeechRecognition
+pyaudio

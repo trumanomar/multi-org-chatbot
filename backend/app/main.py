@@ -15,7 +15,7 @@ from app.Routes.domain_is_actications import router as domain_activation_router
 from app.auth.change_password import router as change_password_router
 from app.auth.reset_password import router as reset_password_router
 from app.auth.forget_password_route import router as forget_password_router
-from app.speech_to_text import router as sst_router 
+from app.Routes.speech_to_text_route import router as sst_router 
 
 app = FastAPI(title="Document Chatbot API") 
 

@@ -20,6 +20,7 @@ class SuperAdminShell extends ConsumerWidget {
       },
       items: const [
         NavItem('KPI Dashboard', Icons.insights, '/s/dashboard'),
+        NavItem('Domains', Icons.domain, '/s/domains'),
         NavItem('Create Domain', Icons.apartment, '/s/domain-create'),
         NavItem('Create Admin', Icons.admin_panel_settings, '/s/admin-create'),
         NavItem('Test Chat', Icons.chat, '/s/chat-test'),

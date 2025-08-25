@@ -6,60 +6,34 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Chat Assistant"),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: FilledButton.icon(
-              onPressed: () => context.go('/login'),
-              icon: const Icon(Icons.login),
-              label: const Text("Login"),
-            ),
-          ),
-        ],
-      ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1000),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Multi-Tenant Knowledge Assistant",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w800),
+      body: Stack(fit: StackFit.expand, children: [
+        Container(color: const Color(0xff0e1116)),
+        Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Chat bot Project',
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      )),
+              const SizedBox(height: 16),
+              Text(
+                'Secure, multi-tenant RAG chat for your org.',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white70),
+              ),
+              const SizedBox(height: 24),
+              FilledButton.tonal(
+                onPressed: () => context.go('/login'),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Text('Login'),
                 ),
-                const SizedBox(height: 12),
-                const Text(
-                  "Upload docs per organization. Chat strictly from retrieved chunks. Admin & Super-Admin controls included.",
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 24),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    FilledButton.icon(
-                      onPressed: () => context.go('/login'),
-                      icon: const Icon(Icons.login),
-                      label: const Text("Login"),
-                    ),
-                    OutlinedButton.icon(
-                      onPressed: () => context.go('/u/chat'),
-                      icon: const Icon(Icons.chat_bubble_outline),
-                      label: const Text("Try Chat (requires login)"),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      ),
+      ]),
     );
   }
 }
