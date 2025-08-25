@@ -15,6 +15,8 @@ from app.Routes.domain_is_actications import router as domain_activation_router
 from app.auth.change_password import router as change_password_router
 from app.auth.reset_password import router as reset_password_router
 from app.auth.forget_password_route import router as forget_password_router
+from app.speech_to_text import router as sst_router 
+
 app = FastAPI(title="Document Chatbot API") 
 
 app.add_middleware(
@@ -43,3 +45,5 @@ app.include_router(domain_activation_router)    # defines /admin/domain/*
 app.include_router(change_password_router)  # change_password.py has prefix="/auth"
 app.include_router(reset_password_router)   # reset_password.py has prefix="/auth"
 app.include_router(forget_password_router)
+app.include_router(sst_router)                    # speech_to_text.py has prefix="/speech-to-text"
+

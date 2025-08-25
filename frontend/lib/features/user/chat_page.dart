@@ -18,6 +18,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   final _scrollCtrl = ScrollController();
 
   bool _sending = false;
+  bool _listening = false;
+  bool _preparingToListen = false;
   String? _error;
 
   // very simple in-memory transcript
@@ -34,6 +36,87 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     await ref.read(authControllerProvider.notifier).logout();
     if (!mounted) return;
     context.go('/login');
+  }
+
+  Future<void> _startListening() async {
+    if (_listening || _preparingToListen) return;
+    
+    setState(() {
+      _preparingToListen = true;
+      _error = null;
+    });
+
+    // Show "Start speaking" message for 5 seconds
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('🎤 Start speaking in 5 seconds...'),
+        duration: Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+
+    // Wait for 5 seconds before starting actual listening
+    await Future.delayed(const Duration(seconds: 5));
+    
+    if (!mounted) return;
+
+    setState(() {
+      _preparingToListen = false;
+      _listening = true;
+    });
+
+    // Show listening message
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('🔴 Listening... Speak now!'),
+        duration: Duration(seconds: 7),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+
+    try {
+      final jwt = ref.read(authControllerProvider).jwt!;
+      final dio = ApiClient(token: jwt.token).dio;
+
+      final res = await dio.get('/speech-to-text/mic');
+      
+      final recognizedText = res.data.toString().trim();
+      
+      if (!mounted) return;
+      
+      if (recognizedText.isNotEmpty) {
+        setState(() {
+          _input.text = recognizedText;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Speech recognized successfully!'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      } else {
+        setState(() {
+          _error = 'Could not understand audio. Please try again.';
+        });
+      }
+    } on DioException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _error = e.response?.data?.toString() ?? e.message ?? 'Speech recognition failed';
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _error = 'Speech recognition error: $e';
+      });
+    } finally {
+      if (!mounted) return;
+      setState(() {
+        _listening = false;
+      });
+    }
   }
 
   Future<void> _send() async {
@@ -341,6 +424,31 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               padding: const EdgeInsets.fromLTRB(12, 6, 12, 12),
               child: Row(
                 children: [
+                  // Voice Input Button
+                  IconButton(
+                    onPressed: _listening || _sending ? null : _startListening,
+                    icon: _listening
+                        ? const SizedBox(
+                            width: 20, height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Icon(
+                            Icons.mic,
+                            color: _listening 
+                                ? theme.colorScheme.primary 
+                                : theme.colorScheme.onSurface,
+                          ),
+                    tooltip: 'Voice Input',
+                    style: IconButton.styleFrom(
+                      backgroundColor: _listening 
+                          ? theme.colorScheme.primary.withOpacity(0.1)
+                          : null,
+                      side: BorderSide(
+                        color: theme.colorScheme.outline.withOpacity(0.5),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: TextField(
                       controller: _input,
@@ -356,7 +464,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   ),
                   const SizedBox(width: 8),
                   FilledButton.icon(
-                    onPressed: _sending ? null : _send,
+                    onPressed: _sending || _listening ? null : _send,
                     icon: _sending
                         ? const SizedBox(
                             width: 16, height: 16,
