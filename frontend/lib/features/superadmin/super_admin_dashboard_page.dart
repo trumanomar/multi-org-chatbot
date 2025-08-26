@@ -19,6 +19,7 @@ class _SuperAdminDashboardPageState extends ConsumerState<SuperAdminDashboardPag
   List<Map<String, dynamic>> _adminsList = [];
   List<Map<String, dynamic>> _domainsList = [];
   bool _detailsLoading = false;
+  Set<int> _domainUpdating = {}; // Track which domains are being updated
 
   @override
   void initState() {
@@ -60,6 +61,57 @@ class _SuperAdminDashboardPageState extends ConsumerState<SuperAdminDashboardPag
     }
   }
 
+  Future<void> _toggleDomainActivation(int domainId, bool currentStatus) async {
+    if (_domainUpdating.contains(domainId)) return;
+    
+    setState(() => _domainUpdating.add(domainId));
+    
+    try {
+      final jwt = ref.read(authControllerProvider).jwt!;
+      final dio = ApiClient(token: jwt.token).dio;
+      
+      final endpoint = currentStatus 
+          ? '/admin/domain/$domainId/deactivate'
+          : '/admin/domain/$domainId/activate';
+      
+      await dio.patch(endpoint);
+      
+      // Update the local state
+      setState(() {
+        final index = _domainsList.indexWhere((d) => d['id'] == domainId);
+        if (index != -1) {
+          _domainsList[index]['active'] = !currentStatus;
+        }
+      });
+      
+      // Show success message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(currentStatus 
+                ? 'Domain deactivated successfully' 
+                : 'Domain activated successfully'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      // Show error message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update domain: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } finally {
+      setState(() => _domainUpdating.remove(domainId));
+    }
+  }
+
   Widget _kpi(String title, int? value) {
     return Card(
       elevation: 0,
@@ -76,6 +128,84 @@ class _SuperAdminDashboardPageState extends ConsumerState<SuperAdminDashboardPag
             Text(value == null ? '—' : value.toString(),
                 style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
           ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDomainCard(Map<String, dynamic> domain) {
+    final domainId = domain['id'] as int;
+    final domainName = domain['name'] ?? 'Domain';
+    final isActive = domain['active'] ?? false;
+    final isUpdating = _domainUpdating.contains(domainId);
+    
+    return Card(
+      elevation: 1,
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            // Status indicator
+            Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isActive ? Colors.green : Colors.grey,
+              ),
+            ),
+            const SizedBox(width: 12),
+            
+            // Domain info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    domainName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    isActive ? 'Active' : 'Inactive',
+                    style: TextStyle(
+                      color: isActive ? Colors.green : Colors.grey,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            // Action button
+            if (isUpdating)
+              const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            else
+              TextButton.icon(
+                onPressed: () => _toggleDomainActivation(domainId, isActive),
+                icon: Icon(
+                  isActive ? Icons.toggle_on : Icons.toggle_off,
+                  color: isActive ? Colors.green : Colors.grey,
+                  size: 20,
+                ),
+                label: Text(
+                  isActive ? 'Deactivate' : 'Activate',
+                  style: TextStyle(
+                    color: isActive ? Colors.red : Colors.green,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -147,10 +277,8 @@ class _SuperAdminDashboardPageState extends ConsumerState<SuperAdminDashboardPag
                         padding: EdgeInsets.all(12),
                         child: Text('No organizations found'),
                       )
-                    : Wrap(
-                        spacing: 12,
-                        runSpacing: 12,
-                        children: _domainsList.map((d) => Chip(label: Text(d['name'] ?? 'Domain'))).toList(),
+                    : Column(
+                        children: _domainsList.map((d) => _buildDomainCard(d)).toList(),
                       ),
               ]),
             ),

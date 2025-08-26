@@ -18,6 +18,7 @@ class _AdminDocsPageState extends ConsumerState<AdminDocsPage> {
   bool _loading = false;
   bool _deleting = false;
   String? _error;
+  Set<int> _docsUpdating = {}; // Track which docs are being updated
 
   // UX helpers
   String _q = '';
@@ -77,6 +78,57 @@ class _AdminDocsPageState extends ConsumerState<AdminDocsPage> {
       setState(() => _error = e.toString());
     } finally {
       if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _toggleDocumentActivation(int docId, bool currentStatus) async {
+    if (_docsUpdating.contains(docId)) return;
+    
+    setState(() => _docsUpdating.add(docId));
+    
+    try {
+      final jwt = ref.read(authControllerProvider).jwt!;
+      final dio = ApiClient(token: jwt.token).dio;
+      
+      final endpoint = currentStatus 
+          ? '/admin/docs/$docId/deactivate'
+          : '/admin/docs/$docId/activate';
+      
+      await dio.patch(endpoint);
+      
+      // Update the local state
+      setState(() {
+        final index = _docs.indexWhere((d) => d['id'] == docId);
+        if (index != -1) {
+          _docs[index]['active'] = !currentStatus;
+        }
+      });
+      
+      // Show success message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(currentStatus 
+                ? 'Document deactivated successfully' 
+                : 'Document activated successfully'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      // Show error message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update document: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } finally {
+      setState(() => _docsUpdating.remove(docId));
     }
   }
 
@@ -177,6 +229,64 @@ class _AdminDocsPageState extends ConsumerState<AdminDocsPage> {
     return list;
   }
 
+  Widget _buildActivationButton(int docId, bool isActive, bool isUpdating) {
+    if (isUpdating) {
+      return const SizedBox(
+        width: 20,
+        height: 20,
+        child: CircularProgressIndicator(strokeWidth: 2),
+      );
+    }
+
+    return TextButton.icon(
+      onPressed: () => _toggleDocumentActivation(docId, isActive),
+      icon: Icon(
+        isActive ? Icons.toggle_on : Icons.toggle_off,
+        color: isActive ? Colors.green : Colors.grey,
+        size: 20,
+      ),
+      label: Text(
+        isActive ? 'Deactivate' : 'Activate',
+        style: TextStyle(
+          color: isActive ? Colors.red : Colors.green,
+          fontSize: 12,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusIndicator(bool isActive) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: isActive ? Colors.green.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isActive ? Colors.green : Colors.grey,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            isActive ? 'Active' : 'Inactive',
+            style: TextStyle(
+              color: isActive ? Colors.green : Colors.grey,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final toolbar = Wrap(
@@ -275,30 +385,47 @@ class _AdminDocsPageState extends ConsumerState<AdminDocsPage> {
                         final id = doc['id'] as int?;
                         final name = (doc['name'] ?? doc['filename'] ?? 'Untitled').toString();
                         final created = doc['created_at']?.toString();
-                        final chunkCount = doc['chunk_count']; // show if backend includes it
+                        final chunkCount = doc['chunk_count'];
+                        final isActive = doc['active'] ?? false;
+                        final isUpdating = id != null && _docsUpdating.contains(id);
 
                         return Card(
                           child: ListTile(
-                            title: Text(name),
-                            subtitle: Row(
+                            title: Row(
                               children: [
-                                if (created != null) Text('Created: $created'),
-                                if (created != null && chunkCount != null) const SizedBox(width: 12),
-                                if (chunkCount != null)
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: Colors.deepPurple.withValues(alpha: .08),
-                                      borderRadius: BorderRadius.circular(999),
-                                    ),
-                                    child: Text('Chunks: $chunkCount',
-                                        style: const TextStyle(fontSize: 12)),
-                                  ),
+                                Expanded(child: Text(name)),
+                                _buildStatusIndicator(isActive),
                               ],
+                            ),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Wrap(
+                                spacing: 12,
+                                runSpacing: 4,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: [
+                                  if (created != null) 
+                                    Text('Created: $created'),
+                                  if (chunkCount != null)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: Colors.deepPurple.withValues(alpha: .08),
+                                        borderRadius: BorderRadius.circular(999),
+                                      ),
+                                      child: Text('Chunks: $chunkCount',
+                                          style: const TextStyle(fontSize: 12)),
+                                    ),
+                                ],
+                              ),
                             ),
                             trailing: Wrap(
                               spacing: 8,
                               children: [
+                                // Activation toggle
+                                if (id != null)
+                                  _buildActivationButton(id, isActive, isUpdating),
+                                
                                 OutlinedButton.icon(
                                   onPressed: id == null ? null : () => context.go('/a/docs/$id'),
                                   icon: const Icon(Icons.list_alt),
