@@ -42,12 +42,12 @@ class _UsersPageState extends ConsumerState<UsersPage> {
   Future<void> _deleteUser(int id) async {
     final ok = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogCtx) => AlertDialog(
         title: const Text('Delete user?'),
         content: const Text('This will permanently delete the user.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+          TextButton(onPressed: () => Navigator.of(dialogCtx).pop(false), child: const Text('Cancel')),
+          FilledButton(onPressed: () => Navigator.of(dialogCtx).pop(true), child: const Text('Delete')),
         ],
       ),
     );
