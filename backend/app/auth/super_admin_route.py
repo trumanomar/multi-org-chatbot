@@ -9,6 +9,7 @@ from app.auth.dependencies import require_super_admin, get_current_principal, Pr
 from app.Models.tables import Domain, User, RoleEnum, Docs, Chunk
 from app.auth.utils import hash_password
 from app.auth.schemas import CreateAdminRequest as _CreateAdminReq, CreateDomainRequest as _CreateDomainReq  # optional if you already had them
+from app.auth.password_validation import validate_password, get_password_requirements
 
 router = APIRouter(prefix="/super-admin", tags=["Super Admin"])
 
@@ -26,7 +27,10 @@ class CreateAdminRequest(BaseModel):
 @router.get("/dashboard")
 def dashboard(_=Depends(require_super_admin)):
     return {"message": "Welcome Super Admin"}
-
+@router.get("/password-requirements")
+def get_password_requirements_endpoint():
+    """Get password requirements for frontend display"""
+    return get_password_requirements()
 # ---------- Domains ----------
 @router.post("/domain/create")
 def create_domain(
@@ -78,12 +82,26 @@ def create_admin(
     if principal.role != RoleEnum.super_admin.value:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only super admins can create admins")
 
+    # Validate password strength
+    try:
+        validate_password(request.password)
+    except HTTPException as e:
+        # Re-raise with more context
+        raise HTTPException(
+            status_code=e.status_code,
+            detail=f"Password validation failed: {e.detail}"
+        )
+
     domain = db.query(Domain).get(request.domain_id)
     if not domain:
         raise HTTPException(status_code=400, detail="Invalid domain_id")
 
     if db.query(User).filter(User.email == request.email).first():
         raise HTTPException(status_code=400, detail="Email already registered")
+
+    # Check if username already exists
+    if db.query(User).filter(User.username == request.username).first():
+        raise HTTPException(status_code=400, detail="Username already registered")
 
     admin = User(
         username=request.username,
@@ -96,7 +114,6 @@ def create_admin(
     db.commit()
     db.refresh(admin)
     return {"message": "Admin created successfully", "admin_id": admin.id}
-
 @router.get("/admins")
 def list_admins(
     db: Session = Depends(get_db),

@@ -639,7 +639,7 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Session: ${title.length > 20 ? title.substring(0, 20) + "..." : title}'),
+        title: Text('Session: ${title.length > 20 ? "${title.substring(0, 20)}..." : title}'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

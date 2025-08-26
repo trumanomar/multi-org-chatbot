@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../widgets/password_requirements_widget.dart'; // Add this import
 
 class CreateUserPage extends ConsumerStatefulWidget {
   const CreateUserPage({super.key});
@@ -27,11 +28,22 @@ class _CreateUserPageState extends ConsumerState<CreateUserPage> {
   List<Map<String, dynamic>> _domains = [];
   int? _selectedDomainId;
   String? _currentDomainName;
+  bool _passwordObscured = true;
+  bool _showPasswordRequirements = false;
+  String? _serverPasswordError;
 
   @override
   void initState() {
     super.initState();
     _loadDomains();
+    
+    // Listen to password changes to show/hide requirements
+    _passwordCtrl.addListener(() {
+      setState(() {
+        _showPasswordRequirements = _passwordCtrl.text.isNotEmpty;
+        _serverPasswordError = null; // Clear server error on password change
+      });
+    });
   }
 
   @override
@@ -109,6 +121,22 @@ class _CreateUserPageState extends ConsumerState<CreateUserPage> {
     }
   }
 
+  String _extractPasswordErrors(dynamic error) {
+    if (error is Map && error.containsKey('detail')) {
+      final detail = error['detail'];
+      if (detail is Map && detail.containsKey('errors')) {
+        final errors = detail['errors'];
+        if (errors is List) {
+          return errors.join('\n');
+        }
+      }
+      if (detail is String) {
+        return detail;
+      }
+    }
+    return error.toString();
+  }
+
   Future<void> _submit() async {
     if (_submitting) return;
     final form = _formKey.currentState;
@@ -122,8 +150,23 @@ class _CreateUserPageState extends ConsumerState<CreateUserPage> {
       return;
     }
 
+    // Client-side password validation
+    if (!PasswordRequirementsWidget.isPasswordValid(_passwordCtrl.text)) {
+      setState(() {
+        _showPasswordRequirements = true;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please ensure your password meets all requirements'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _submitting = true;
+      _serverPasswordError = null;
     });
 
     try {
@@ -143,14 +186,38 @@ class _CreateUserPageState extends ConsumerState<CreateUserPage> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('User created successfully')),
+          const SnackBar(
+            content: Text('User created successfully'),
+            backgroundColor: Colors.green,
+          ),
         );
         Navigator.of(context).maybePop();
       }
     } catch (e) {
+      String errorMessage = 'Failed to create user';
+      
+      if (e is DioException && e.response?.data != null) {
+        final responseData = e.response!.data;
+        
+        // Check if it's a password validation error
+        if (responseData is Map && 
+            responseData.toString().toLowerCase().contains('password validation failed')) {
+          setState(() {
+            _serverPasswordError = _extractPasswordErrors(responseData);
+            _showPasswordRequirements = true;
+          });
+          errorMessage = 'Password validation failed. Please check the requirements below.';
+        } else {
+          errorMessage = _extractPasswordErrors(responseData);
+        }
+      }
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create user: $e')),
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -186,151 +253,224 @@ class _CreateUserPageState extends ConsumerState<CreateUserPage> {
             constraints: const BoxConstraints(maxWidth: 560),
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text('Add a new user to your organization', style: theme.textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Admin role: Can only create users in your own domain\nSuper Admin role: Can create users in any domain',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text('Add a new user to your organization', style: theme.textTheme.titleMedium),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Admin role: Can only create users in your own domain\nSuper Admin role: Can create users in any domain',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-                    TextFormField(
-                      controller: _usernameCtrl,
-                      textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        labelText: 'Username',
-                        border: OutlineInputBorder(),
+                      TextFormField(
+                        controller: _usernameCtrl,
+                        textInputAction: TextInputAction.next,
+                        decoration: const InputDecoration(
+                          labelText: 'Username',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (v) {
+                          if (v == null || v.trim().isEmpty) return 'Username is required';
+                          if (v.trim().length < 3) return 'At least 3 characters';
+                          return null;
+                        },
                       ),
-                      validator: (v) {
-                        if (v == null || v.trim().isEmpty) return 'Username is required';
-                        if (v.trim().length < 3) return 'At least 3 characters';
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 12),
+                      const SizedBox(height: 12),
 
-                    TextFormField(
-                      controller: _emailCtrl,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(),
+                      TextFormField(
+                        controller: _emailCtrl,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (v) {
+                          final value = (v ?? '').trim();
+                          if (value.isEmpty) return 'Email is required';
+                          final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+                          if (!emailRegex.hasMatch(value)) return 'Enter a valid email';
+                          return null;
+                        },
                       ),
-                      validator: (v) {
-                        final value = (v ?? '').trim();
-                        if (value.isEmpty) return 'Email is required';
-                        final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
-                        if (!emailRegex.hasMatch(value)) return 'Enter a valid email';
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 12),
+                      const SizedBox(height: 12),
 
-                    TextFormField(
-                      controller: _passwordCtrl,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(),
+                      // Password field with visibility toggle
+                      TextFormField(
+                        controller: _passwordCtrl,
+                        obscureText: _passwordObscured,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          border: const OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _passwordObscured ? Icons.visibility : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _passwordObscured = !_passwordObscured;
+                              });
+                            },
+                          ),
+                        ),
+                        validator: (v) {
+                          final value = v ?? '';
+                          if (value.isEmpty) return 'Password is required';
+                          if (!PasswordRequirementsWidget.isPasswordValid(value)) {
+                            return 'Password does not meet requirements';
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (v) {
-                        final value = v ?? '';
-                        if (value.isEmpty) return 'Password is required';
-                        if (value.length < 6) return 'At least 6 characters';
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Domain Selection
-                    if (_loadingDomains)
-                      const Center(child: CircularProgressIndicator())
-                    else if (_domains.isNotEmpty)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+                      
+                      // Server password error
+                      if (_serverPasswordError != null) ...[
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.errorContainer.withOpacity(0.3),
+                            border: Border.all(color: theme.colorScheme.error),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
                             children: [
-                              Expanded(
-                                child: DropdownButtonFormField<int>(
-                                  value: _selectedDomainId,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Domain',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  items: _domains.map((domain) {
-                                    return DropdownMenuItem<int>(
-                                      value: domain['id'] as int,
-                                      child: Text(domain['name'] as String),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _selectedDomainId = value;
-                                      if (value != null) {
-                                        final domain = _domains.firstWhere((d) => d['id'] == value);
-                                        _currentDomainName = domain['name'] as String;
-                                      }
-                                    });
-                                  },
-                                  validator: (value) {
-                                    if (value == null) return 'Please select a domain';
-                                    return null;
-                                  },
-                                ),
-                              ),
+                              Icon(Icons.error_outline, 
+                                  color: theme.colorScheme.error, size: 20),
                               const SizedBox(width: 8),
-                              IconButton(
-                                onPressed: _loadDomains,
-                                icon: const Icon(Icons.refresh),
-                                tooltip: 'Refresh domains',
+                              Expanded(
+                                child: Text(
+                                  _serverPasswordError!,
+                                  style: TextStyle(color: theme.colorScheme.error),
+                                ),
                               ),
                             ],
                           ),
-                          if (_currentDomainName != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4),
-                              child: Text(
-                                'Selected: $_currentDomainName',
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.w500,
+                        ),
+                      ],
+
+                      // Password requirements widget
+                      if (_showPasswordRequirements) ...[
+                        const SizedBox(height: 12),
+                        PasswordRequirementsWidget(
+                          password: _passwordCtrl.text,
+                          showAll: false,
+                        ),
+                      ],
+
+                      const SizedBox(height: 12),
+
+                      // Domain Selection
+                      if (_loadingDomains)
+                        const Center(child: CircularProgressIndicator())
+                      else if (_domains.isNotEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: DropdownButtonFormField<int>(
+                                    value: _selectedDomainId,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Domain',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    items: _domains.map((domain) {
+                                      return DropdownMenuItem<int>(
+                                        value: domain['id'] as int,
+                                        child: Text(domain['name'] as String),
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _selectedDomainId = value;
+                                        if (value != null) {
+                                          final domain = _domains.firstWhere((d) => d['id'] == value);
+                                          _currentDomainName = domain['name'] as String;
+                                        }
+                                      });
+                                    },
+                                    validator: (value) {
+                                      if (value == null) return 'Please select a domain';
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                IconButton(
+                                  onPressed: _loadDomains,
+                                  icon: const Icon(Icons.refresh),
+                                  tooltip: 'Refresh domains',
+                                ),
+                              ],
+                            ),
+                            if (_currentDomainName != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4),
+                                child: Text(
+                                  'Selected: $_currentDomainName',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.primary,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
+                          ],
+                        )
+                      else
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('No domains available', style: TextStyle(color: Colors.red)),
+                            const SizedBox(height: 8),
+                            TextButton.icon(
+                              onPressed: _loadDomains,
+                              icon: const Icon(Icons.refresh),
+                              label: const Text('Retry'),
                             ),
-                        ],
-                      )
-                    else
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('No domains available', style: TextStyle(color: Colors.red)),
-                          const SizedBox(height: 8),
-                          TextButton.icon(
-                            onPressed: _loadDomains,
-                            icon: const Icon(Icons.refresh),
-                            label: const Text('Retry'),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
 
-                    const SizedBox(height: 20),
-                    FilledButton.icon(
-                      onPressed: _submitting ? null : _submit,
-                      icon: _submitting
-                          ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
-                          : const Icon(Icons.person_add),
-                      label: const Text('Create User'),
-                    ),
-                  ],
+                      const SizedBox(height: 20),
+                      
+                      // Show password requirements button
+                      if (!_showPasswordRequirements && _passwordCtrl.text.isEmpty)
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              _showPasswordRequirements = true;
+                            });
+                          },
+                          icon: const Icon(Icons.info_outline),
+                          label: const Text('Show Password Requirements'),
+                        ),
+                      
+                      if (_showPasswordRequirements && _passwordCtrl.text.isEmpty) ...[
+                        const SizedBox(height: 12),
+                        PasswordRequirementsWidget(
+                          password: _passwordCtrl.text,
+                          showAll: true,
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+
+                      FilledButton.icon(
+                        onPressed: _submitting ? null : _submit,
+                        icon: _submitting
+                            ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                            : const Icon(Icons.person_add),
+                        label: const Text('Create User'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -340,5 +480,3 @@ class _CreateUserPageState extends ConsumerState<CreateUserPage> {
     );
   }
 }
-
-

@@ -16,13 +16,18 @@ from app.auth.dependencies import (
     Principal,
 )
 from app.VectorDB.DB import delete_vectors_for_doc
+from app.auth.password_validation import validate_password, get_password_requirements
+
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
 # -------------------------------------------------------------------------
 # USERS
 # -------------------------------------------------------------------------
-
+@router.get("/password-requirements")
+def get_password_requirements_endpoint():
+    """Get password requirements for frontend display"""
+    return get_password_requirements()
 @router.get("/domains", dependencies=[Depends(require_admin_or_super)])
 def get_admin_domains(
     db: Session = Depends(get_db),
@@ -72,6 +77,16 @@ def create_user(
     if principal.role not in [RoleEnum.admin.value, RoleEnum.super_admin.value]:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only admins and super admins can create users")
 
+    # Validate password strength
+    try:
+        validate_password(request.password)
+    except HTTPException as e:
+        # Re-raise with more context
+        raise HTTPException(
+            status_code=e.status_code,
+            detail=f"Password validation failed: {e.detail}"
+        )
+
     if db.query(User).filter(User.username == request.username).first():
         raise HTTPException(status_code=400, detail="Username already registered")
 
@@ -102,6 +117,7 @@ def create_user(
     db.commit()
     db.refresh(user)
     return {"message": "User created successfully", "user_id": user.id}
+
 
 @router.get("/users", dependencies=[Depends(require_admin)])
 def list_users(
