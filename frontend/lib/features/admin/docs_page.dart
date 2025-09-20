@@ -18,7 +18,7 @@ class _AdminDocsPageState extends ConsumerState<AdminDocsPage> {
   bool _loading = false;
   bool _deleting = false;
   String? _error;
-  Set<int> _docsUpdating = {}; // Track which docs are being updated
+  final Set<int> _docsUpdating = {}; // Track which docs are being updated
 
   // UX helpers
   String _q = '';

@@ -19,7 +19,7 @@ class _SuperAdminDashboardPageState extends ConsumerState<SuperAdminDashboardPag
   List<Map<String, dynamic>> _adminsList = [];
   List<Map<String, dynamic>> _domainsList = [];
   bool _detailsLoading = false;
-  Set<int> _domainUpdating = {}; // Track which domains are being updated
+  final Set<int> _domainUpdating = {}; // Track which domains are being updated
 
   @override
   void initState() {

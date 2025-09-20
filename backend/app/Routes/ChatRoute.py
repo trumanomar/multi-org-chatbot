@@ -444,15 +444,13 @@ def get_current_session_info(
     }
 
 
-# ---------- Chat History Endpoints ----------
+"""# ---------- Chat History Endpoints ----------
 @router.get("/chat/sessions/{user_id}")
 def get_user_chat_sessions(
     user_id: int, 
     db: Session = Depends(get_db),
     principal = Depends(get_current_principal)
 ):
-    """Get all chat sessions for a user (with domain filtering for non-super_admin)"""
-    
     # Security check: users can only access their own sessions unless they're super_admin
     if principal.role != "super_admin" and principal.user_id != user_id:
         raise HTTPException(status_code=403, detail="Access denied")
@@ -472,7 +470,6 @@ def get_chat_messages(
     db: Session = Depends(get_db),
     principal = Depends(get_current_principal)
 ):
-    """Get all messages for a specific chat session (with security checks)"""
     
     # Get the session first to check ownership and domain
     session = db.query(ChatSession).filter(ChatSession.id == session_id).first()
@@ -499,7 +496,6 @@ def get_user_chat_history(
     db: Session = Depends(get_db),
     principal = Depends(get_current_principal)
 ):
-    """Get recent chat history for a user with pagination and domain filtering"""
     
     # Security check
     if principal.role != "super_admin" and principal.user_id != user_id:
@@ -534,7 +530,7 @@ def get_user_chat_history(
             ]
         })
     
-    return history
+    return history"""
 
 # ---------- Domain-specific utilities ----------
 @router.get("/chat/domain_stats")
