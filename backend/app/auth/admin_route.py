@@ -213,33 +213,110 @@ def update_email(
     user.email = new_email
     db.commit()
     return {"message": "User email updated successfully"}
-@router.get("/chunks", dependencies=[Depends(require_admin)])
-def list_chunks(
-    doc_id: int = Query(..., ge=1),
+
+# Add this route to your admin_route.py
+
+# Option 1: Fix the existing route and add the query parameter version
+@router.get("/docs/{doc_id}/chunks", dependencies=[Depends(require_admin)])
+async def get_document_chunks_by_path(
+    doc_id: int,
     db: Session = Depends(get_db),
     principal: Principal = Depends(get_current_principal),
 ):
-    # Ensure the doc belongs to this admin’s domain
-    doc = enforce_same_domain_query(
+    """Get all chunks for a specific document using path parameter"""
+    
+    # First verify the document exists and belongs to the user's domain
+    document = enforce_same_domain_query(
         db.query(Docs).filter(Docs.id == doc_id), Docs, principal
     ).first()
-    if not doc:
+    
+    if not document:
         raise HTTPException(status_code=404, detail="Document not found")
-
-    chunks = db.query(Chunk).filter(Chunk.doc_id == doc_id).order_by(Chunk.id).all()
+    
+    # Get all chunks for this document
+    chunks = enforce_same_domain_query(
+        db.query(Chunk).filter(Chunk.doc_id == doc_id), Chunk, principal
+    ).order_by(Chunk.id).all()
+    
+    # Format the response
+    chunks_data = []
+    for chunk in chunks:
+        # Parse metadata if it's stored as JSON string
+        metadata = chunk.meta_data
+        if isinstance(metadata, str):
+            try:
+                import json
+                metadata = json.loads(metadata)
+            except:
+                metadata = {}
+        
+        chunks_data.append({
+            "id": chunk.id,
+            "content": chunk.content,
+            "metadata": metadata,
+            "created_at": chunk.created_at.isoformat() if chunk.created_at else None,
+        })
+    
     return {
-        "doc_id": doc_id,
-        "chunks": [
-            {
-                "id": c.id,
-                "content": c.content,
-                "meta_data": c.meta_data,
-                "created_at": c.created_at,
-            }
-            for c in chunks
-        ],
+        "document": {
+            "id": document.id,
+            "name": document.name,  # Changed from filename to name based on your Docs model
+            "created_at": document.created_at.isoformat() if document.created_at else None,
+        },
+        "chunks": chunks_data,
+        "total_chunks": len(chunks_data)
     }
 
+# Option 2: Add the query parameter version that matches your frontend request
+@router.get("/chunks", dependencies=[Depends(require_admin)])
+async def get_document_chunks_by_query(
+    doc_id: int = Query(..., description="Document ID to get chunks for"),
+    db: Session = Depends(get_db),
+    principal: Principal = Depends(get_current_principal),
+):
+    """Get all chunks for a specific document using query parameter"""
+    
+    # First verify the document exists and belongs to the user's domain
+    document = enforce_same_domain_query(
+        db.query(Docs).filter(Docs.id == doc_id), Docs, principal
+    ).first()
+    
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+    
+    # Get all chunks for this document
+    chunks = enforce_same_domain_query(
+        db.query(Chunk).filter(Chunk.doc_id == doc_id), Chunk, principal
+    ).order_by(Chunk.id).all()
+    
+    # Format the response
+    chunks_data = []
+    for chunk in chunks:
+        # Parse metadata if it's stored as JSON string
+        metadata = chunk.meta_data
+        if isinstance(metadata, str):
+            try:
+                import json
+                metadata = json.loads(metadata)
+            except:
+                metadata = {}
+        
+        chunks_data.append({
+            "id": chunk.id,
+            "content": chunk.content,
+            "metadata": metadata,
+            "created_at": chunk.created_at.isoformat() if chunk.created_at else None,
+        })
+    
+    return {
+        "document": {
+            "id": document.id,
+            "name": document.name,
+            "created_at": document.created_at.isoformat() if document.created_at else None,
+        },
+        "chunks": chunks_data,
+        "total_chunks": len(chunks_data)
+    }
 @router.delete("/docs/{doc_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)])
 def delete_doc(
     doc_id: int,

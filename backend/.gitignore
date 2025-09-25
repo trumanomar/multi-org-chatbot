@@ -21,3 +21,7 @@ storage/
 chroma/
 data/index/
 newchroma_db/
+llm/
+MCP/
+llm_arabic_instruct_gen/
+

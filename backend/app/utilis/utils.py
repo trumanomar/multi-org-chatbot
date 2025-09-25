@@ -1,134 +1,125 @@
 import os
-import pandas as pd
 import json
+import pandas as pd
 from langchain.docstore.document import Document
 from docling.document_converter import DocumentConverter
-from llm_arabic_instruct_gen.processors.chunker import TextChunker
+from fastmcp import FastMCP
+
+# --- Simple Chunker ---
+def simple_chunk_text(text, chunk_size=500, chunk_overlap=50):
+    print(f"[utils] simple_chunk_text called with text length: {len(text)}")
+    print(f"[utils] chunk_size: {chunk_size}, chunk_overlap: {chunk_overlap}")
+    
+    if not text or not text.strip():
+        print(f"[utils] WARNING: Empty or whitespace-only text provided")
+        return []
+    
+    chunks = []
+    start = 0
+    while start < len(text):
+        end = start + chunk_size
+        chunk = text[start:end]
+        stripped_chunk = chunk.strip()
+        if stripped_chunk:  # Only add non-empty chunks
+            chunks.append(stripped_chunk)
+            print(f"[utils] Created chunk {len(chunks)}: length={len(stripped_chunk)}")
+        start += chunk_size - chunk_overlap
+    
+    print(f"[utils] simple_chunk_text returning {len(chunks)} chunks")
+    return chunks
 
 
-# --- Docling loader (for PDF, DOCX, PPTX, MD) ---
+# --- Docling Loader ---
 def docling_to_docs(file_path):
+    print(f"[utils] docling_to_docs processing: {file_path}")
     converter = DocumentConverter()
     result = converter.convert(file_path)
+    
+    print(f"[utils] Docling conversion result: {type(result)}")
+    print(f"[utils] Has document: {hasattr(result, 'document') and result.document is not None}")
 
-    # ✅ اطبع الـ DOM كله (صفحات, بلوكات, إلخ)
-    if result.document:
-        dom_dict = result.document.model_dump()
-        dom_json = json.dumps(dom_dict, ensure_ascii=False, indent=2)
-        print("========= DOC DOM =========")
-        print(dom_json)
-        print("===========================")
-    else:
-        print("⚠️ No document object found")
-        return []
-
-    # ✅ Extract text from the texts array in the document
     all_text = []
     page_info = []
-    
-    if hasattr(result, "document") and result.document:
-        # Method 1: Try to get text from the 'texts' array (more reliable for Arabic)
+
+    if result.document:
+        print(f"[utils] Document object exists")
+        print(f"[utils] Has texts: {hasattr(result.document, 'texts')}")
+        print(f"[utils] Has pages: {hasattr(result.document, 'pages')}")
+        
         if hasattr(result.document, 'texts') and result.document.texts:
-            print(f"[DEBUG] Found {len(result.document.texts)} text elements")
-            for text_element in result.document.texts:
-                if hasattr(text_element, 'text') and text_element.text:
-                    text_content = text_element.text.strip()
-                    if text_content:
-                        all_text.append(text_content)
-                        # Try to get page info from prov
+            print(f"[utils] Processing {len(result.document.texts)} text elements")
+            for i, text_element in enumerate(result.document.texts):
+                txt_content = getattr(text_element, 'text', None)
+                print(f"[utils] Text element {i}: has text = {txt_content is not None}")
+                if txt_content:
+                    txt = txt_content.strip()
+                    print(f"[utils] Text element {i}: length after strip = {len(txt)}")
+                    if txt:
+                        all_text.append(txt)
+                        print(f"[utils] Added text: {txt[:100]}...")
                         if hasattr(text_element, 'prov') and text_element.prov:
                             try:
                                 page_no = getattr(text_element.prov[0], 'page_no', 1)
-                                if page_no not in page_info:
-                                    page_info.append(page_no)
-                            except (IndexError, AttributeError):
-                                # If we can't get page info, default to page 1
-                                if 1 not in page_info:
-                                    page_info.append(1)
-        
-        # Method 2: Fallback to pages/blocks method if no texts found
-        elif hasattr(result.document, 'pages') and result.document.pages:
-            print("[DEBUG] Using pages/blocks method as fallback")
-            for page in result.document.pages:
+                                page_info.append(page_no)
+                            except Exception:
+                                page_info.append(1)
+                        
+        elif hasattr(result.document, 'pages'):
+            print(f"[utils] Processing {len(result.document.pages)} pages")
+            for i, page in enumerate(result.document.pages):
+                print(f"[utils] Page {i}: has blocks = {hasattr(page, 'blocks')}")
                 page_texts = []
-                if hasattr(page, "blocks") and page.blocks:
-                    for block in page.blocks:
-                        text = getattr(block, "text", "").strip()
-                        if text:
-                            page_texts.append(text)
-                
+                if hasattr(page, 'blocks'):
+                    print(f"[utils] Page {i}: {len(page.blocks)} blocks")
+                    for j, block in enumerate(getattr(page, "blocks", [])):
+                        txt = getattr(block, "text", "").strip()
+                        print(f"[utils] Page {i}, Block {j}: text length = {len(txt)}")
+                        if txt:
+                            page_texts.append(txt)
+                            print(f"[utils] Block text preview: {txt[:100]}...")
                 if page_texts:
-                    page_text = "\n".join(page_texts)
-                    all_text.append(page_text)
+                    page_content = "\n".join(page_texts)
+                    all_text.append(page_content)
+                    print(f"[utils] Page {i}: combined text length = {len(page_content)}")
                     page_info.append(getattr(page, "number", len(page_info) + 1))
+        else:
+            print(f"[utils] WARNING: Document has neither texts nor pages attributes")
+            # Try to access document content directly
+            if hasattr(result.document, 'content'):
+                print(f"[utils] Document has content attribute: {type(result.document.content)}")
+            if hasattr(result.document, 'text'):
+                print(f"[utils] Document has text attribute: {type(result.document.text)}")
+    else:
+        print(f"[utils] ERROR: No document in result")
+
+    print(f"[utils] Total text segments collected: {len(all_text)}")
+    combined = "\n\n".join(all_text)
+    print(f"[utils] Combined text length: {len(combined)}")
+    print(f"[utils] Combined text preview: {combined[:200]}...")
     
-    print(f"[DEBUG] Extracted {len(all_text)} text segments")
-    if all_text:
-        # Preview first few characters of extracted text
-        combined_text = "\n\n".join(all_text)
-        print(f"[DEBUG] Combined text length: {len(combined_text)} characters")
-        print(f"[DEBUG] Text preview: {combined_text[:200]}...")
-        
-        return [Document(
-            page_content=combined_text,
-            metadata={
-                "file": file_path,
-                "total_pages": len(set(page_info)) if page_info else 1,
-                "pages": ",".join(map(str, sorted(list(set(page_info))))) if page_info else "1"  # Convert list to string
-            }
-        )]
+    doc = Document(
+        page_content=combined,
+        metadata={
+            "file": file_path,
+            "total_pages": len(set(page_info)) if page_info else 1,
+            "pages": ",".join(map(str, sorted(set(page_info)))) if page_info else "1"
+        }
+    )
     
-    print("⚠️ No text content extracted")
-    return []
+    print(f"[utils] Created Document with page_content length: {len(doc.page_content)}")
+    return [doc]
 
 
-# --- Alternative: Keep page-level documents ---
-def docling_to_docs_by_page(file_path):
-    """Alternative approach: Create one document per page"""
-    converter = DocumentConverter()
-    result = converter.convert(file_path)
-
-    docs = []
-    if hasattr(result, "document") and result.document:
-        for page in result.document.pages:
-            if hasattr(page, "blocks"):
-                page_texts = []
-                for block in page.blocks:
-                    text = getattr(block, "text", "").strip()
-                    if text:
-                        page_texts.append(text)
-                
-                if page_texts:
-                    page_text = "\n".join(page_texts)
-                    docs.append(
-                        Document(
-                            page_content=page_text,
-                            metadata={
-                                "file": file_path,
-                                "page": getattr(page, "number", None),
-                                "total_pages": len(result.document.pages) if hasattr(result.document, 'pages') else 1
-                            }
-                        )
-                    )
-    return docs
-
-
-# --- Custom loaders for tabular & plain text ---
+# --- Other Loaders ---
 def csv_to_docs(file_path):
     df = pd.read_csv(file_path, encoding="utf-8")
-    docs = []
-    for _, row in df.iterrows():
-        text = " | ".join(str(v) for v in row.values)
-        docs.append(Document(page_content=text, metadata={"file": file_path}))
-    return docs
+    return [Document(page_content=" | ".join(str(v) for v in row.values), metadata={"file": file_path})
+            for _, row in df.iterrows()]
 
 def xlsx_to_docs(file_path):
     df = pd.read_excel(file_path)
-    docs = []
-    for _, row in df.iterrows():
-        text = " | ".join(str(v) for v in row.values)
-        docs.append(Document(page_content=text, metadata={"file": file_path}))
-    return docs
+    return [Document(page_content=" | ".join(str(v) for v in row.values), metadata={"file": file_path})
+            for _, row in df.iterrows()]
 
 def txt_to_docs(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
@@ -137,18 +128,10 @@ def txt_to_docs(file_path):
 
 
 # --- Dispatcher ---
-def get_loader(file_path, use_page_level=False):
-    """
-    Args:
-        file_path: Path to the file
-        use_page_level: If True, create separate documents per page for PDFs/DOCX
-    """
+def get_loader(file_path):
     ext = os.path.splitext(file_path)[1].lower()
     if ext in [".pdf", ".docx", ".pptx", ".md"]:
-        if use_page_level:
-            return docling_to_docs_by_page(file_path)
-        else:
-            return docling_to_docs(file_path)
+        return docling_to_docs(file_path)
     elif ext == ".csv":
         return csv_to_docs(file_path)
     elif ext == ".xlsx":
@@ -159,65 +142,74 @@ def get_loader(file_path, use_page_level=False):
         raise ValueError(f"Unsupported file type: {ext}")
 
 
-# --- Loader + Chunker ---
-def load_and_split(file_path, chunk_size=500, chunk_overlap=50, use_page_level=False):
-    """
-    Args:
-        file_path: Path to the file
-        chunk_size: Size of each chunk
-        chunk_overlap: Overlap between chunks
-        use_page_level: For PDFs/DOCX, whether to chunk per page or entire document
-    """
-    docs = get_loader(file_path, use_page_level=use_page_level)
+# --- Core logic function (callable in Uploadroute.py) ---
+def load_and_split_func(file_path: str, chunk_size: int = 500, chunk_overlap: int = 50):
+    print(f"[utils] Starting load_and_split_func for: {file_path}")
     
-    if not docs:
-        print("[ERROR] No documents loaded!")
-        return []
-    
-    chunker = TextChunker(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-
-    chunks = []
-    for i, doc in enumerate(docs):
-        if not doc.page_content or not doc.page_content.strip():
-            print(f"[DEBUG] Document {i+1} is empty, skipping")
-            continue
-
-        print(f"[DEBUG] Document {i+1} length: {len(doc.page_content)} characters")
-        print(f"[DEBUG] Document {i+1} preview: {doc.page_content[:100]}...")
+    try:
+        docs = get_loader(file_path)
+        print(f"[utils] get_loader returned {len(docs)} documents")
         
-        try:
-            # ✅ Always try to chunk, regardless of size
-            text_chunks = chunker.chunk_text(doc.page_content)
-            print(f"[DEBUG] Chunker returned {len(text_chunks) if text_chunks else 0} chunks")
+        if docs:
+            for i, doc in enumerate(docs):
+                print(f"[utils] Doc {i}: content length = {len(doc.page_content)}")
+                print(f"[utils] Doc {i}: content preview = {doc.page_content[:200]}...")
+                print(f"[utils] Doc {i}: metadata = {doc.metadata}")
+        
+        chunks = []
+        for doc in docs:
+            print(f"[utils] Processing doc with content length: {len(doc.page_content)}")
+            text_chunks = simple_chunk_text(doc.page_content, chunk_size, chunk_overlap)
+            print(f"[utils] simple_chunk_text returned {len(text_chunks)} chunks")
             
-            # ✅ If no chunks created but document has content, keep as single chunk
-            if not text_chunks and doc.page_content.strip():
-                text_chunks = [doc.page_content.strip()]
-                print(f"[DEBUG] Document {i+1} kept as single chunk (smaller than chunk_size or chunker failed)")
-
-            print(f"[DEBUG] Document {i+1} → {len(text_chunks)} final chunks")
-
             for j, chunk in enumerate(text_chunks):
-                if chunk and chunk.strip():  # Only add non-empty chunks
-                    chunk_metadata = doc.metadata.copy()
-                    chunk_metadata['chunk_id'] = j + 1
-                    chunk_metadata['total_chunks'] = len(text_chunks)
-                    chunk_metadata['original_doc_length'] = len(doc.page_content)
-                    chunks.append(Document(page_content=chunk.strip(), metadata=chunk_metadata))
-                else:
-                    print(f"[DEBUG] Skipping empty chunk {j+1} from document {i+1}")
-                    
-        except Exception as e:
-            print(f"[ERROR] Failed to chunk document {i+1}: {str(e)}")
-            # Fallback: treat entire document as one chunk
-            chunk_metadata = doc.metadata.copy()
-            chunk_metadata['chunk_id'] = 1
-            chunk_metadata['total_chunks'] = 1
-            chunk_metadata['original_doc_length'] = len(doc.page_content)
-            chunk_metadata['chunking_error'] = str(e)
-            chunks.append(Document(page_content=doc.page_content.strip(), metadata=chunk_metadata))
+                print(f"[utils] Processing chunk {j+1}: length = {len(chunk)}")
+                # Return Document objects instead of dictionaries
+                chunk_doc = Document(
+                    page_content=chunk,
+                    metadata={
+                        **doc.metadata,
+                        "chunk_id": j + 1,
+                        "total_chunks": len(text_chunks),
+                        "original_doc_length": len(doc.page_content),
+                    }
+                )
+                chunks.append(chunk_doc)
+        
+        print(f"[utils] Final result: {len(chunks)} total chunks")
+        return chunks
+        
+    except Exception as e:
+        print(f"[utils] ERROR in load_and_split_func: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
 
-    print(f"[DEBUG] Total chunks created: {len(chunks)}")
-    if chunks:
-        print(f"[DEBUG] First chunk preview: {chunks[0].page_content[:100]}...")
+
+# --- MCP Server ---
+mcp = FastMCP("docling-mcp")
+
+@mcp.tool()
+def load_and_split(file_path: str, chunk_size: int = 500, chunk_overlap: int = 50):
+    """
+    Load a document with Docling/CSV/XLSX/TXT and return JSON-serializable chunks.
+    """
+    docs = get_loader(file_path)
+    chunks = []
+    for doc in docs:
+        text_chunks = simple_chunk_text(doc.page_content, chunk_size, chunk_overlap)
+        for j, chunk in enumerate(text_chunks):
+            metadata = {
+                **doc.metadata,
+                "chunk_id": j + 1,
+                "total_chunks": len(text_chunks),
+                "original_doc_length": len(doc.page_content),
+            }
+            chunks.append({
+                "content": chunk,
+                "metadata": metadata
+            })
     return chunks
+
+if __name__ == "__main__":
+    mcp.run()

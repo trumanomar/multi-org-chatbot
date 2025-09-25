@@ -7,14 +7,12 @@
 .env
 *.env
 **/.env
-
+venv/
 # Vector DB / data dumps
 chroma_data/
 **/chroma_data/
-
 # Python / backend
-backend/.venv/
-backend/venv/
+
 backend/__pycache__/
 backend/.pytest_cache/
 backend/.mypy_cache/

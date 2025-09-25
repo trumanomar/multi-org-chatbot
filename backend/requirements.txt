@@ -26,3 +26,7 @@ deep-translator
 langdetect
 SpeechRecognition
 pyaudio
+fastmcp
+docling
+PyPDF2
+datasets
