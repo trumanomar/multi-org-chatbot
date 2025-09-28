@@ -1,0 +1,2045 @@
+{
+  "nodes": [
+    {
+      "id": "chunk_50874",
+      "data": {
+        "chunk_id": 50874,
+        "content": "Machine Learning Guide\nIntroduction to Machine Learning Machine Learning (ML) is a subset of Artificial Intelligence\n(AI) that enables computers to learn from data and improve performance over time without being\nexplicitly programmed. It involves algorithms that identify patterns in data and make\npredictions or decisions.\nLearning Paradigms Supervised Learning - Uses labeled data to learn a mapping from inputs to",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=1",
+          "total_pages": 10,
+          "page": 0,
+          "page_label": "1",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50875",
+      "data": {
+        "chunk_id": 50875,
+        "content": "outputs (e.g., predicting house prices). Unsupervised Learning - Discovers hidden structures in\nunlabeled data (e.g., clustering customers). Reinforcement Learning - Trains an agent to take\nactions in an environment to maximize cumulative reward.\nCommon Machine Learning Algorithms Linear Regression - Predicts continuous values. Logistic\nRegression - Binary classification. Decision Trees - Rule-based splits on features. Random",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=1",
+          "total_pages": 10,
+          "page": 0,
+          "page_label": "1",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50876",
+      "data": {
+        "chunk_id": 50876,
+        "content": "Forest - Ensemble of trees for robust predictions. Support Vector Machines (SVM) - Finds\noptimal separating hyperplane. k-Nearest Neighbors (kNN) - Classifies based on nearby points.\nNaive Bayes - Probabilistic classifier with independence assumption. Gradient Boosting\n(XGBoost, LightGBM, CatBoost) - Powerful ensembles. K-Means Clustering - Partitions data into K\nclusters. DBSCAN - Density-based clustering. PCA - Dimensionality reduction.",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=1",
+          "total_pages": 10,
+          "page": 0,
+          "page_label": "1",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50877",
+      "data": {
+        "chunk_id": 50877,
+        "content": "Evaluation Metrics Regression: MAE, RMSE, R^2. Classification: Accuracy, Precision, Recall, F1,\nROC-AUC. Clustering: Silhouette Score, Davies Bouldin Index.\nFeature Engineering Handling missing values, encoding categoricals, scaling, feature selection,\nand domain-specific transformations.\nModel Serving Batch predictions, real-time inference APIs, monitoring drift, and retraining\nschedules.",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=1",
+          "total_pages": 10,
+          "page": 0,
+          "page_label": "1",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50878",
+      "data": {
+        "chunk_id": 50878,
+        "content": "Vector Databases & RAG\nOverview Retrieval-Augmented Generation (RAG) combines a vector search system with a generative\nmodel so answers are grounded in a knowledge base.\nEmbeddings Sentence transformers (e.g., all-MiniLM-L6-v2) convert text to dense vectors.\nSimilarity search finds relevant chunks.\nVector Stores Chroma - Local, simple persist directory. FAISS - Facebook AI Similarity Search\nin-memory or on-disk indexes. Milvus/Weaviate - Scalable, server-based vector DBs.",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=2",
+          "total_pages": 10,
+          "page": 1,
+          "page_label": "2",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50879",
+      "data": {
+        "chunk_id": 50879,
+        "content": "Chunking & Metadata Split long docs into overlapping chunks (e.g., 800 1200 chars, 10 15%\noverlap). Store filename, page, and section headers as metadata to improve traceability.\nPrompt T emplate (RAG) System: You must ONLY answer using the provided context. If missing, say\nyou cannot find it. User: Context: [chunks] Question: [user question]\nFailure Modes Hallucination if the model ignores context, poor chunking, or weak retrieval.",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=2",
+          "total_pages": 10,
+          "page": 1,
+          "page_label": "2",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50880",
+      "data": {
+        "chunk_id": 50880,
+        "content": "Mitigations: temperature 0.2, strict system prompt, show sources, and fallback when retrieval\nis empty.",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=2",
+          "total_pages": 10,
+          "page": 1,
+          "page_label": "2",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50881",
+      "data": {
+        "chunk_id": 50881,
+        "content": "Company Handbook (Excerpt)\nWork Hours & Attendance Core hours are 10:00 16:00 with flexible start between 8:00 10:00.\nRemote work allowed up to 3 days/week.\nLeave Policy Annual leave: 20 working days. Sick leave requires a medical note for absences of\n2+ consecutive days.\nSecurity & Data Handling All customer data is confidential. Never share API keys or\ncredentials. Use least-privilege access.\nExpense Policy Travel requires prior approval. Submit receipts within 10 days. Per-diem rates",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=3",
+          "total_pages": 10,
+          "page": 2,
+          "page_label": "3",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50882",
+      "data": {
+        "chunk_id": 50882,
+        "content": "vary by region.\nCode of Conduct Be respectful, inclusive, and professional. No harassment or discrimination.\nAdhere to local laws.",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=3",
+          "total_pages": 10,
+          "page": 2,
+          "page_label": "3",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50883",
+      "data": {
+        "chunk_id": 50883,
+        "content": "Product FAQ (WidgetPro)\nWhat is WidgetPro? WidgetPro is a modular analytics dashboard for SMBs.\nKey Features  Real-time KPI tiles  Custom reports  T eam-based permissions  CSV/Excel export\nPricing Starter: 19/monthGrowth : 49/month Scale: Contact sales\nLimits Starter: 3 dashboards, Growth: 10 dashboards, Scale: unlimited. API rate limit: 600\nrequests/min per org.\nSupport Email: support@widgetpro.example SLA: Starter (best effort), Growth (8x5), Scale\n(24x7).",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=4",
+          "total_pages": 10,
+          "page": 3,
+          "page_label": "4",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50884",
+      "data": {
+        "chunk_id": 50884,
+        "content": "API Reference (Subset)\nAuthentication Use a bearer token via the Authorization header. T okens expire in 24 hours.\nEndpoints GET /v1/health - returns service status. POST /v1/reports - creates a report job\n(asynchronous). GET /v1/reports/{id} - returns job status and result URL when complete.\nError Codes 400 Bad Request - invalid input. 401 Unauthorized - missing/expired token. 404 Not\nFound - resource doesn't exist. 429 T oo Many Requests - backoff and retry with exponential",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=5",
+          "total_pages": 10,
+          "page": 4,
+          "page_label": "5",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50885",
+      "data": {
+        "chunk_id": 50885,
+        "content": "strategy. 5xx - transient errors; retry with jitter.",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=5",
+          "total_pages": 10,
+          "page": 4,
+          "page_label": "5",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50886",
+      "data": {
+        "chunk_id": 50886,
+        "content": "Data Governance\nPII Handling Encrypt at rest and in transit. Redact PII in logs. Access only on a need-to-know\nbasis.\nRetention Application logs: 30 days rolling. Backups: 35 days. Customer deletes honored within\n14 days.\nAuditing All admin actions are logged with timestamps, user IDs, and IP addresses. Quarterly\naudit reviews are mandated.",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=6",
+          "total_pages": 10,
+          "page": 5,
+          "page_label": "6",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50887",
+      "data": {
+        "chunk_id": 50887,
+        "content": "Onboarding Checklist\nWeek 1  Laptop provisioning and SSO setup  Meet your mentor and team  Read the Company\nHandbook excerpt  Access dev environments\nWeek 2  Pair-programming sessions  First small task shipped  Intro to monitoring and on-call\nWeek 3  Ownership of a small feature  Write a post-merge summary  Schedule feedback session",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=7",
+          "total_pages": 10,
+          "page": 6,
+          "page_label": "7",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50888",
+      "data": {
+        "chunk_id": 50888,
+        "content": "Incident Response Playbook\nSeverities SEV1 - Critical outage, customer impact. SEV2 - Major degradation or partial outage.\nSEV3 - Minor incident or bug impacting a subset of users.\nProcess 1. Triage and assign incident commander. 2. Communicate status every 15 30 minutes. 3.\nMitigate, then identify root cause. 4. Create & assign action items. 5. Publish postmortem\nwithin 5 business days.",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=8",
+          "total_pages": 10,
+          "page": 7,
+          "page_label": "8",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50889",
+      "data": {
+        "chunk_id": 50889,
+        "content": "Analytics Concepts\nKPIs North Star Metric, Activation Rate, Retention (D1/D7/D30), Churn, LTV, CAC.\nCohorts Group users by signup month to track retention and revenue trends.\nAttribution First-touch vs last-touch vs data-driven models. Beware of channel cannibalization\nand seasonality.",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=9",
+          "total_pages": 10,
+          "page": 8,
+          "page_label": "9",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_50890",
+      "data": {
+        "chunk_id": 50890,
+        "content": "Glossary\nA/B T est - Experiment comparing a control vs a variant. Backoff - Increasing wait times between\nretries. Drift - Model performance change when data distribution shifts. Embeddings - Vector\nrepresentations of text for similarity search. Grounding - Restricting model answers to\nprovided evidence. Silhouette Score - Cluster separation metric (-1 to 1). Higher is better.\nVector Store - Database optimized for vector similarity queries.",
+        "doc_id": 22,
+        "user_id": 16,
+        "domain_id": 3,
+        "doc_name": "knowledge_base_sample.pdf",
+        "username": "youssef elzahar",
+        "domain_name": "eand",
+        "metadata": {
+          "producer": "Matplotlib pdf backend v3.6.3",
+          "creator": "Matplotlib v3.6.3, https://matplotlib.org",
+          "creationdate": "2025-08-11T15:39:45+00:00",
+          "source": "knowledge_base_sample.pdf#page=10",
+          "total_pages": 10,
+          "page": 9,
+          "page_label": "10",
+          "domain_id": 3,
+          "doc_id": 22,
+          "user_id": 16
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_175772",
+      "data": {
+        "chunk_id": 175772,
+        "content": "",
+        "doc_id": 71,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "Read_Me_Instructions.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {},
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_175773",
+      "data": {
+        "chunk_id": 175773,
+        "content": "",
+        "doc_id": 71,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "Read_Me_Instructions.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {},
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530473",
+      "data": {
+        "chunk_id": 530473,
+        "content": "Youssef Elzahar\n\nData scientist\n\nPhone: +20 127 188 5939 Email: youssefelzahar12@gmail.com GitHub: github.com/youssefelzahar Kaggle: kaggle.com/youssefelzahar Military Service: Exempted\n\nProfessional Summary\n\nGood  experience  with  Machine  Learning  and  Data  Science.  Completed  various  projects  using  different algorithms  and  datasets.  Skilled  in  Natural  Language  Processing  (NLP),  Transformer  models,  and finetuning. Proficient in Power BI, Pandas, and software engineering with",
+        "doc_id": 119,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmp9dbezbxk.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmp9dbezbxk.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 4,
+          "original_doc_length": 1773,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 119,
+          "user_id": 30,
+          "source": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+          "file_size_mb": 0.24,
+          "processing_timestamp": 79106.39
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530474",
+      "data": {
+        "chunk_id": 530474,
+        "content": "n Power BI, Pandas, and software engineering with a focus on backend using Laravel and MySQL. Kaggle Notebook Expert and current Data Scientist Intern at Fixed Solutions.\n\nProfessional Experience\n\nFull Stack Data Scientist Intern\n\nJuly 2025 - Present\n\n-Built AI agents using n8n triggers.\n\n-Developed classic ML models and built Docker images.\n\n-Deployed APIs using Flask.\n\n-Develop RAG system chatbot can work with multi domains\n\n-Worked on advanced statistical analysis on Robot faults and chocolat",
+        "doc_id": 119,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmp9dbezbxk.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmp9dbezbxk.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 4,
+          "original_doc_length": 1773,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 119,
+          "user_id": 30,
+          "source": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+          "file_size_mb": 0.24,
+          "processing_timestamp": 79106.39
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530475",
+      "data": {
+        "chunk_id": 530475,
+        "content": "statistical analysis on Robot faults and chocolate factory\n\nML for Data Analysis\n\nDecember 2024 - January 2025\n\n-Worked on ML models and data preprocessing.\n\n-Competed in Kaggle competition 'Home Credit Risk'.\n\nFreelance Data Analyst\n\nApril 2025 - Present\n\n-Built an interactive sales dashboard using Power BI.\n\n-Crafted KPIs using DAX: avg. unit price, quantity sold, discount distribution.\n\nEducation\n\nBachelor of Computer Science Elshrouk Academy October 2018 - June 2022\n\nTechnical Skills\n\nData",
+        "doc_id": 119,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmp9dbezbxk.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmp9dbezbxk.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 3,
+          "total_chunks": 4,
+          "original_doc_length": 1773,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 119,
+          "user_id": 30,
+          "source": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+          "file_size_mb": 0.24,
+          "processing_timestamp": 79106.39
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530476",
+      "data": {
+        "chunk_id": 530476,
+        "content": "October 2018 - June 2022\n\nTechnical Skills\n\nData Science:\n\nMachine Learning, Deep Learning, NLP, LLM, Python (Pandas, NumPy), Keras, Scikitlearn,\n\nFine Tuning\n\nData Analysis:\n\nPower BI, Excel, MySQL, Python (Matplotlib, Seaborn)\n\nSoftware:\n\nData Structures, OOP, Docker, Laravel (Backend)\n\nLanguages\n\nArabic: Native\n\nEnglish: B2 Level\n\nFixed Solutions hybrid\n\n(Onsite)\n\nNTI onsite\n\nFreelance Yard\n\nProjects\n\nGitHub\n\nGitHub",
+        "doc_id": 119,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmp9dbezbxk.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmp9dbezbxk.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 4,
+          "total_chunks": 4,
+          "original_doc_length": 1773,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 119,
+          "user_id": 30,
+          "source": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+          "file_size_mb": 0.24,
+          "processing_timestamp": 79106.39
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530477",
+      "data": {
+        "chunk_id": 530477,
+        "content": "\\documentclass[a4paper,10pt]{article}\n\\usepackage[margin=1in]{geometry}\n\\usepackage{enumitem}\n\\usepackage{hyperref}\n\\usepackage{xcolor}\n\\usepackage{fontspec} % Needed for custom fonts\n\n\\setmainfont{Calibri} % Set main font to Calibri\n\n\\hypersetup{\n    colorlinks=true,\n    urlcolor=blue,\n}\n\n\\pagestyle{empty}\n\n\\newcommand{\\sectiontitle}[1]{\n    \\vspace{10pt}\n    \\noindent\\textbf{\\Large #1} \\\\\n    \\rule{\\linewidth}{0.5pt}\n}\n\n\\begin{document}\n\n%====================\n% Header\n%====================\n\\be",
+        "doc_id": 121,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "youssef_cv_latex.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmppij3rv87.txt",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmppij3rv87.txt",
+          "char_count": 4424,
+          "chunk_id": 1,
+          "total_chunks": 10,
+          "original_doc_length": 4424,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 121,
+          "user_id": 30,
+          "source": "youssef_cv_latex.txt",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 142362.14
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530478",
+      "data": {
+        "chunk_id": 530478,
+        "content": "===============\n% Header\n%====================\n\\begin{center}\n    {\\Huge \\textbf{Youssef Elzahar}} \\\\\n    Data Scientist \\\\\n    Phone: +20 127 188 5939 \\\\\n    Email: \\href{mailto:youssefelzahar12@gmail.com}{youssefelzahar12@gmail.com} \\\\\n    GitHub: \\href{https://github.com/youssefelzahar}{github.com/youssefelzahar} \\\\\n    Kaggle: \\href{https://www.kaggle.com/youssefelzahar}{kaggle.com/youssefelzahar} \\\\\n    Military Service: Exempted\n\\end{center}\n\n%====================\n% Profile Summary\n%======",
+        "doc_id": 121,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "youssef_cv_latex.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmppij3rv87.txt",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmppij3rv87.txt",
+          "char_count": 4424,
+          "chunk_id": 2,
+          "total_chunks": 10,
+          "original_doc_length": 4424,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 121,
+          "user_id": 30,
+          "source": "youssef_cv_latex.txt",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 142362.14
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530479",
+      "data": {
+        "chunk_id": 530479,
+        "content": "}\n\n%====================\n% Profile Summary\n%====================\n\\sectiontitle{Professional Summary}\nGood experience with Machine Learning and Data Science. Completed various projects using different algorithms and datasets. Skilled in Natural Language Processing (NLP), Transformer models, and fine-tuning. Proficient in Power BI, Pandas, and software engineering with a focus on backend using Laravel and MySQL. Kaggle Notebook Expert and current Data Scientist Intern at Fixed Solution.\n\n%========",
+        "doc_id": 121,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "youssef_cv_latex.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmppij3rv87.txt",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmppij3rv87.txt",
+          "char_count": 4424,
+          "chunk_id": 3,
+          "total_chunks": 10,
+          "original_doc_length": 4424,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 121,
+          "user_id": 30,
+          "source": "youssef_cv_latex.txt",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 142362.14
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530480",
+      "data": {
+        "chunk_id": 530480,
+        "content": "ata Scientist Intern at Fixed Solution.\n\n%====================\n% Experience\n%====================\n\\sectiontitle{Professional Experience}\n\n\\textbf{Data Scientist Intern} \\hfill \\textit{Fixed Solution} \\\\\n\\textit{July 2025 -- Present} \\\\\n- Built AI agents using n8n triggers. \\\\\n- Developed classic ML models and built Docker images. \\\\\n- Deployed APIs using Flask.\n\n\\textbf{ML for Data Analysis} \\hfill \\textit{NTI Digital Egypt Youth (Onsite)} \\\\\n\\textit{December 2024 -- January 2025} \\\\\n- Worked on",
+        "doc_id": 121,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "youssef_cv_latex.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmppij3rv87.txt",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmppij3rv87.txt",
+          "char_count": 4424,
+          "chunk_id": 4,
+          "total_chunks": 10,
+          "original_doc_length": 4424,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 121,
+          "user_id": 30,
+          "source": "youssef_cv_latex.txt",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 142362.14
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530481",
+      "data": {
+        "chunk_id": 530481,
+        "content": "xtit{December 2024 -- January 2025} \\\\\n- Worked on ML models and data preprocessing. \\\\\n- Competed in Kaggle competition \"Home Credit Risk\".\n\n\\textbf{Freelance Data Analyst} \\hfill \\textit{FreelanceYard} \\\\\n\\textit{April 2025 -- Present} \\\\\n- Built an interactive sales dashboard using Power BI. \\\\\n- Crafted KPIs using DAX: avg. unit price, quantity sold, discount distribution.\n\n%====================\n% Education\n%====================\n\\sectiontitle{Education}\n\\textbf{Bachelor of Computer Science}",
+        "doc_id": 121,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "youssef_cv_latex.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmppij3rv87.txt",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmppij3rv87.txt",
+          "char_count": 4424,
+          "chunk_id": 5,
+          "total_chunks": 10,
+          "original_doc_length": 4424,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 121,
+          "user_id": 30,
+          "source": "youssef_cv_latex.txt",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 142362.14
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530482",
+      "data": {
+        "chunk_id": 530482,
+        "content": "{Education}\n\\textbf{Bachelor of Computer Science} \\hfill \\textit{Elshrouk Academy} \\\\\n\\textit{October 2018 -- June 2022}\n\n%====================\n% Skills\n%====================\n\\sectiontitle{Technical Skills}\n\\textbf{Data Science:} Machine Learning, Deep Learning, NLP, LLM, Python (Pandas, NumPy), Keras, Scikit-learn, Fine Tuning \\\\\n\\textbf{Data Analysis:} Power BI, Excel, MySQL, Python (Matplotlib, Seaborn) \\\\\n\\textbf{Software:} Data Structures, OOP, Docker, Laravel (Backend)\n\n%==================",
+        "doc_id": 121,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "youssef_cv_latex.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmppij3rv87.txt",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmppij3rv87.txt",
+          "char_count": 4424,
+          "chunk_id": 6,
+          "total_chunks": 10,
+          "original_doc_length": 4424,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 121,
+          "user_id": 30,
+          "source": "youssef_cv_latex.txt",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 142362.14
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530483",
+      "data": {
+        "chunk_id": 530483,
+        "content": "OP, Docker, Laravel (Backend)\n\n%====================\n% Projects\n%====================\n\\sectiontitle{Projects}\n\n\\textbf{SmartFin -- AI Personal Finance Advisor} \\hfill \\href{https://github.com/youssefelzahar/SmartFin-.}{GitHub} \\\\\n- Built a Python tool for spending analysis and trend forecasting. \\\\\n- Used NLP to classify transaction descriptions and SARIMA for forecasts. \\\\\n- Created a Streamlit dashboard and integrated a smart chatbot.\n\n\\textbf{Nurse Robot (Graduation Project)} \\hfill \\textit{G",
+        "doc_id": 121,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "youssef_cv_latex.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmppij3rv87.txt",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmppij3rv87.txt",
+          "char_count": 4424,
+          "chunk_id": 7,
+          "total_chunks": 10,
+          "original_doc_length": 4424,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 121,
+          "user_id": 30,
+          "source": "youssef_cv_latex.txt",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 142362.14
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530484",
+      "data": {
+        "chunk_id": 530484,
+        "content": "Nurse Robot (Graduation Project)} \\hfill \\textit{Grade: Excellent} \\\\\n- Designed a robot to assist doctors during COVID using QR and face recognition. \\\\\n- Built a website and mobile app for robot control and data communication.\n\n\\textbf{CIBMTR -- Equity in Post-HCT Survival (Kaggle)} \\hfill \\href{https://www.kaggle.com/code/youssefelzahar/cibmtr-preprocessing-and-catboost-xgboostt}{Kaggle} \\\\\n- Achieved 63\\% score on survival prediction challenge. \\\\\n- Used models like CatBoost, LightGBM, XGBoo",
+        "doc_id": 121,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "youssef_cv_latex.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmppij3rv87.txt",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmppij3rv87.txt",
+          "char_count": 4424,
+          "chunk_id": 8,
+          "total_chunks": 10,
+          "original_doc_length": 4424,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 121,
+          "user_id": 30,
+          "source": "youssef_cv_latex.txt",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 142362.14
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530485",
+      "data": {
+        "chunk_id": 530485,
+        "content": "e. \\\\\n- Used models like CatBoost, LightGBM, XGBoost, and Survival Forest. \\\\\n- Evaluated with c-index and ROC, performed extensive preprocessing.\n\n\\textbf{Medical Chatbot (LLM Fine Tuning)} \\hfill \\href{https://github.com/youssefelzahar/Chatbot_finetuning}{GitHub} \\\\\n- Fine-tuned TinyLlama-1.1B on HealthCareMagic-100k dataset using LoRA. \\\\\n- Deployed with Gradio for real-time medical Q\\&A.\n\n\\textbf{AI Agent for Web Scraping + Autocomplete} \\hfill \\href{https://github.com/youssefelzahar/auto_co",
+        "doc_id": 121,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "youssef_cv_latex.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmppij3rv87.txt",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmppij3rv87.txt",
+          "char_count": 4424,
+          "chunk_id": 9,
+          "total_chunks": 10,
+          "original_doc_length": 4424,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 121,
+          "user_id": 30,
+          "source": "youssef_cv_latex.txt",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 142362.14
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530486",
+      "data": {
+        "chunk_id": 530486,
+        "content": "ll \\href{https://github.com/youssefelzahar/auto_complete}{GitHub} \\\\\n- Built an AI web scraping agent using n8n triggers and automation. \\\\\n- Designed LSTM-based autocomplete system with NLP preprocessing (text cleaning, tokenization).\n\n%====================\n% Languages\n%====================\n\\sectiontitle{Languages}\n- Arabic: Native \\\\\n- English: B1 Level\n\n\\end{document}",
+        "doc_id": 121,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "youssef_cv_latex.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmppij3rv87.txt",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmppij3rv87.txt",
+          "char_count": 4424,
+          "chunk_id": 10,
+          "total_chunks": 10,
+          "original_doc_length": 4424,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 121,
+          "user_id": 30,
+          "source": "youssef_cv_latex.txt",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 142362.14
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530487",
+      "data": {
+        "chunk_id": 530487,
+        "content": "Chocolate_Factory\n\nDescription:\n\nWe are working with two datasets:\n\nDemographic data - containing customer attributes.\n\nPurchasing data - containing purchasing incidence, promotions, prices, and information on five brands.\n\nThe plan is as follows:\n\n∞ Conduct initial statistical and descriptive analysis to better understand the data and inform the segmentation process.\n\n∞ Clean and prepare the datasets for modeling.\n\n∞ Perform clustering using demographic features to create customer segments that",
+        "doc_id": 122,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "Choc_Factory.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpc7gy5388.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpc7gy5388.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 4,
+          "original_doc_length": 1360,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 122,
+          "user_id": 30,
+          "source": "Choc_Factory.pdf",
+          "file_size_mb": 0.09,
+          "processing_timestamp": 171446.984
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530488",
+      "data": {
+        "chunk_id": 530488,
+        "content": "ographic features to create customer segments that can be used in prediction models.\n\n∞ Estimate price elasticity at both a general level and at the brand level to determine:\n\no The price point at which customers may stop purchasing.\n\no Opportunities to adjust prices based on the characteristics of each segment.\n\nDatasets to Explore\n\n∞ Demographics dataset (customer attributes)\n\n∞ Purchasing behavior dataset (incidence, promotions, prices, brands)\n\nWhat To Do:\n\n∞ Analyze demographic data to iden",
+        "doc_id": 122,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "Choc_Factory.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpc7gy5388.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpc7gy5388.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 4,
+          "original_doc_length": 1360,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 122,
+          "user_id": 30,
+          "source": "Choc_Factory.pdf",
+          "file_size_mb": 0.09,
+          "processing_timestamp": 171446.984
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530489",
+      "data": {
+        "chunk_id": 530489,
+        "content": ")\n\nWhat To Do:\n\n∞ Analyze demographic data to identify customer segments.\n\n∞ Apply these segments to the purchasing dataset.\n\n∞ Study purchasing behavior within each segment.\n\n∞ Provide recommendations for optimal price points.\n\n∞ Conduct price sensitivity analysis for each segment.\n\n∞ Prepare a final report summarizing findings and actionable recommendations\n\nRecommedations To Study\n\n∞ Clustering\n\n∞ Descriptive | Statistical Analytics\n\n∞ Price Sensitivity",
+        "doc_id": 122,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "Choc_Factory.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpc7gy5388.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpc7gy5388.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 3,
+          "total_chunks": 4,
+          "original_doc_length": 1360,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 122,
+          "user_id": 30,
+          "source": "Choc_Factory.pdf",
+          "file_size_mb": 0.09,
+          "processing_timestamp": 171446.984
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530490",
+      "data": {
+        "chunk_id": 530490,
+        "content": "ensitivity",
+        "doc_id": 122,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "Choc_Factory.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpc7gy5388.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpc7gy5388.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 4,
+          "total_chunks": 4,
+          "original_doc_length": 1360,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 122,
+          "user_id": 30,
+          "source": "Choc_Factory.pdf",
+          "file_size_mb": 0.09,
+          "processing_timestamp": 171446.984
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530491",
+      "data": {
+        "chunk_id": 530491,
+        "content": "فاتورة\n\nرقم الفاتورة\n\n: INV-2025-001\n\nتاريخ الإصدار : 31 يوليو 2025\n\nتاريخ الاستحقاق\n\n: 15 2025\n\nأغسطس\n\nمعلومات البائع :\n\nاسم الشركة\n\n: حلول التقنية المتقدمة\n\nالعنوان :\n\nشارع الابتكار، مبنى رقم 10 ، القاهرة، مصر\n\nرقم الهاتف\n\n: 01012345678\n\nالبريد الإلكتروني\n\n: info@techsolutions.com\n\nمعلومات العميل :\n\nالاسم : أحمد محمد عبد الل\n\nالعنوان :\n\nشارع النصر، مدينة نصر، القاهرة،\n\nمصر\n\nرقم الهاتف\n\n: 01123456789\n\nالبريد الإلكتروني\n\n: ahmed@example.com\n\nالوصف\n\nالكمية سعر الوحدة الإجمالي\n\nتصميم موقع إلكتروني",
+        "doc_id": 123,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "arabic_invoice.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpvq56jrt5.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpvq56jrt5.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 2,
+          "original_doc_length": 863,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 123,
+          "user_id": 30,
+          "source": "arabic_invoice.pdf",
+          "file_size_mb": 3.75,
+          "processing_timestamp": 232009.156
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530492",
+      "data": {
+        "chunk_id": 530492,
+        "content": "ف\n\nالكمية سعر الوحدة الإجمالي\n\nتصميم موقع إلكتروني\n\n1\n\n5,000 ج . م 5,000 ج . م\n\nاستضافة لمدة سنة\n\n1\n\n1,200 ج . م 1,200 ج . م\n\nدعم فني شهري 3( أشهر ) 3\n\n500 ج . م 1,500 ج . م\n\nالإجمالي الفرعي\n\n: 7,700 ج . م\n\nالضريبة )14%(: 1,078\n\nج . م\n\nالإجمالي الكلي\n\n: 8,778 ج . م\n\nملاحظات : يرجى سداد الفاتورة خلال 15 يوم ً ا من تاريخ الإصدار . في حال وجود أي استفسار، لا تتردد في التواصل معنا عبر البريد الإلكتروني أو الهاتف .",
+        "doc_id": 123,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "arabic_invoice.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpvq56jrt5.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpvq56jrt5.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 2,
+          "original_doc_length": 863,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 123,
+          "user_id": 30,
+          "source": "arabic_invoice.pdf",
+          "file_size_mb": 3.75,
+          "processing_timestamp": 232009.156
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530493",
+      "data": {
+        "chunk_id": 530493,
+        "content": "فاتورة\n\nرقم الفاتورة\n\n: INV-2025-001\n\nتاريخ الإصدار : 31 يوليو 2025\n\nتاريخ الاستحقاق\n\n: 15 2025\n\nأغسطس\n\nمعلومات البائع :\n\nاسم الشركة\n\n: حلول التقنية المتقدمة\n\nالعنوان :\n\nشارع الابتكار، مبنى رقم 10 ، القاهرة، مصر\n\nرقم الهاتف\n\n: 01012345678\n\nالبريد الإلكتروني\n\n: info@techsolutions.com\n\nمعلومات العميل :\n\nالاسم : أحمد محمد عبد الل\n\nالعنوان :\n\nشارع النصر، مدينة نصر، القاهرة،\n\nمصر\n\nرقم الهاتف\n\n: 01123456789\n\nالبريد الإلكتروني\n\n: ahmed@example.com\n\nالوصف\n\nالكمية سعر الوحدة الإجمالي\n\nتصميم موقع إلكتروني",
+        "doc_id": 124,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "arabic_invoice.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpwjlzs1fq.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpwjlzs1fq.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 2,
+          "original_doc_length": 863,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 124,
+          "user_id": 30,
+          "source": "arabic_invoice.pdf",
+          "file_size_mb": 3.75,
+          "processing_timestamp": 241101.562
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530494",
+      "data": {
+        "chunk_id": 530494,
+        "content": "ف\n\nالكمية سعر الوحدة الإجمالي\n\nتصميم موقع إلكتروني\n\n1\n\n5,000 ج . م 5,000 ج . م\n\nاستضافة لمدة سنة\n\n1\n\n1,200 ج . م 1,200 ج . م\n\nدعم فني شهري 3( أشهر ) 3\n\n500 ج . م 1,500 ج . م\n\nالإجمالي الفرعي\n\n: 7,700 ج . م\n\nالضريبة )14%(: 1,078\n\nج . م\n\nالإجمالي الكلي\n\n: 8,778 ج . م\n\nملاحظات : يرجى سداد الفاتورة خلال 15 يوم ً ا من تاريخ الإصدار . في حال وجود أي استفسار، لا تتردد في التواصل معنا عبر البريد الإلكتروني أو الهاتف .",
+        "doc_id": 124,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "arabic_invoice.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpwjlzs1fq.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpwjlzs1fq.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 2,
+          "original_doc_length": 863,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 124,
+          "user_id": 30,
+          "source": "arabic_invoice.pdf",
+          "file_size_mb": 3.75,
+          "processing_timestamp": 241101.562
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530495",
+      "data": {
+        "chunk_id": 530495,
+        "content": "فاتورة\n\nرقم الفاتورة\n\n: INV-2025-001\n\nتاريخ الإصدار : 31 يوليو 2025\n\nتاريخ الاستحقاق\n\n: 15 2025\n\nأغسطس\n\nمعلومات البائع :\n\nاسم الشركة\n\n: حلول التقنية المتقدمة\n\nالعنوان :\n\nشارع الابتكار، مبنى رقم 10 ، القاهرة، مصر\n\nرقم الهاتف\n\n: 01012345678\n\nالبريد الإلكتروني\n\n: info@techsolutions.com\n\nمعلومات العميل :\n\nالاسم : أحمد محمد عبد الل\n\nالعنوان :\n\nشارع النصر، مدينة نصر، القاهرة،\n\nمصر\n\nرقم الهاتف\n\n: 01123456789\n\nالبريد الإلكتروني\n\n: ahmed@example.com\n\nالوصف\n\nالكمية سعر الوحدة الإجمالي\n\nتصميم موقع إلكتروني",
+        "doc_id": 125,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "arabic_invoice.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpf8s2uz85.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpf8s2uz85.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 2,
+          "original_doc_length": 863,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 125,
+          "user_id": 30,
+          "source": "arabic_invoice.pdf",
+          "file_size_mb": 3.75,
+          "processing_timestamp": 241331.031
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530496",
+      "data": {
+        "chunk_id": 530496,
+        "content": "ف\n\nالكمية سعر الوحدة الإجمالي\n\nتصميم موقع إلكتروني\n\n1\n\n5,000 ج . م 5,000 ج . م\n\nاستضافة لمدة سنة\n\n1\n\n1,200 ج . م 1,200 ج . م\n\nدعم فني شهري 3( أشهر ) 3\n\n500 ج . م 1,500 ج . م\n\nالإجمالي الفرعي\n\n: 7,700 ج . م\n\nالضريبة )14%(: 1,078\n\nج . م\n\nالإجمالي الكلي\n\n: 8,778 ج . م\n\nملاحظات : يرجى سداد الفاتورة خلال 15 يوم ً ا من تاريخ الإصدار . في حال وجود أي استفسار، لا تتردد في التواصل معنا عبر البريد الإلكتروني أو الهاتف .",
+        "doc_id": 125,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "arabic_invoice.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpf8s2uz85.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpf8s2uz85.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 2,
+          "original_doc_length": 863,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 125,
+          "user_id": 30,
+          "source": "arabic_invoice.pdf",
+          "file_size_mb": 3.75,
+          "processing_timestamp": 241331.031
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530497",
+      "data": {
+        "chunk_id": 530497,
+        "content": "fastapi\nuvicorn\npython-multipart\nsentence-transformers\nlangchain\nlangchain-community\nlangchain-chroma\nlangchain-huggingface\npypdf\nlangchain-openai\nopenai>=1.30.0\npython-dotenv>=1.0.1\ncryptography\npymysql\nsqlalchemy\npython-jose[cryptography]\npydantic\npython-multipart\npandas\nbcrypt==4.1.2\npasslib[bcrypt]>=1.7.4\ntyping-extensions>=4.12.2\nemail-validator\npydantic[email]\ndeep-translator\nlangdetect\nSpeechRecognition\npyaudio\nfastmcp\ndocling\nPyPDF2\ndatasets\nraganything[all]\nnetworkx\nneo4j",
+        "doc_id": 126,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "requirements.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpbb2dce30.txt",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpbb2dce30.txt",
+          "char_count": 485,
+          "chunk_id": 1,
+          "total_chunks": 2,
+          "original_doc_length": 485,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 126,
+          "user_id": 30,
+          "source": "requirements.txt",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 241368.156
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530498",
+      "data": {
+        "chunk_id": 530498,
+        "content": "ets\nraganything[all]\nnetworkx\nneo4j",
+        "doc_id": 126,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "requirements.txt",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpbb2dce30.txt",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpbb2dce30.txt",
+          "char_count": 485,
+          "chunk_id": 2,
+          "total_chunks": 2,
+          "original_doc_length": 485,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 126,
+          "user_id": 30,
+          "source": "requirements.txt",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 241368.156
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530499",
+      "data": {
+        "chunk_id": 530499,
+        "content": "Youssef Elzahar\n\nData Scientist\n\nPhone: +20 127 188 5939 Email: youssefalzahar12@gmail.com GitHub: github.com/youssefelzahar  Kaggle: kaggle.com/youssefelzahar  Military Service: Exempted linkedin: https://www.linkedin.com/in/youssef-elzahar/\n\nProfessional Summary\n\nGood  experience  with  Machine  Learning  and  Data  Science.  Completed  various  projects  using  different algorithms  and  datasets.  Skilled  in  Natural  Language  Processing  (NLP),  Transformer  models,  and finetuning. Profi",
+        "doc_id": 127,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpiwy85s5c.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpiwy85s5c.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 5,
+          "original_doc_length": 1833,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 127,
+          "user_id": 30,
+          "source": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+          "file_size_mb": 0.25,
+          "processing_timestamp": 242701.109
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530500",
+      "data": {
+        "chunk_id": 530500,
+        "content": "NLP),  Transformer  models,  and finetuning. Proficient in Power BI, Pandas, and software engineering with a focus on backend using Laravel and MySQL. Kaggle Notebook Expert and current Data Scientist Intern at Fixed Solutions.\n\nProfessional Experience\n\nFull Stack Data Scientist Intern\n\nJuly 2025 - Present\n\n-Built AI agents using n8n triggers.\n\n-Developed classic ML models and built Docker images.\n\n-Deployed APIs using Flask.\n\n-Develop RAG system chatbot can work with multi domains\n\n-Worked on a",
+        "doc_id": 127,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpiwy85s5c.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpiwy85s5c.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 5,
+          "original_doc_length": 1833,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 127,
+          "user_id": 30,
+          "source": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+          "file_size_mb": 0.25,
+          "processing_timestamp": 242701.109
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530501",
+      "data": {
+        "chunk_id": 530501,
+        "content": "chatbot can work with multi domains\n\n-Worked on advanced statistical analysis on Robot faults and chocolate factory\n\nML for Data Analysis\n\nDecember 2024 - January 2025\n\n-Worked on ML models and data preprocessing.\n\n-Competed in Kaggle competition 'Home Credit Risk'.\n\nFreelance Data Analyst\n\nApril 2025 - Present\n\n-Built an interactive sales dashboard using Power BI.\n\n-Crafted KPIs using DAX: avg. unit price, quantity sold, discount distribution.\n\nEducation\n\nBachelor of Computer Science Elshrouk",
+        "doc_id": 127,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpiwy85s5c.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpiwy85s5c.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 3,
+          "total_chunks": 5,
+          "original_doc_length": 1833,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 127,
+          "user_id": 30,
+          "source": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+          "file_size_mb": 0.25,
+          "processing_timestamp": 242701.109
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530502",
+      "data": {
+        "chunk_id": 530502,
+        "content": "Education\n\nBachelor of Computer Science Elshrouk Academy October 2018 - June 2022\n\nTechnical Skills\n\nData Science:\n\nMachine Learning, Deep Learning, NLP, LLM, Python (Pandas, NumPy), Keras, Scikitlearn,\n\nFine Tuning\n\nData Analysis:\n\nPower BI, Excel, MySQL, Python (Matplotlib, Seaborn)\n\nSoftware:\n\nData Structures, OOP, Docker, Laravel (Backend)\n\nLanguages\n\n-\n\nArabic: Native\n\nEnglish: B2 Level\n\nFixed Solutions hybrid\n\n(Onsite)\n\nNTI onsite\n\nFreelance Yard\n\nProjects\n\nGitHub\n\nGitHub",
+        "doc_id": 127,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpiwy85s5c.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpiwy85s5c.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 4,
+          "total_chunks": 5,
+          "original_doc_length": 1833,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 127,
+          "user_id": 30,
+          "source": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+          "file_size_mb": 0.25,
+          "processing_timestamp": 242701.109
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530503",
+      "data": {
+        "chunk_id": 530503,
+        "content": "ce Yard\n\nProjects\n\nGitHub\n\nGitHub",
+        "doc_id": 127,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpiwy85s5c.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpiwy85s5c.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 5,
+          "total_chunks": 5,
+          "original_doc_length": 1833,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 127,
+          "user_id": 30,
+          "source": "YOUSSEF_ELZAHAR_Data_scientist.pdf",
+          "file_size_mb": 0.25,
+          "processing_timestamp": 242701.109
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530504",
+      "data": {
+        "chunk_id": 530504,
+        "content": "Alice founded TechNova in 2015. Bob is the CTO of TechNova. TechNova partnered with GreenAI in 2020. GreenAI was founded by Carol in 2018.",
+        "doc_id": 128,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "companies.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpk6x235sh.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpk6x235sh.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 138,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 128,
+          "user_id": 30,
+          "source": "companies.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 243568.25
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530505",
+      "data": {
+        "chunk_id": 530505,
+        "content": "TechNova headquarters is in Berlin. GreenAI headquarters is in Paris. Berlin is in Germany. Paris is in France. Germany borders France.",
+        "doc_id": 129,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "locations.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpghv42tqu.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpghv42tqu.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 135,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 129,
+          "user_id": 30,
+          "source": "locations.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 243578.687
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530506",
+      "data": {
+        "chunk_id": 530506,
+        "content": "In 2021, TechNova hosted the FutureAI Conference in Berlin. GreenAI presented EcoCam at the FutureAI Conference. The FutureAI Conference was attended by Alice and Carol.",
+        "doc_id": 130,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "events.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpwsbs80pq.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpwsbs80pq.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 169,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 130,
+          "user_id": 30,
+          "source": "events.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 243590.671
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530507",
+      "data": {
+        "chunk_id": 530507,
+        "content": "TechNova produces VisionX. VisionX competes with EcoCam by GreenAI. EcoCam belongs to the EcoTech category.\n\nVisionX belongs to the SmartVision category.",
+        "doc_id": 131,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "products.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmp6mmzyofm.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmp6mmzyofm.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 153,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 131,
+          "user_id": 30,
+          "source": "products.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 243599.234
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530508",
+      "data": {
+        "chunk_id": 530508,
+        "content": "Dr. Alice wrote 'AI for Vision' in 2022. 'AI for Vision' cites 'Sustainable AI' written by Dr. Bob. Dr. Carol authored 'Eco-friendly Computing' in 2021. 'Eco-friendly Computing' was presented at the FutureAI Conference.",
+        "doc_id": 132,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "research.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmp_9xtztx6.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmp_9xtztx6.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 219,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 132,
+          "user_id": 30,
+          "source": "research.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 243608.359
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530509",
+      "data": {
+        "chunk_id": 530509,
+        "content": "In 2021, MedCare Hospital hosted the Global Health Conference in Berlin. GreenHealth Clinic presented EcoTherapy at the Global Health Conference. The Global Health Conference was attended by Dr. Alice and Dr. Carol.",
+        "doc_id": 133,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "events.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmprffb0j2_.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmprffb0j2_.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 215,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 133,
+          "user_id": 30,
+          "source": "events.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 245213.468
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530510",
+      "data": {
+        "chunk_id": 530510,
+        "content": "Dr. Alice founded MedCare Hospital in 2015. Dr. Bob is the Head of Cardiology at MedCare Hospital. MedCare Hospital partnered with GreenHealth Clinic in 2020. GreenHealth Clinic was established by Dr. Carol in 2018.",
+        "doc_id": 134,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "hospitals.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmplr6qbu05.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmplr6qbu05.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 215,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 134,
+          "user_id": 30,
+          "source": "hospitals.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 245233.281
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530511",
+      "data": {
+        "chunk_id": 530511,
+        "content": "MedCare Hospital headquarters is in Berlin. GreenHealth Clinic headquarters is in Paris. Berlin is in Germany. Paris is in France. Germany borders France.",
+        "doc_id": 135,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "locations.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmppdev16fo.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmppdev16fo.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 154,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 135,
+          "user_id": 30,
+          "source": "locations.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 245290.937
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530512",
+      "data": {
+        "chunk_id": 530512,
+        "content": "Dr. Alice published 'Advances in Hypertension Treatment' in 2022. 'Advances in Hypertension Treatment' cites 'Sustainable Cardiology' by Dr. Bob. Dr. Carol authored 'Eco-friendly Therapies' in 2021. 'Eco-friendly Therapies' was presented at the Global Health Conference.",
+        "doc_id": 136,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "research.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpsfnx5mf1.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpsfnx5mf1.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 270,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 136,
+          "user_id": 30,
+          "source": "research.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 245332.718
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530513",
+      "data": {
+        "chunk_id": 530513,
+        "content": "MedCare Hospital provides HeartShield Therapy. HeartShield Therapy is used for treating Hypertension. GreenHealth Clinic provides EcoTherapy. EcoTherapy competes with HeartShield Therapy.",
+        "doc_id": 137,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "treatments.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpar6u94mx.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpar6u94mx.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 187,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 137,
+          "user_id": 30,
+          "source": "treatments.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 245454.625
+        },
+        "node_type": "chunk"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "chunk_50874",
+      "target": "chunk_50875",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50875",
+      "target": "chunk_50876",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50876",
+      "target": "chunk_50877",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50877",
+      "target": "chunk_50878",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50878",
+      "target": "chunk_50879",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50879",
+      "target": "chunk_50880",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50880",
+      "target": "chunk_50881",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50881",
+      "target": "chunk_50882",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50882",
+      "target": "chunk_50883",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50883",
+      "target": "chunk_50884",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50884",
+      "target": "chunk_50885",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50885",
+      "target": "chunk_50886",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50886",
+      "target": "chunk_50887",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50887",
+      "target": "chunk_50888",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50888",
+      "target": "chunk_50889",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_50889",
+      "target": "chunk_50890",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_175772",
+      "target": "chunk_175773",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530473",
+      "target": "chunk_530474",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530474",
+      "target": "chunk_530475",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530475",
+      "target": "chunk_530476",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530477",
+      "target": "chunk_530478",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530478",
+      "target": "chunk_530479",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530479",
+      "target": "chunk_530480",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530480",
+      "target": "chunk_530481",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530481",
+      "target": "chunk_530482",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530482",
+      "target": "chunk_530483",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530483",
+      "target": "chunk_530484",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530484",
+      "target": "chunk_530485",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530485",
+      "target": "chunk_530486",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530487",
+      "target": "chunk_530488",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530488",
+      "target": "chunk_530489",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530489",
+      "target": "chunk_530490",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530491",
+      "target": "chunk_530492",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530493",
+      "target": "chunk_530494",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530495",
+      "target": "chunk_530496",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530497",
+      "target": "chunk_530498",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530499",
+      "target": "chunk_530500",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530500",
+      "target": "chunk_530501",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530501",
+      "target": "chunk_530502",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    },
+    {
+      "source": "chunk_530502",
+      "target": "chunk_530503",
+      "data": {
+        "edge_type": "sequential",
+        "weight": 1.0
+      }
+    }
+  ]
+}
