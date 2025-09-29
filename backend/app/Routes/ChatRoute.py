@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 # Database imports
 from app.DB.db import get_db
-from app.Models.tables import ChatSession, ChatMessage, User
+from app.Models.tables import ChatSession, ChatMessage, User, ChatSource
 from app.auth.dependencies import get_current_principal, get_current_user_db
 
 # Vector search helpers (module-level)
@@ -378,9 +378,23 @@ def chat_query(
     # Save message to existing session
     message = _save_message_to_session(db, session, user, q, answer)
 
+    # Persist sources linked to this message
+    try:
+        extracted_sources = _extract_sources(hits)
+        for s in extracted_sources:
+            src_file = (s.get("source_file") or s.get("source") or "").strip()
+            snippet = (s.get("snippet") or "").strip()
+            if not src_file:
+                continue
+            db.add(ChatSource(message_id=message.id, source=src_file, snippet=snippet))
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"[chat] Failed to save sources for message {message.id}: {e}")
+
     return ChatAnswer(
         answer=answer, 
-        sources=_extract_sources(hits), 
+        sources=[{"source": s.get("source_file") or s.get("source"), "snippet": s.get("snippet")} for s in extracted_sources], 
         session_id=session.id, 
         message_id=message.id,
         domain_scope=domain_scope,

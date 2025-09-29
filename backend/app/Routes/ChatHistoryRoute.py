@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 from pydantic import BaseModel, Field
 
 from app.DB.db import get_db
-from app.Models.tables import ChatSession, ChatMessage, User, Domain
+from app.Models.tables import ChatSession, ChatMessage, User, Domain, ChatSource
 from app.auth.dependencies import get_current_principal, get_current_user_db
 
 router = APIRouter(prefix="/chat-history", tags=["Chat History"])
@@ -27,6 +27,11 @@ class ChatMessageResponse(BaseModel):
     question: str
     answer: str
     created_at: str
+    sources: List[dict] = Field(default_factory=list)
+
+class ChatSourceResponse(BaseModel):
+    source: str
+    snippet: Optional[str] = None
 
 class ChatHistoryResponse(BaseModel):
     session_id: int
@@ -94,17 +99,18 @@ def get_session_messages(
 ):
     """Get all messages for a specific chat session"""
     messages = db.query(ChatMessage).filter(ChatMessage.session_id == session_id).order_by(ChatMessage.created_at.asc()).all()
-    
+    # Return empty list instead of 404 when no messages found
     if not messages:
-        raise HTTPException(status_code=404, detail="Session not found or no messages")
-    
+        return []
+
     return [ChatMessageResponse(
         id=msg.id,
         session_id=msg.session_id,
         user_id=msg.user_id,
         question=msg.question,
         answer=msg.answer,
-        created_at=msg.created_at.isoformat()
+        created_at=msg.created_at.isoformat(),
+        sources=[{"source": s.source, "snippet": s.snippet} for s in getattr(msg, "sources", [])]
     ) for msg in messages]
 
 @router.get("/history", response_model=List[ChatHistoryResponse])
@@ -134,7 +140,8 @@ def get_user_chat_history(
                 user_id=msg.user_id,
                 question=msg.question,
                 answer=msg.answer,
-                created_at=msg.created_at.isoformat()
+                created_at=msg.created_at.isoformat(),
+                sources=[{"source": s.source, "snippet": s.snippet} for s in getattr(msg, "sources", [])]
             ) for msg in messages]
         ))
     

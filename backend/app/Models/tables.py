@@ -120,6 +120,7 @@ class ChatMessage(Base):
     
     chat_session = relationship("ChatSession", back_populates="chat_messages")
     user = relationship("User", back_populates="chat_messages")
+    sources = relationship("ChatSource", back_populates="message", cascade="all, delete")
 
 
 #Role
@@ -127,3 +128,14 @@ class RoleEnum(str, enum.Enum):
     super_admin = "super_admin"
     admin = "admin"
     user = "user"
+
+
+class ChatSource(Base):
+    __tablename__ = 'chat_sources'
+    id = Column(Integer, primary_key=True, index=True)
+    message_id = Column(Integer, ForeignKey('chat_messages.id'), nullable=False)
+    source = Column(Text, nullable=False)
+    snippet = Column(Text, nullable=True)
+    created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
+
+    message = relationship("ChatMessage", back_populates="sources")

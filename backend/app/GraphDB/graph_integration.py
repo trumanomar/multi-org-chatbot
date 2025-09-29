@@ -10,7 +10,7 @@ import asyncio
 from typing import List, Dict, Any, Optional, Tuple
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-import networkx as nx
+import networkx as n
 import requests
 from raganything import RAGAnything
 from app.DB.db import get_db
@@ -40,7 +40,7 @@ class GraphRAGIntegration:
         self.model = model
         self.output_dir = output_dir
         self.rag = None  # Will be initialized when needed
-        self.graph = nx.DiGraph()  # Directed graph for relationships
+        self.graph = n.DiGraph()  # Directed graph for relationships
         self.chunk_to_node_mapping = {}  # Maps chunk IDs to graph nodes
         
         # Ensure output directory exists

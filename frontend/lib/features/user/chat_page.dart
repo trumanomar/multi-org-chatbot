@@ -208,7 +208,7 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
               'id': 'a-${m['id']}',
               'role': 'assistant',
               'content': a,
-              'sources': const [],
+              'sources': (m['sources'] as List?) ?? const [],
               'originalMessageId': m['id'],
             });
           }
@@ -263,7 +263,7 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
                     'id': 'a-${m['id']}',
                     'role': 'assistant',
                     'content': a,
-                    'sources': const [],
+                    'sources': (m['sources'] as List?) ?? const [],
                     'originalMessageId': m['id'],
                   });
                 }
@@ -1048,13 +1048,10 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
                                                 spacing: 6,
                                                 runSpacing: -8,
                                                 children: sources
-                                                    .map((s) => Chip(
-                                                          label: Text(
-                                                            (s['title'] ??
-                                                                    'source')
-                                                                .toString(),
-                                                          ),
-                                                        ))
+                                                    .map((s) {
+                                                      final label = (s['title'] ?? s['source'] ?? 'source').toString();
+                                                      return Chip(label: Text(label));
+                                                    })
                                                     .toList(),
                                               ),
                                             ],
