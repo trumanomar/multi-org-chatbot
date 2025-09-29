@@ -38,10 +38,19 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   bool _sending = false;
   String? _error;
 
-  // Persistence keys
+  // Persistence keys (base). We will namespace them per user/domain at runtime.
   static const String _sessionsKey = 'chat_sessions';
   static const String _messagesKey = 'chat_messages';
   static const String _selectedSessionKey = 'selected_session_id';
+
+  String _keyPrefix() {
+    final auth = ref.read(authControllerProvider);
+    final uid = auth.user?.id;
+    final did = auth.domainId;
+    return 'u_${uid ?? 'anon'}_d_${did ?? 'none'}';
+  }
+
+  String _nsKey(String base) => '${_keyPrefix()}_$base';
 
   @override
   void initState() {
@@ -700,12 +709,12 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
       final prefs = await SharedPreferences.getInstance();
       
       // Save sessions
-      await prefs.setString(_sessionsKey, jsonEncode(_sessions));
+      await prefs.setString(_nsKey(_sessionsKey), jsonEncode(_sessions));
       
       // Save messages for ALL sessions, not just the current one
       for (final session in _sessions) {
         final sessionId = session['id'] as int;
-        final messagesKey = '${_messagesKey}_$sessionId';
+        final messagesKey = _nsKey('${_messagesKey}_$sessionId');
         
         // Get messages for this specific session
         List<dynamic> sessionMessages = [];
@@ -728,7 +737,7 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
       
       // Save selected session ID
       if (_selectedSessionId != null) {
-        await prefs.setInt(_selectedSessionKey, _selectedSessionId!);
+        await prefs.setInt(_nsKey(_selectedSessionKey), _selectedSessionId!);
       }
     } catch (e) {
       print('Error saving to local storage: $e');
@@ -742,7 +751,7 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
       final prefs = await SharedPreferences.getInstance();
       
       // Restore sessions
-      final sessionsJson = prefs.getString(_sessionsKey);
+      final sessionsJson = prefs.getString(_nsKey(_sessionsKey));
       if (sessionsJson != null) {
         final sessions = jsonDecode(sessionsJson) as List<dynamic>;
         setState(() {
@@ -751,14 +760,14 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
       }
       
       // Restore selected session ID
-      final selectedId = prefs.getInt(_selectedSessionKey);
+      final selectedId = prefs.getInt(_nsKey(_selectedSessionKey));
       if (selectedId != null) {
         setState(() {
           _selectedSessionId = selectedId;
         });
         
         // Restore messages for selected session
-        final messagesKey = '${_messagesKey}_$selectedId';
+        final messagesKey = _nsKey('${_messagesKey}_$selectedId');
         final messagesJson = prefs.getString(messagesKey);
         if (messagesJson != null) {
           final messages = jsonDecode(messagesJson) as List<dynamic>;
@@ -779,13 +788,13 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
       final prefs = await SharedPreferences.getInstance();
       
       // Clear all chat-related data
-      await prefs.remove(_sessionsKey);
-      await prefs.remove(_selectedSessionKey);
+      await prefs.remove(_nsKey(_sessionsKey));
+      await prefs.remove(_nsKey(_selectedSessionKey));
       
       // Clear messages for all sessions
       final keys = prefs.getKeys();
       for (final key in keys) {
-        if (key.startsWith(_messagesKey)) {
+        if (key.startsWith(_keyPrefix())) {
           await prefs.remove(key);
         }
       }
@@ -799,7 +808,7 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
     // This ensures each session's messages are stored separately
     try {
       final prefs = await SharedPreferences.getInstance();
-      final messagesKey = '${_messagesKey}_$sessionId';
+      final messagesKey = _nsKey('${_messagesKey}_$sessionId');
       await prefs.setString(messagesKey, jsonEncode(messages));
     } catch (e) {
       print('Error saving session messages: $e');
@@ -811,7 +820,7 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
     // This prevents orphaned message data from accumulating
     try {
       final prefs = await SharedPreferences.getInstance();
-      final messagesKey = '${_messagesKey}_$sessionId';
+      final messagesKey = _nsKey('${_messagesKey}_$sessionId');
       await prefs.remove(messagesKey);
     } catch (e) {
       print('Error clearing session messages: $e');
