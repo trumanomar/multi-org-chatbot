@@ -130,6 +130,15 @@ async def example_usage():
             
             for i, result in enumerate(custom_query_result["results"][:3]):
                 print(f"   {i+1}. {result['content'][:80]}...")
+
+        # Your requested query
+        print("\n🧭 Doctors connected to hospitals (domain 3)")
+        result = await graph_integration.query_graph(
+            query="doctors hospitals",
+            domain_id=3,
+            max_results=10
+        )
+        print(result)
     
     print("\n🎉 Example completed successfully!")
 

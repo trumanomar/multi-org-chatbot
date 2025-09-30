@@ -153,6 +153,36 @@ class GraphMCPClient:
         """
         return await self._make_request("POST", f"/load_graph/{domain_id}")
     
+    async def draw_graph(
+        self, 
+        domain_id: int, 
+        layout: str = "spring", 
+        node_size: int = 300, 
+        font_size: int = 6,
+        file_path: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Draw and save graph visualization
+        
+        Args:
+            domain_id: Domain ID to visualize
+            layout: Layout algorithm (spring, kamada_kawai, circular)
+            node_size: Size of nodes in visualization
+            font_size: Font size for labels
+            file_path: Optional custom file path for output
+            
+        Returns:
+            Dictionary with visualization results including file path
+        """
+        data = {
+            "domain_id": domain_id,
+            "layout": layout,
+            "node_size": node_size,
+            "font_size": font_size,
+            "file_path": file_path
+        }
+        return await self._make_request("POST", "/draw_graph", data)
+    
     async def search_connected_chunks(self, chunk_id: int, domain_id: int, max_depth: int = 2) -> Dict[str, Any]:
         """
         Find connected chunks
@@ -188,6 +218,45 @@ class GraphMCPClient:
             "status": "not_implemented",
             "message": "Graph path finding not yet implemented in HTTP API"
         }
+    
+    async def query_and_visualize(
+        self, 
+        query: str, 
+        domain_id: int, 
+        max_results: int = 10,
+        draw_graph: bool = True,
+        layout: str = "spring"
+    ) -> Dict[str, Any]:
+        """
+        Convenience method to query graph and optionally create visualization
+        
+        Args:
+            query: Search query
+            domain_id: Domain ID
+            max_results: Maximum results
+            draw_graph: Whether to generate graph visualization
+            layout: Layout algorithm for visualization
+            
+        Returns:
+            Combined query results and visualization info
+        """
+        # Query the graph
+        query_results = await self.query_graph(query, domain_id, max_results)
+        
+        result = {
+            "query_results": query_results,
+            "visualization": None
+        }
+        
+        # Optionally create visualization
+        if draw_graph:
+            viz_result = await self.draw_graph(
+                domain_id=domain_id,
+                layout=layout
+            )
+            result["visualization"] = viz_result
+        
+        return result
 
 # Convenience functions for easy integration
 async def query_domain_graph(query: str, domain_id: int, mcp_url: str = "http://127.0.0.1:5001") -> Dict[str, Any]:
@@ -233,6 +302,51 @@ async def get_domain_graph_stats(domain_id: int, mcp_url: str = "http://127.0.0.
     async with GraphMCPClient(mcp_url) as client:
         return await client.get_graph_stats(domain_id)
 
+async def draw_domain_graph(
+    domain_id: int, 
+    layout: str = "spring",
+    mcp_url: str = "http://127.0.0.1:5001"
+) -> Dict[str, Any]:
+    """
+    Convenience function to draw domain graph
+    
+    Args:
+        domain_id: Domain ID
+        layout: Layout algorithm
+        mcp_url: MCP server URL
+        
+    Returns:
+        Visualization results with file path
+    """
+    async with GraphMCPClient(mcp_url) as client:
+        return await client.draw_graph(domain_id, layout=layout)
+
+async def query_and_visualize_graph(
+    query: str,
+    domain_id: int,
+    layout: str = "spring",
+    mcp_url: str = "http://127.0.0.1:5001"
+) -> Dict[str, Any]:
+    """
+    Convenience function to query and visualize graph in one call
+    
+    Args:
+        query: Search query
+        domain_id: Domain ID
+        layout: Layout algorithm
+        mcp_url: MCP server URL
+        
+    Returns:
+        Combined query and visualization results
+    """
+    async with GraphMCPClient(mcp_url) as client:
+        return await client.query_and_visualize(
+            query=query,
+            domain_id=domain_id,
+            draw_graph=True,
+            layout=layout
+        )
+
 # Example usage
 async def example_usage():
     """Example of how to use the Graph MCP Client"""
@@ -247,9 +361,24 @@ async def example_usage():
         stats = await client.get_graph_stats(1)
         print(f"Stats: {stats}")
         
-        # Query graph
-        results = await client.query_graph("machine learning", 1)
-        print(f"Query results: {results}")
+        # Query graph and visualize
+        results = await client.query_and_visualize(
+            query="machine learning",
+            domain_id=1,
+            draw_graph=True,
+            layout="spring"
+        )
+        print(f"Query results: {results['query_results']}")
+        print(f"Visualization: {results['visualization']}")
+        
+        # Or just draw the graph
+        viz = await client.draw_graph(
+            domain_id=1,
+            layout="kamada_kawai",
+            node_size=500,
+            font_size=8
+        )
+        print(f"Graph visualization saved to: {viz.get('path')}")
 
 if __name__ == "__main__":
     asyncio.run(example_usage())

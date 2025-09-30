@@ -11,6 +11,7 @@ from app.auth.dependencies import get_current_principal, get_current_user_db
 
 # Vector search helpers (module-level)
 from app.VectorDB import DB as vectordb
+from app.GraphDB.graph_integration import GraphRAGIntegration
 from app.utilis.greetings import (
     is_greeting,
     detect_language,
@@ -36,6 +37,23 @@ class ChatAnswer(BaseModel):
     message_id: int
     domain_scope: str = Field(description="Domain that was searched")
     is_new_session: bool = Field(description="Whether this created a new session")
+
+class ChatSeparateResponse(BaseModel):
+    query: str
+    vector: List[Dict[str, Any]]
+    graph: List[Dict[str, Any]]
+    vector_total: int
+    graph_total: int
+
+def _append_triplets_to_context(context: str, triplets: List[Dict[str, Any]], max_triplets: int = 10) -> str:
+    if not triplets:
+        return context
+    lines = ["\n\n---\n\nTriplets (graph relations):"]
+    for t in triplets[:max_triplets]:
+        content = (t.get("content") or "").strip()
+        if content:
+            lines.append(f"- {content}")
+    return context + "\n" + "\n".join(lines)
 
 # ---------- Prompt ----------
 SYSTEM_INSTRUCTIONS = (
@@ -87,7 +105,11 @@ def _build_context(hits: List[Dict[str, Any]], max_chars: int = 12000) -> str:
         total += len(block)
     return "\n\n---\n\n".join(blocks)
 
-def _extract_sources(hits: List[Dict[str, Any]]) -> List[Dict[str, str]]:
+def _extract_sources(hits: List[Dict[str, Any]], max_sources: int = 5) -> List[Dict[str, str]]:
+    """
+    Extract source entries only from the hits actually used to build the current answer.
+    Limits the number of returned sources and de-duplicates by source path.
+    """
     out, seen = [], set()
     for h in hits:
         meta = h.get("metadata") or {}
@@ -96,11 +118,14 @@ def _extract_sources(hits: List[Dict[str, Any]]) -> List[Dict[str, str]]:
             continue
         txt = (h.get("page_content") or "").strip()
         snippet = (txt[:300] + "…") if len(txt) > 300 else txt
+        title = meta.get("title") or meta.get("doc_name") or os.path.basename(str(src))
         # De-dupe by source only (simple & effective)
         if src in seen:
             continue
         seen.add(src)
-        out.append({"source_file": src, "snippet": snippet})
+        out.append({"source_file": src, "snippet": snippet, "title": title})
+        if len(out) >= max_sources:
+            break
     return out
 
 def _get_domain_scope_name(domain_id: int, is_super_admin: bool = False) -> str:
@@ -289,7 +314,7 @@ def get_domain_info(principal = Depends(get_current_principal)):
     }
 
 @router.post("/chat/query", response_model=ChatAnswer)
-def chat_query(
+async def chat_query(
     payload: ChatQuery, 
     principal = Depends(get_current_principal),
     user: User = Depends(get_current_user_db),
@@ -366,8 +391,17 @@ def chat_query(
             is_new_session=is_new_session
         )
 
-    # Generate answer from domain-specific context
+    # Generate answer from domain-specific context (vector)
     context = _build_context(hits)
+
+    # Also fetch graph triplets related to the query to enrich context
+    try:
+        graph = GraphRAGIntegration()
+        graph_part = await graph.query_graph(q, domain_id=search_domain_id or 0, max_results=10) if search_domain_id is not None else {"results": []}
+        triplet_snippets = graph_part.get("results") or []
+        context = _append_triplets_to_context(context, triplet_snippets, max_triplets=8)
+    except Exception as e:
+        print(f"[chat] Graph enrichment skipped: {e}")
     domain_name = _get_domain_scope_name(search_domain_id, principal.role == "super_admin")
     answer = _answer_with_openai(context, q, domain_name) or "I couldn't find this in the knowledge base."
 
@@ -380,7 +414,7 @@ def chat_query(
 
     # Persist sources linked to this message
     try:
-        extracted_sources = _extract_sources(hits)
+        extracted_sources = _extract_sources(hits, max_sources=5)
         for s in extracted_sources:
             src_file = (s.get("source_file") or s.get("source") or "").strip()
             snippet = (s.get("snippet") or "").strip()
@@ -399,6 +433,39 @@ def chat_query(
         message_id=message.id,
         domain_scope=domain_scope,
         is_new_session=is_new_session
+    )
+
+@router.post("/chat/query_separate", response_model=ChatSeparateResponse)
+async def chat_query_separate(
+    payload: ChatQuery,
+    principal = Depends(get_current_principal),
+    user: User = Depends(get_current_user_db),
+    db: Session = Depends(get_db)
+):
+    q = (payload.message or "").strip()
+    if not q:
+        raise HTTPException(status_code=400, detail="Empty message")
+
+    # Determine domain scope similar to chat_query
+    if principal.role != "super_admin" and principal.domain_id is None:
+        raise HTTPException(status_code=403, detail="No domain assigned")
+
+    search_domain_id = principal.domain_id if principal.role != "super_admin" else principal.domain_id
+    if principal.role == "super_admin" and payload.session_id:
+        # keep same domain as in the session if needed (fallback to user's domain)
+        search_domain_id = principal.domain_id
+
+    k = payload.k or 5
+    graph = GraphRAGIntegration()
+    vector_part = await graph.query_vector(q, domain_id=search_domain_id or 0, k=k) if search_domain_id is not None else {"status":"success","results":[],"total_found":0}
+    graph_part = await graph.query_graph(q, domain_id=search_domain_id or 0, max_results=k) if search_domain_id is not None else {"status":"success","results":[],"total_found":0}
+
+    return ChatSeparateResponse(
+        query=q,
+        vector=(vector_part.get("results") or []),
+        graph=(graph_part.get("results") or []),
+        vector_total=int(vector_part.get("total_found") or 0),
+        graph_total=int(graph_part.get("total_found") or 0),
     )
 
 

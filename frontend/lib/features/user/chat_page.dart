@@ -393,22 +393,36 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
         'session_id': _selectedSessionId,
         'message': text,
       };
+      // Call separate endpoint to get both vector and graph sections
       final r = await dio.post(
-        '/chat/query',
+        '/chat/query_separate',
         data: jsonEncode(payload),
         options: Options(headers: {'Content-Type': 'application/json'}),
       );
       final resp = (r.data as Map?) ?? {};
-      final answer = (resp['answer'] ?? '').toString();
-      final sources = (resp['sources'] as List?) ?? const [];
-      
+      final vector = (resp['vector'] as List?) ?? const [];
+      final graph = (resp['graph'] as List?) ?? const [];
+      final content = StringBuffer();
+      content.writeln('Vector results (${resp['vector_total'] ?? vector.length}):');
+      for (final v in vector.take(3)) {
+        final txt = (v['content'] ?? '').toString();
+        if (txt.isNotEmpty) content.writeln('- ${txt.length > 160 ? txt.substring(0, 160) + '…' : txt}');
+      }
+      content.writeln('');
+      content.writeln('Graph results (${resp['graph_total'] ?? graph.length}):');
+      for (final g in graph.take(3)) {
+        final txt = (g['content'] ?? '').toString();
+        if (txt.isNotEmpty) content.writeln('- ${txt.length > 160 ? txt.substring(0, 160) + '…' : txt}');
+      }
+
       setState(() {
         _messages.add({
-          'id': 'sv-${resp['message_id'] ?? DateTime.now().millisecondsSinceEpoch}',
+          'id': 'sv-${DateTime.now().millisecondsSinceEpoch}',
           'role': 'assistant',
-          'content': answer,
-          'sources': sources,
-          'originalMessageId': resp['message_id'],
+          'content': content.toString().trim(),
+          'sources': const [],
+          'vector': vector,
+          'graph': graph,
         });
       });
       

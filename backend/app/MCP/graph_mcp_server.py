@@ -49,6 +49,13 @@ class GraphStatsResponse(BaseModel):
     edge_types: Dict[str, int]
     connected_components: int
 
+class DrawGraphRequest(BaseModel):
+    domain_id: int
+    layout: str = "spring"
+    node_size: int = 300
+    font_size: int = 6
+    file_path: Optional[str] = None
+
 # Global graph integration instance
 graph_integration = None
 
@@ -130,6 +137,32 @@ async def load_existing_graph(domain_id: int):
         return {"success": success, "domain_id": domain_id}
     except Exception as e:
         logger.error(f"Error loading graph: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@fastapi_app.post("/draw_graph")
+async def draw_graph_endpoint(req: DrawGraphRequest):
+    """Draw and save graph visualization"""
+    try:
+        graph = get_graph_integration()
+        
+        # Load the graph first if not already loaded
+        if graph.graph.number_of_nodes() == 0:
+            await graph.load_existing_graph(req.domain_id)
+        
+        # Generate file path if not provided
+        file_path = req.file_path
+        if not file_path:
+            file_path = os.path.join(graph.output_dir, f"graph_domain_{req.domain_id}_viz.png")
+        
+        result = graph.draw_graph(
+            file_path=file_path,
+            layout=req.layout,
+            node_size=req.node_size,
+            font_size=req.font_size
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Error drawing graph: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @fastapi_app.get("/health")
@@ -262,6 +295,59 @@ def create_graph_mcp_server():
             }
         except Exception as e:
             logger.error(f"Error in load_graph_tool: {e}")
+            return {"status": "error", "message": str(e)}
+    
+    @mcp.tool()
+    async def draw_graph_tool(
+        domain_id: int, 
+        layout: str = "spring", 
+        node_size: int = 300, 
+        font_size: int = 6,
+        file_path: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Draw and save graph visualization
+        
+        Args:
+            domain_id: Domain ID to visualize
+            layout: Layout algorithm (spring, kamada_kawai, circular)
+            node_size: Size of nodes in visualization
+            font_size: Font size for labels
+            file_path: Optional custom file path for output
+            
+        Returns:
+            Dictionary with visualization results including file path
+        """
+        try:
+            graph = get_graph_integration()
+            
+            # Load the graph first if not already loaded
+            if graph.graph.number_of_nodes() == 0:
+                loaded = await graph.load_existing_graph(domain_id)
+                if not loaded:
+                    return {
+                        "status": "error",
+                        "message": f"No graph found for domain {domain_id}. Build the graph first."
+                    }
+            
+            # Generate file path if not provided
+            if not file_path:
+                file_path = os.path.join(graph.output_dir, f"graph_domain_{domain_id}_viz.png")
+            
+            result = graph.draw_graph(
+                file_path=file_path,
+                layout=layout,
+                node_size=node_size,
+                font_size=font_size
+            )
+            
+            return {
+                **result,
+                "domain_id": domain_id
+            }
+            
+        except Exception as e:
+            logger.error(f"Error in draw_graph_tool: {e}")
             return {"status": "error", "message": str(e)}
     
     @mcp.tool()

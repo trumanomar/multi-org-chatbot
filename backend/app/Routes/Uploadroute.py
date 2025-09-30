@@ -1,4 +1,4 @@
-# app/Routes/Uploadroute.py - Updated version
+# app/Routes/Uploadroute.py - Updated with Graph Integration
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
 import os, traceback, asyncio, psutil, gc
 from tempfile import NamedTemporaryFile
@@ -14,11 +14,16 @@ from app.DB.save_chunks import save_chunks
 from app.auth.dependencies import require_admin, get_current_principal, Principal
 
 from app.utilis.docling_client import DoclingHttpClient
+from app.MCP.graph_mcp_client import GraphMCPClient  # Add this import
 from langchain.docstore.document import Document
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 BATCH_SIZE = 100
 ALLOWED_EXTS = {".pdf", ".docx", ".txt", ".csv", ".xlsx", ".md"}
+
+# Configuration
+GRAPH_MCP_URL = os.getenv("GRAPH_MCP_URL", "http://127.0.0.1:5001")
+ENABLE_GRAPH_AUTO_UPDATE = os.getenv("ENABLE_GRAPH_AUTO_UPDATE", "true").lower() == "true"
 
 @router.post("/upload", dependencies=[Depends(require_admin)])
 async def upload_files(
@@ -38,6 +43,7 @@ async def upload_files(
 
     total_chunks = 0
     file_counts = []
+    processed_doc_ids = []  # Track processed documents for graph update
 
     # Initialize docling client
     docling_client = DoclingHttpClient(base_url="http://127.0.0.1:5000")
@@ -48,6 +54,22 @@ async def upload_files(
             status_code=503, 
             detail="Docling service is not available. Please ensure the MCP server is running."
         )
+    
+    # Initialize graph client (optional - won't fail if graph service is down)
+    graph_client = None
+    graph_available = False
+    if ENABLE_GRAPH_AUTO_UPDATE:
+        try:
+            graph_client = GraphMCPClient(mcp_url=GRAPH_MCP_URL)
+            health = await graph_client.health_check()
+            graph_available = health.get("status") == "healthy"
+            if graph_available:
+                print(f"[upload] Graph MCP service available at {GRAPH_MCP_URL}")
+            else:
+                print(f"[upload] Graph MCP service not available, skipping graph updates")
+        except Exception as e:
+            print(f"[upload] Could not connect to Graph MCP service: {e}")
+            graph_available = False
         
     for idx, file in enumerate(files):
         suffix = os.path.splitext(file.filename)[-1].lower()
@@ -79,7 +101,7 @@ async def upload_files(
             try:
                 mcp_response = await docling_client.load_and_split_async(
                     file_path=tmp_path,
-                    chunk_size=500,  # You can make these configurable
+                    chunk_size=500,
                     chunk_overlap=50
                 )
             except Exception as docling_error:
@@ -135,6 +157,9 @@ async def upload_files(
                 
                 db.commit()
                 print(f"[upload] All chunks saved to database")
+                
+                # Track this doc for graph update
+                processed_doc_ids.append(new_doc.id)
                 
             except Exception as save_error:
                 print(f"[upload] Database save error: {save_error}")
@@ -201,6 +226,52 @@ async def upload_files(
                 pass
             gc.collect()
 
+    # 6) Update Graph Database (after all files are processed)
+    graph_update_results = []
+    if graph_available and graph_client and processed_doc_ids:
+        print(f"[upload] Updating graph database for {len(processed_doc_ids)} documents...")
+        
+        for doc_id in processed_doc_ids:
+            try:
+                graph_result = await graph_client.update_graph(
+                    domain_id=db_user.domain_id,
+                    doc_id=doc_id,
+                    user_id=db_user.id
+                )
+                
+                if graph_result.get("status") == "success":
+                    print(f"[upload] Graph updated for doc_id={doc_id}: "
+                          f"{graph_result.get('nodes_added', 0)} nodes, "
+                          f"{graph_result.get('triplets_extracted', 0)} triplets")
+                    graph_update_results.append({
+                        "doc_id": doc_id,
+                        "status": "success",
+                        "nodes_added": graph_result.get('nodes_added', 0),
+                        "triplets_extracted": graph_result.get('triplets_extracted', 0)
+                    })
+                else:
+                    print(f"[upload] Graph update failed for doc_id={doc_id}: {graph_result.get('message')}")
+                    graph_update_results.append({
+                        "doc_id": doc_id,
+                        "status": "failed",
+                        "error": graph_result.get('message', 'Unknown error')
+                    })
+                    
+            except Exception as graph_error:
+                print(f"[upload] Graph update error for doc_id={doc_id}: {graph_error}")
+                graph_update_results.append({
+                    "doc_id": doc_id,
+                    "status": "error",
+                    "error": str(graph_error)
+                })
+        
+        # Close graph client
+        try:
+            if hasattr(graph_client, 'session') and graph_client.session:
+                await graph_client.session.close()
+        except:
+            pass
+
     print(f"[upload] Finished uploading all files: {total_chunks} total chunks")
 
     # Count successful vs failed files
@@ -218,6 +289,30 @@ async def upload_files(
             "failed": len(failed_files)
         }
     }
+    
+    # Add graph update information if available
+    if graph_update_results:
+        successful_graph_updates = [g for g in graph_update_results if g.get("status") == "success"]
+        response["graph_updates"] = {
+            "enabled": True,
+            "total_documents": len(processed_doc_ids),
+            "successful": len(successful_graph_updates),
+            "failed": len(graph_update_results) - len(successful_graph_updates),
+            "details": graph_update_results,
+            "total_nodes_added": sum(g.get("nodes_added", 0) for g in successful_graph_updates),
+            "total_triplets_extracted": sum(g.get("triplets_extracted", 0) for g in successful_graph_updates)
+        }
+    elif ENABLE_GRAPH_AUTO_UPDATE and not graph_available:
+        response["graph_updates"] = {
+            "enabled": True,
+            "status": "unavailable",
+            "message": "Graph MCP service not available"
+        }
+    else:
+        response["graph_updates"] = {
+            "enabled": False,
+            "message": "Graph auto-update is disabled"
+        }
     
     # If some files failed, return 207 (Multi-Status) instead of 200
     if failed_files and successful_files:
@@ -239,3 +334,57 @@ async def check_docling_health():
         "base_url": docling_client.base_url,
         "status": "ok" if is_healthy else "error"
     }
+
+# Add endpoint to check graph service health
+@router.get("/graph-health", dependencies=[Depends(require_admin)])
+async def check_graph_health():
+    """Check if the graph MCP server is running"""
+    try:
+        async with GraphMCPClient(mcp_url=GRAPH_MCP_URL) as client:
+            health = await client.health_check()
+            return {
+                "graph_service": "healthy" if health.get("status") == "healthy" else "unhealthy",
+                "base_url": GRAPH_MCP_URL,
+                "status": "ok" if health.get("status") == "healthy" else "error",
+                "details": health
+            }
+    except Exception as e:
+        return {
+            "graph_service": "unhealthy",
+            "base_url": GRAPH_MCP_URL,
+            "status": "error",
+            "error": str(e)
+        }
+
+# Add endpoint to manually trigger graph update for a document
+@router.post("/update-graph/{doc_id}", dependencies=[Depends(require_admin)])
+async def manually_update_graph(
+    doc_id: int,
+    db: Session = Depends(get_db),
+    principal: Principal = Depends(get_current_principal)
+):
+    """Manually trigger graph update for a specific document"""
+    
+    # Verify user
+    db_user = db.query(User).filter(User.username == principal.sub).first()
+    if not db_user:
+        raise HTTPException(status_code=401, detail="User not found")
+    
+    try:
+        async with GraphMCPClient(mcp_url=GRAPH_MCP_URL) as client:
+            result = await client.update_graph(
+                domain_id=db_user.domain_id,
+                doc_id=doc_id,
+                user_id=db_user.id
+            )
+            
+            return {
+                "status": "success",
+                "doc_id": doc_id,
+                "graph_update": result
+            }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to update graph: {str(e)}"
+        )
