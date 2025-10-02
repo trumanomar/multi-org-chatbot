@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from typing import Any, Dict, List
 import os
 from sqlalchemy.orm import Session
-
+import json
 # Database imports
 from app.DB.db import get_db
 from app.Models.tables import ChatSession, ChatMessage, User, ChatSource
@@ -29,14 +29,7 @@ class ChatQuery(BaseModel):
     message: str = Field(..., description="User question")
     k: int = Field(5, ge=1, le=50, description="Top-K retrieved chunks")
     session_id: int = Field(None, description="Existing session ID to continue conversation")
-
-class ChatAnswer(BaseModel):
-    answer: str
-    sources: List[Dict[str, str]]
-    session_id: int
-    message_id: int
-    domain_scope: str = Field(description="Domain that was searched")
-    is_new_session: bool = Field(description="Whether this created a new session")
+    answer: str = Field(None, description="Pre-generated answer (optional, for saving complete message)")
 
 class ChatSeparateResponse(BaseModel):
     query: str
@@ -44,16 +37,13 @@ class ChatSeparateResponse(BaseModel):
     graph: List[Dict[str, Any]]
     vector_total: int
     graph_total: int
-
-def _append_triplets_to_context(context: str, triplets: List[Dict[str, Any]], max_triplets: int = 10) -> str:
-    if not triplets:
-        return context
-    lines = ["\n\n---\n\nTriplets (graph relations):"]
-    for t in triplets[:max_triplets]:
-        content = (t.get("content") or "").strip()
-        if content:
-            lines.append(f"- {content}")
-    return context + "\n" + "\n".join(lines)
+    session_id: int
+    message_id: int
+    domain_scope: str = Field(description="Domain that was searched")
+    is_new_session: bool = Field(description="Whether this created a new session")
+    is_greeting: bool = Field(default=False, description="Whether this was a greeting")
+    answer: str = Field(default="", description="Generated answer for greetings")
+    sources: List[Dict[str, str]] = Field(default=[], description="Extracted sources")
 
 # ---------- Prompt ----------
 SYSTEM_INSTRUCTIONS = (
@@ -89,45 +79,6 @@ def _normalize_hit(hit: Any) -> Dict[str, Any]:
         return {"page_content": obj, "metadata": {}, "score": score}
     return {"page_content": "", "metadata": {}, "score": score}
 
-def _build_context(hits: List[Dict[str, Any]], max_chars: int = 12000) -> str:
-    blocks, total = [], 0
-    for i, h in enumerate(hits, 1):
-        meta = h.get("metadata") or {}
-        src = meta.get("source") or meta.get("file_path") or meta.get("filename") or "unknown"
-        txt = (h.get("page_content") or "").strip()
-        if not txt:
-            continue
-        chunk = txt if len(txt) <= 2000 else (txt[:2000] + "…")
-        block = f"[Source {i}: {src}]\n{chunk}"
-        if total + len(block) > max_chars:
-            break
-        blocks.append(block)
-        total += len(block)
-    return "\n\n---\n\n".join(blocks)
-
-def _extract_sources(hits: List[Dict[str, Any]], max_sources: int = 5) -> List[Dict[str, str]]:
-    """
-    Extract source entries only from the hits actually used to build the current answer.
-    Limits the number of returned sources and de-duplicates by source path.
-    """
-    out, seen = [], set()
-    for h in hits:
-        meta = h.get("metadata") or {}
-        src = meta.get("source") or meta.get("file_path") or meta.get("filename") or ""
-        if not src or src.lower() == "unknown":
-            continue
-        txt = (h.get("page_content") or "").strip()
-        snippet = (txt[:300] + "…") if len(txt) > 300 else txt
-        title = meta.get("title") or meta.get("doc_name") or os.path.basename(str(src))
-        # De-dupe by source only (simple & effective)
-        if src in seen:
-            continue
-        seen.add(src)
-        out.append({"source_file": src, "snippet": snippet, "title": title})
-        if len(out) >= max_sources:
-            break
-    return out
-
 def _get_domain_scope_name(domain_id: int, is_super_admin: bool = False) -> str:
     """Get human-readable domain scope name"""
     if is_super_admin and domain_id is None:
@@ -141,94 +92,49 @@ def _get_domain_scope_name(domain_id: int, is_super_admin: bool = False) -> str:
     }
     return domain_names.get(domain_id, f"Domain {domain_id}")
 
-# ---------- LLM ----------
-def _answer_with_stub(context: str, question: str) -> str:
-    if not context.strip():
-        return "I couldn't find this in the knowledge base."
-    return f"Based on the provided documents: {question}"
-
-def _answer_with_openai(context: str, question: str, domain_name: str = None) -> str:
-    """
-    OpenAI-compatible Chat Completions call.
-    Uses OPENAI_BASE_URL (e.g., http://localhost:11434/v1 for Ollama),
-    OPENAI_API_KEY, and LLM_MODEL.
-    """
-    api_key = os.getenv("OPENAI_API_KEY", "")
-    base_url = os.getenv("OPENAI_BASE_URL")
-    model = os.getenv("LLM_MODEL", "llama3.1:8b-instruct-q4_K_M")
-
-    if not api_key:
-        return _answer_with_stub(context, question)
-
-    try:
-        client = OpenAI(api_key=api_key, base_url=base_url)
-        
-        # Enhanced system instructions with domain context
-        system_prompt = SYSTEM_INSTRUCTIONS
-        if domain_name:
-            system_prompt += f"\n\nNote: You are specifically answering for {domain_name}. Only provide information relevant to this domain."
-        
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {question}\n\nAnswer strictly from the context."},
-        ]
-        resp = client.chat.completions.create(
-            model=model,
-            messages=messages,
-            temperature=0.1,
-            max_tokens=500,
-        )
-        text = (resp.choices[0].message.content or "").strip()
-        return text or "I couldn't find this in the knowledge base."
-    except Exception as e:
-        # Keep it simple and robust
-        print(f"[chat] LLM call failed; falling back. Error: {e}")
-        return _answer_with_stub(context, question)
-
 def _get_or_create_session(
     db: Session, 
     user: User, 
     domain_id: int,
     existing_session_id: int = None
 ) -> tuple[ChatSession, bool]:
-    """Get existing session or create new one. Returns (session, is_new_session)"""
+    """Get existing session or create new one"""
+    
+    # لو domain_id فاضي، استخدم 0
+    if domain_id is None:
+        domain_id = 0
+    
+    print(f"[DEBUG] Starting session creation - user_id={user.id}, domain_id={domain_id}")
+    
     try:
-        # If session_id provided, try to get existing session
+        # لو في session_id موجود، جيبه
         if existing_session_id:
             session = db.query(ChatSession).filter(
                 ChatSession.id == existing_session_id,
-                ChatSession.user_id == user.id,
-                ChatSession.domain_id == domain_id
+                ChatSession.user_id == user.id
             ).first()
             
             if session:
-                return session, False  # Existing session found
+                print(f"[SUCCESS] Found existing session: {session.id}")
+                return session, False
         
-        # If no session_id provided or session not found, get the most recent session for this user/domain
-        recent_session = db.query(ChatSession).filter(
-            ChatSession.user_id == user.id,
-            ChatSession.domain_id == domain_id
-        ).order_by(ChatSession.created_at.desc()).first()
-        
-        # If there's a recent session (within last 24 hours), reuse it
-        if recent_session:
-            from datetime import datetime, timedelta
-            if datetime.now() - recent_session.created_at.replace(tzinfo=None) < timedelta(hours=24):
-                return recent_session, False
-        
-        # Create new session if none exists or too old
+        # اعمل session جديد
         session = ChatSession(user_id=user.id, domain_id=domain_id)
         db.add(session)
+        db.flush()  # مهم جداً - علشان تجيب الـ ID قبل الـ commit
+        print(f"[DEBUG] Session created with ID: {session.id}")
         db.commit()
         db.refresh(session)
-        return session, True  # New session created
+        print(f"[SUCCESS] Session committed successfully: {session.id}")
+        return session, True
         
     except Exception as e:
         db.rollback()
-        print(f"[chat] Session management failed: {e}")
-        # Return dummy session to prevent crashes
-        session = ChatSession(id=-1, user_id=user.id, domain_id=domain_id)
-        return session, True
+        print(f"[ERROR] Session creation failed: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+
 
 def _save_message_to_session(
     db: Session,
@@ -237,7 +143,15 @@ def _save_message_to_session(
     question: str,
     answer: str
 ) -> ChatMessage:
-    """Save message to existing session"""
+    """Save message to session"""
+    
+    print(f"[DEBUG] Saving message - session_id={session.id}, user_id={user.id}")
+    
+    # تأكد إن الـ session صالح
+    if not session or not session.id or session.id <= 0:
+        print(f"[ERROR] Invalid session ID: {session.id if session else 'None'}")
+        raise HTTPException(status_code=500, detail="Invalid session")
+    
     try:
         message = ChatMessage(
             session_id=session.id,
@@ -246,52 +160,77 @@ def _save_message_to_session(
             answer=answer,
         )
         db.add(message)
+        db.flush()  # مهم جداً
+        print(f"[DEBUG] Message created with ID: {message.id}")
         db.commit()
         db.refresh(message)
+        print(f"[SUCCESS] Message saved: {message.id}")
         return message
+        
     except Exception as e:
         db.rollback()
-        print(f"[chat] Message save failed: {e}")
-        # Return dummy message to prevent crashes
-        return ChatMessage(id=-1, session_id=session.id, user_id=user.id, question=question, answer=answer)
+        print(f"[ERROR] Message save failed: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
-def _save_chat_interaction(
-    db: Session, 
-    user: User, 
-    domain_id: int, 
-    question: str, 
-    answer: str
-) -> tuple[ChatSession, ChatMessage]:
-    """
-    Legacy function for backward compatibility - creates new session every time
-    Use _get_or_create_session + _save_message_to_session instead for session continuity
-    """
+
+def _save_chat_sources(db: Session, message_id: int, sources: List[Dict[str, str]]) -> None:
+    """Save sources for a chat message"""
+    if not message_id or message_id <= 0:
+        print(f"[chat] ⚠️ Skipping source save - invalid message_id: {message_id}")
+        return
+    
     try:
-        # Create new chat session
-        session = ChatSession(user_id=user.id, domain_id=domain_id)
-        db.add(session)
+        for s in sources:
+            src_file = (s.get("source_file") or s.get("source") or "").strip()
+            snippet = (s.get("snippet") or "").strip()
+            if not src_file:
+                continue
+            db.add(ChatSource(message_id=message_id, source=src_file, snippet=snippet))
         db.commit()
-        db.refresh(session)
-
-        # Create chat message
-        message = ChatMessage(
-            session_id=session.id,
-            user_id=user.id,
-            question=question,
-            answer=answer,
-        )
-        db.add(message)
-        db.commit()
-        db.refresh(message)
-
-        return session, message
+        print(f"[chat] ✅ Saved {len(sources)} sources for message {message_id}")
     except Exception as e:
         db.rollback()
-        print(f"[chat] Database save failed: {e}")
-        # Return dummy objects to prevent crashes
-        session = ChatSession(id=-1, user_id=user.id, domain_id=domain_id)
-        message = ChatMessage(id=-1, session_id=-1, user_id=user.id, question=question, answer=answer)
-        return session, message
+        print(f"[chat] ❌ Failed to save sources for message {message_id}: {e}")
+        # Don't raise - sources are optional
+def _generate_answer_with_llm(query: str, vector_results: list, graph_results: list) -> str:
+    """Generate final answer from LLM using vector + graph context"""
+    try:
+        client = OpenAI()
+
+        # Collect context from vector + graph
+        context_texts = []
+        for v in vector_results:
+            context_texts.append(v.get("page_content") or v.get("content") or "")
+        for g in graph_results:
+            context_texts.append(g.get("page_content") or g.get("content") or "")
+
+        context_str = "\n".join(context_texts)[:4000]  # truncate for safety
+
+        # Debug: print context to logs
+        print("[DEBUG] Context passed to LLM:\n", context_str[:1000], "..." if len(context_str) > 1000 else "")
+
+        response = client.chat.completions.create(
+            model=os.getenv("LLM_MODEL", "gpt-4o-mini"),
+            messages=[
+                {"role": "system", "content": SYSTEM_INSTRUCTIONS},
+                {
+                    "role": "user",
+                    "content": f"Here is the context extracted from the knowledge base:\n\n{context_str}\n\n"
+                               f"User question: {query}\n\nPlease provide a clear and factual answer "
+                               f"based only on the context above."
+                },
+            ],
+            temperature=0,
+        )
+
+        answer = response.choices[0].message.content.strip()
+        return answer
+
+    except Exception as e:
+        print(f"[chat] ❌ LLM generation failed: {e}")
+        return "I couldn't generate an answer due to an internal error."
 
 # ---------- Routes ----------
 @router.get("/chat/debug_env")
@@ -313,14 +252,18 @@ def get_domain_info(principal = Depends(get_current_principal)):
         "search_scope": "global" if principal.role == "super_admin" and principal.domain_id is None else f"domain_{principal.domain_id}"
     }
 
-@router.post("/chat/query", response_model=ChatAnswer)
-async def chat_query(
-    payload: ChatQuery, 
+@router.post("/chat/query_separate", response_model=ChatSeparateResponse)
+async def chat_query_separate(
+    payload: ChatQuery,
     principal = Depends(get_current_principal),
     user: User = Depends(get_current_user_db),
     db: Session = Depends(get_db)
 ):
-    q = payload.message.strip()
+    """
+    Main chat endpoint - handles both greetings and queries
+    Returns separate vector and graph results along with saved message info
+    """
+    q = (payload.message or "").strip()
     if not q:
         raise HTTPException(status_code=400, detail="Empty message")
 
@@ -341,12 +284,12 @@ async def chat_query(
         search_domain_id = principal.domain_id
         domain_scope = f"domain_{principal.domain_id}"
 
-    # Get or create session - THIS IS THE KEY FIX
+    # Get or create session
     session, is_new_session = _get_or_create_session(
         db, 
         user, 
         principal.domain_id or 0, 
-        payload.session_id  # Pass the session_id from frontend
+        payload.session_id
     )
 
     # Handle greetings
@@ -354,119 +297,94 @@ async def chat_query(
     if greeting_lang:
         answer = make_greeting_response(greeting_lang)
         message = _save_message_to_session(db, session, user, q, answer)
-        return ChatAnswer(
-            answer=answer, 
-            sources=[], 
-            session_id=session.id, 
+        
+        return ChatSeparateResponse(
+            query=q,
+            vector=[],
+            graph=[],
+            vector_total=0,
+            graph_total=0,
+            session_id=session.id,
             message_id=message.id,
             domain_scope=domain_scope,
-            is_new_session=is_new_session
+            is_new_session=is_new_session,
+            is_greeting=True,
+            answer=answer,
+            sources=[]
         )
 
-    # Detect user language for possible localized fallbacks
-    user_lang = detect_language(q)
-
-    # Perform domain-scoped vector search
-    try:
-        if search_domain_id is None:
-            raw = vectordb.search_similar(q, payload.k)
-        else:
-            raw = vectordb.search_similar_for_domain(q, search_domain_id, payload.k)
-    except Exception as e:
-        print(f"[chat] Vector search failed: {e}")
-        raise HTTPException(status_code=500, detail="Search service unavailable")
-
-    hits = [_normalize_hit(h) for h in (raw or []) if h is not None]
-
-    # Handle no results found
-    if not hits or not any((h.get("page_content") or "").strip() for h in hits):
-        answer = localized_not_found(user_lang)
-        message = _save_message_to_session(db, session, user, q, answer)
-        return ChatAnswer(
-            answer=answer, 
-            sources=[], 
-            session_id=session.id, 
-            message_id=message.id,
-            domain_scope=domain_scope,
-            is_new_session=is_new_session
-        )
-
-    # Generate answer from domain-specific context (vector)
-    context = _build_context(hits)
-
-    # Also fetch graph triplets related to the query to enrich context
-    try:
-        graph = GraphRAGIntegration()
-        graph_part = await graph.query_graph(q, domain_id=search_domain_id or 0, max_results=10) if search_domain_id is not None else {"results": []}
-        triplet_snippets = graph_part.get("results") or []
-        context = _append_triplets_to_context(context, triplet_snippets, max_triplets=8)
-    except Exception as e:
-        print(f"[chat] Graph enrichment skipped: {e}")
-    domain_name = _get_domain_scope_name(search_domain_id, principal.role == "super_admin")
-    answer = _answer_with_openai(context, q, domain_name) or "I couldn't find this in the knowledge base."
-
-    # If the model/stub returned the fallback phrase, localize it
-    if (answer or "").strip() == "I couldn't find this in the knowledge base.":
-        answer = localized_not_found(user_lang)
-
-    # Save message to existing session
-    message = _save_message_to_session(db, session, user, q, answer)
-
-    # Persist sources linked to this message
-    try:
-        extracted_sources = _extract_sources(hits, max_sources=5)
-        for s in extracted_sources:
-            src_file = (s.get("source_file") or s.get("source") or "").strip()
-            snippet = (s.get("snippet") or "").strip()
-            if not src_file:
-                continue
-            db.add(ChatSource(message_id=message.id, source=src_file, snippet=snippet))
-        db.commit()
-    except Exception as e:
-        db.rollback()
-        print(f"[chat] Failed to save sources for message {message.id}: {e}")
-
-    return ChatAnswer(
-        answer=answer, 
-        sources=[{"source": s.get("source_file") or s.get("source"), "snippet": s.get("snippet")} for s in extracted_sources], 
-        session_id=session.id, 
-        message_id=message.id,
-        domain_scope=domain_scope,
-        is_new_session=is_new_session
-    )
-
-@router.post("/chat/query_separate", response_model=ChatSeparateResponse)
-async def chat_query_separate(
-    payload: ChatQuery,
-    principal = Depends(get_current_principal),
-    user: User = Depends(get_current_user_db),
-    db: Session = Depends(get_db)
-):
-    q = (payload.message or "").strip()
-    if not q:
-        raise HTTPException(status_code=400, detail="Empty message")
-
-    # Determine domain scope similar to chat_query
-    if principal.role != "super_admin" and principal.domain_id is None:
-        raise HTTPException(status_code=403, detail="No domain assigned")
-
-    search_domain_id = principal.domain_id if principal.role != "super_admin" else principal.domain_id
-    if principal.role == "super_admin" and payload.session_id:
-        # keep same domain as in the session if needed (fallback to user's domain)
-        search_domain_id = principal.domain_id
-
+    # Perform queries
     k = payload.k or 5
     graph = GraphRAGIntegration()
-    vector_part = await graph.query_vector(q, domain_id=search_domain_id or 0, k=k) if search_domain_id is not None else {"status":"success","results":[],"total_found":0}
-    graph_part = await graph.query_graph(q, domain_id=search_domain_id or 0, max_results=k) if search_domain_id is not None else {"status":"success","results":[],"total_found":0}
+    
+    # Query vector and graph databases
+    if search_domain_id is None:
+        vector_part = await graph.query_vector(q, domain_id=0, k=k)
+        graph_part = await graph.query_graph(q, domain_id=0, max_results=k)
+    else:
+        vector_part = await graph.query_vector(q, domain_id=search_domain_id, k=k)
+        graph_part = await graph.query_graph(q, domain_id=search_domain_id, max_results=k)
+
+    # Extract results
+    vector_results = vector_part.get("results") or []
+    graph_results = graph_part.get("results") or []
+    vector_total = int(vector_part.get("total_found") or 0)
+    graph_total = int(graph_part.get("total_found") or 0)
+
+    # Prepare sources from vector results
+    sources = []
+    seen_sources = set()
+    for result in vector_results[:5]:  # Top 5 sources
+        metadata = result.get("metadata", {})
+        source_file = metadata.get("source") or metadata.get("file_path") or metadata.get("filename") or ""
+        
+        if not source_file or source_file in seen_sources:
+            continue
+            
+        seen_sources.add(source_file)
+        content = result.get("content") or result.get("page_content") or ""
+        snippet = (content[:300] + "…") if len(content) > 300 else content
+        title = metadata.get("title") or metadata.get("doc_name") or os.path.basename(str(source_file))
+        
+        sources.append({
+            "source": source_file,
+            "snippet": snippet,
+            "title": title
+        })
+
+    # Save message to session
+    # Use provided answer if available, otherwise empty string
+   # --- Generate answer using LLM ---
+    generated_answer = _generate_answer_with_llm(q, vector_results, graph_results)
+
+    # Save message with generated answer
+    message = _save_message_to_session(db, session, user, q, generated_answer)
+    message.vector_results = json.dumps(vector_results)
+    message.graph_results = json.dumps(graph_results)
+    db.commit()
+ 
+
+
+    # Save sources if we have them
+    if sources and message.id:
+        _save_chat_sources(db, message.id, sources)
 
     return ChatSeparateResponse(
         query=q,
-        vector=(vector_part.get("results") or []),
-        graph=(graph_part.get("results") or []),
-        vector_total=int(vector_part.get("total_found") or 0),
-        graph_total=int(graph_part.get("total_found") or 0),
+        
+        vector_total=vector_total,
+        graph_total=graph_total,
+        session_id=session.id,
+        message_id=message.id,
+        domain_scope=domain_scope,
+        is_new_session=is_new_session,
+        is_greeting=False,
+        answer=generated_answer,
+        vector=vector_results,
+        graph=graph_results,
+        sources=sources
     )
+
 
 
 # ---------- Session Management Endpoints ----------
@@ -499,7 +417,8 @@ def create_new_chat_session(
 def get_current_session_info(
     session_id: int,
     db: Session = Depends(get_db),
-    principal = Depends(get_current_principal)
+    principal = Depends(get_current_principal),
+    user: User = Depends(get_current_user_db)
 ):
     """Get information about current session"""
     session = db.query(ChatSession).filter(ChatSession.id == session_id).first()
@@ -508,7 +427,7 @@ def get_current_session_info(
     
     # Security check
     if principal.role != "super_admin":
-        if session.user_id != principal.user_id:
+        if session.user_id != user.id:
             raise HTTPException(status_code=403, detail="Access denied")
         if principal.domain_id is not None and session.domain_id != principal.domain_id:
             raise HTTPException(status_code=403, detail="Domain access denied")
@@ -524,16 +443,16 @@ def get_current_session_info(
         "is_active": True
     }
 
-
-"""# ---------- Chat History Endpoints ----------
 @router.get("/chat/sessions/{user_id}")
 def get_user_chat_sessions(
     user_id: int, 
     db: Session = Depends(get_db),
-    principal = Depends(get_current_principal)
+    principal = Depends(get_current_principal),
+    user: User = Depends(get_current_user_db)
 ):
+    """Get all chat sessions for a user"""
     # Security check: users can only access their own sessions unless they're super_admin
-    if principal.role != "super_admin" and principal.user_id != user_id:
+    if principal.role != "super_admin" and user.id != user_id:
         raise HTTPException(status_code=403, detail="Access denied")
     
     query = db.query(ChatSession).filter(ChatSession.user_id == user_id)
@@ -543,14 +462,22 @@ def get_user_chat_sessions(
         query = query.filter(ChatSession.domain_id == principal.domain_id)
     
     sessions = query.order_by(ChatSession.created_at.desc()).all()
-    return sessions
+    
+    return [{
+        "session_id": s.id,
+        "domain_id": s.domain_id,
+        "domain_name": _get_domain_scope_name(s.domain_id),
+        "created_at": s.created_at
+    } for s in sessions]
 
 @router.get("/chat/messages/{session_id}")
 def get_chat_messages(
     session_id: int, 
     db: Session = Depends(get_db),
-    principal = Depends(get_current_principal)
+    principal = Depends(get_current_principal),
+    user: User = Depends(get_current_user_db)
 ):
+    """Get all messages for a session with their sources"""
     
     # Get the session first to check ownership and domain
     session = db.query(ChatSession).filter(ChatSession.id == session_id).first()
@@ -559,27 +486,52 @@ def get_chat_messages(
     
     # Security checks
     if principal.role != "super_admin":
-        if session.user_id != principal.user_id:
+        if session.user_id != user.id:
             raise HTTPException(status_code=403, detail="Access denied")
         if principal.domain_id is not None and session.domain_id != principal.domain_id:
             raise HTTPException(status_code=403, detail="Domain access denied")
     
+    # Get messages with their sources
     messages = db.query(ChatMessage).filter(
         ChatMessage.session_id == session_id
     ).order_by(ChatMessage.created_at.asc()).all()
     
-    return messages
+    result = []
+    for msg in messages:
+        # Get sources for this message
+        sources = db.query(ChatSource).filter(
+            ChatSource.message_id == msg.id
+        ).all()
+        
+        result.append({
+            "id": msg.id,
+            "question": msg.question,
+            "answer": msg.answer,
+            "vector": json.loads(msg.vector_results or "[]"),
+            "graph": json.loads(msg.graph_results or "[]"),
+            "created_at": msg.created_at,
+            "sources": [
+                {
+                    "source": s.source,
+                    "snippet": s.snippet
+                } for s in sources
+            ]
+        })
+    
+    return result
 
 @router.get("/chat/history/{user_id}")
 def get_user_chat_history(
     user_id: int, 
     limit: int = 50, 
     db: Session = Depends(get_db),
-    principal = Depends(get_current_principal)
+    principal = Depends(get_current_principal),
+    user: User = Depends(get_current_user_db)
 ):
+    """Get complete chat history with messages and sources"""
     
     # Security check
-    if principal.role != "super_admin" and principal.user_id != user_id:
+    if principal.role != "super_admin" and user.id != user_id:
         raise HTTPException(status_code=403, detail="Access denied")
     
     # Get recent sessions with domain filtering
@@ -596,22 +548,119 @@ def get_user_chat_history(
             ChatMessage.session_id == session.id
         ).order_by(ChatMessage.created_at.asc()).all()
         
+        messages_with_sources = []
+        for msg in messages:
+            # Get sources for each message
+            sources = db.query(ChatSource).filter(
+                ChatSource.message_id == msg.id
+            ).all()
+            
+            messages_with_sources.append({
+                "id": msg.id,
+                "question": msg.question,
+                "answer": msg.answer,
+                "vector": json.loads(msg.vector_results or "[]"),
+                "graph": json.loads(msg.graph_results or "[]"),
+                "created_at": msg.created_at,
+                "sources": [
+                    {
+                        "source": s.source,
+                        "snippet": s.snippet
+                    } for s in sources
+                ]
+            })
+        
         history.append({
             "session_id": session.id,
             "domain_id": session.domain_id,
             "domain_name": _get_domain_scope_name(session.domain_id),
             "created_at": session.created_at,
-            "messages": [
-                {
-                    "id": msg.id,
-                    "question": msg.question,
-                    "answer": msg.answer,
-                    "created_at": msg.created_at
-                } for msg in messages
-            ]
+            "messages": messages_with_sources
         })
     
-    return history"""
+    return history
+
+# ---------- Update Message Answer ----------
+class UpdateAnswerRequest(BaseModel):
+    answer: str = Field(..., description="Generated answer to save")
+    vector: List[Dict[str, Any]] = Field(default=[], description="Vector results to save")
+    graph: List[Dict[str, Any]] = Field(default=[], description="Graph results to save")
+
+@router.patch("/chat/message/{message_id}/answer")
+def update_message_answer(
+    message_id: int,
+    payload: UpdateAnswerRequest,
+    db: Session = Depends(get_db),
+    principal = Depends(get_current_principal),
+    user: User = Depends(get_current_user_db)
+):
+    message = db.query(ChatMessage).filter(ChatMessage.id == message_id).first()
+    if not message:
+        raise HTTPException(status_code=404, detail="Message not found")
+
+    if principal.role != "super_admin" and message.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    try:
+        message.answer = payload.answer.strip()
+        message.vector_results = json.dumps(payload.vector or [])
+        message.graph_results = json.dumps(payload.graph or [])
+        db.commit()
+        db.refresh(message)
+
+        return {
+            "message_id": message.id,
+            "answer": message.answer,
+            "vector": json.loads(message.vector_results or "[]"),
+            "graph": json.loads(message.graph_results or "[]"),
+            "updated": True,
+            "message": "Answer (and context) saved successfully"
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to update answer: {str(e)}")
+
+
+# ---------- Bulk Update (للـ Frontend) ----------
+class BulkUpdateAnswerRequest(BaseModel):
+    message_id: int
+    answer: str
+    vector: List[Dict[str, Any]] = Field(default=[])
+    graph: List[Dict[str, Any]] = Field(default=[])
+
+@router.post("/chat/save_answer")
+def save_generated_answer(
+    payload: BulkUpdateAnswerRequest,
+    db: Session = Depends(get_db),
+    principal = Depends(get_current_principal),
+    user: User = Depends(get_current_user_db)
+):
+    message = db.query(ChatMessage).filter(ChatMessage.id == payload.message_id).first()
+    if not message:
+        raise HTTPException(status_code=404, detail="Message not found")
+
+    if principal.role != "super_admin" and message.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    try:
+        message.answer = payload.answer.strip()
+        message.vector_results = json.dumps(payload.vector or [])
+        message.graph_results = json.dumps(payload.graph or [])
+        db.commit()
+
+        return {
+            "success": True,
+            "message_id": payload.message_id,
+            "answer": message.answer,
+            "vector": json.loads(message.vector_results or "[]"),
+            "graph": json.loads(message.graph_results or "[]"),
+            "message": "Answer (and context) saved"
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to save answer: {str(e)}")
+
+
 
 # ---------- Domain-specific utilities ----------
 @router.get("/chat/domain_stats")

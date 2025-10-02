@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, TIMESTAMP,Boolean
+from sqlalchemy.dialects.mysql import LONGTEXT
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.DB.db import Base
@@ -121,6 +122,8 @@ class ChatMessage(Base):
     chat_session = relationship("ChatSession", back_populates="chat_messages")
     user = relationship("User", back_populates="chat_messages")
     sources = relationship("ChatSource", back_populates="message", cascade="all, delete")
+    vector_results = Column(LONGTEXT)   # JSON string
+    graph_results = Column(LONGTEXT)    # JSON string
 
 
 #Role

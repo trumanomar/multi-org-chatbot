@@ -19,26 +19,19 @@ class ChatPage extends ConsumerStatefulWidget {
 }
 
 class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver {
-  // UI
   final TextEditingController _input = TextEditingController();
   final ScrollController _scroll = ScrollController();
-
-  // Speech
   bool _isListening = false;
 
-  // Data
   List<dynamic> _sessions = [];
   List<dynamic> _messages = [];
-
   int? _selectedSessionId;
 
-  // State flags
   bool _loadingSessions = false;
   bool _loadingMessages = false;
   bool _sending = false;
   String? _error;
 
-  // Persistence keys (base). We will namespace them per user/domain at runtime.
   static const String _sessionsKey = 'chat_sessions';
   static const String _messagesKey = 'chat_messages';
   static const String _selectedSessionKey = 'selected_session_id';
@@ -63,7 +56,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.paused) {
-      // Save current session messages when app goes to background
       if (_selectedSessionId != null && _messages.isNotEmpty) {
         _saveSessionMessages(_selectedSessionId!, _messages);
       }
@@ -72,18 +64,9 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   }
 
   Future<void> _bootstrap() async {
-    // Initialize chat page with data restoration priority:
-    // 1. First restore from local storage for instant access
-    // 2. Then load fresh data from server
-    // 3. Select session based on priority: initialSessionId > restored session > first available
-    
-    // First try to restore from local storage
     await _restoreFromLocalStorage();
-    
-    // Then load from server to get fresh data
     await _loadSessionsSide();
     
-    // Select session based on priority: initialSessionId > restored session > first available
     if (widget.initialSessionId != null &&
         _sessions.any((s) => s['id'] == widget.initialSessionId)) {
       _selectSession(widget.initialSessionId!);
@@ -96,7 +79,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   }
 
   Future<Dio> _dio() async {
-    // Read base URL from .env; fallback for dev.
     final base = dotenv.env['API_BASE_URL'] ?? 'http://127.0.0.1:8000';
     final token = ref.read(authControllerProvider).jwt?.token;
 
@@ -113,7 +95,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
       ),
     );
 
-    // Optional: visible logging while you debug
     d.interceptors.add(LogInterceptor(
       requestBody: true,
       responseBody: true,
@@ -122,7 +103,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
     return d;
   }
 
-  // ---------- sessions (sidebar) ----------
   Future<void> _loadSessionsSide() async {
     setState(() {
       _loadingSessions = true;
@@ -131,29 +111,61 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
 
     try {
       final dio = await _dio();
-      // استخدام الـ endpoint الصحيح من الـ backend
-      final r = await dio.get('/chat-history/my-sessions', queryParameters: {
-        'limit': 50,
-        'offset': 0,
-      });
-      final list = (r.data as List?) ?? [];
+      final authState = ref.read(authControllerProvider);
+      int? userId = authState.user?.id;
       
-      // ترتيب حسب آخر رسالة أو تاريخ الإنشاء
-      list.sort((a, b) {
-        final aTime = a['last_message_at'] ?? a['created_at'];
-        final bTime = b['last_message_at'] ?? b['created_at'];
-        final da = DateTime.tryParse(aTime?.toString() ?? '') ??
-            DateTime.fromMillisecondsSinceEpoch(0);
-        final db = DateTime.tryParse(bTime?.toString() ?? '') ??
-            DateTime.fromMillisecondsSinceEpoch(0);
+      if (userId == null) {
+        if (!authState.isAuthed) {
+          await ref.read(authControllerProvider.notifier).hydrate();
+          final hydrated = ref.read(authControllerProvider);
+          userId = hydrated.user?.id;
+        }
+        if (userId == null) throw Exception('User not logged in');
+      }
+      
+      Response r = await dio.get(
+        '/chat/sessions/$userId',
+        queryParameters: {'limit': 50, 'offset': 0},
+      );
+      
+      if ((r.statusCode ?? 0) == 401) {
+        await ref.read(authControllerProvider.notifier).hydrate();
+        r = await dio.get(
+          '/chat/sessions/$userId',
+          queryParameters: {'limit': 50, 'offset': 0},
+        );
+      }
+      
+      if ((r.statusCode ?? 0) < 200 || (r.statusCode ?? 0) >= 300) {
+        throw Exception('Sessions request failed (${r.statusCode})');
+      }
+
+      final raw = r.data;
+      final list = raw is List ? raw : (raw is Map && raw['data'] is List ? raw['data'] as List : <dynamic>[]);
+      
+      final sessions = list.whereType<Map>().map<Map<String, dynamic>>((e) {
+        final m = Map<String, dynamic>.from(e);
+        return {
+          'id': m['session_id'] ?? m['id'],
+          'created_at': m['created_at'],
+          'domain_id': m['domain_id'],
+          'domain_name': m['domain_name'] ?? '',
+          'title': m['title'] ?? 'Chat Session',
+        };
+      }).toList();
+      
+      sessions.sort((a, b) {
+        final aTime = a['created_at'];
+        final bTime = b['created_at'];
+        final da = DateTime.tryParse((aTime ?? '').toString()) ?? DateTime.fromMillisecondsSinceEpoch(0);
+        final db = DateTime.tryParse((bTime ?? '').toString()) ?? DateTime.fromMillisecondsSinceEpoch(0);
         return db.compareTo(da);
       });
       
       setState(() {
-        _sessions = list;
+        _sessions = sessions;
       });
       
-      // Save sessions and preserve existing messages for each session
       await _saveToLocalStorage();
     } catch (e) {
       print('Error loading sessions: $e');
@@ -168,10 +180,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   }
 
   Future<void> _selectSession(int id) async {
-    // Switch to a different chat session
-    // This method ensures current session messages are saved before switching
-    
-    // Save current session messages before switching
     if (_selectedSessionId != null && _messages.isNotEmpty) {
       await _saveSessionMessages(_selectedSessionId!, _messages);
     }
@@ -191,8 +199,7 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
 
     try {
       final dio = await _dio();
-      // استخدام الـ endpoint الصحيح للرسائل
-      final r = await dio.get('/chat-history/sessions/$sessionId/messages');
+      final r = await dio.get('/chat/messages/$sessionId');
       final rawList = (r.data as List?) ?? [];
       
       final List<Map<String, dynamic>> normalized = [];
@@ -218,6 +225,8 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
               'role': 'assistant',
               'content': a,
               'sources': (m['sources'] as List?) ?? const [],
+              'vector': m['vector'] ?? const [],
+              'graph': m['graph'] ?? const [],
               'originalMessageId': m['id'],
             });
           }
@@ -228,72 +237,17 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
         _messages = normalized;
       });
       
-      // Save messages for this session immediately
       await _saveSessionMessages(sessionId, normalized);
       
-      // Scroll to bottom after loading
       await Future.delayed(const Duration(milliseconds: 100));
       if (_scroll.hasClients) {
         _scroll.jumpTo(_scroll.position.maxScrollExtent);
       }
     } catch (e) {
       print('Error loading messages: $e');
-      // Fallback to chat history if messages endpoint fails
-      try {
-        final dio = await _dio();
-        final r = await dio.get('/chat-history/history', queryParameters: {'limit': 50});
-        final history = (r.data as List?) ?? [];
-        
-        List<Map<String, dynamic>> normalized = [];
-        for (final entry in history) {
-          if (entry is Map) {
-            final sid = entry['session_id'];
-            if (sid != sessionId) continue;
-            
-            final msgs = (entry['messages'] as List?) ?? [];
-            for (final item in msgs) {
-              if (item is Map) {
-                final m = Map<String, dynamic>.from(item);
-                final q = (m['question'] ?? '').toString();
-                final a = (m['answer'] ?? '').toString();
-                
-                if (q.isNotEmpty) {
-                  normalized.add({
-                    'id': 'q-${m['id']}',
-                    'role': 'user',
-                    'content': q,
-                    'sources': const [],
-                    'originalMessageId': m['id'],
-                  });
-                }
-                
-                if (a.isNotEmpty) {
-                  normalized.add({
-                    'id': 'a-${m['id']}',
-                    'role': 'assistant',
-                    'content': a,
-                    'sources': (m['sources'] as List?) ?? const [],
-                    'originalMessageId': m['id'],
-                  });
-                }
-              }
-            }
-            break;
-          }
-        }
-        
-        setState(() {
-          _messages = normalized;
-        });
-        
-        // Save messages loaded from history
-        await _saveSessionMessages(sessionId, normalized);
-      } catch (e2) {
-        print('Error loading history fallback: $e2');
-        setState(() {
-          _error = 'Failed to load messages';
-        });
-      }
+      setState(() {
+        _error = 'Failed to load messages';
+      });
     } finally {
       setState(() {
         _loadingMessages = false;
@@ -304,7 +258,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   Future<void> _newSession() async {
     try {
       final dio = await _dio();
-      // Backend derives user from token; no need to pass user_id
       final r = await dio.post('/chat/new_session');
       final data = (r.data as Map?) ?? {};
       final sid = (data['session_id'] is int)
@@ -323,7 +276,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
         });
       });
       
-      // Save to local storage and clear any existing messages
       await _saveToLocalStorage();
       setState(() {
         _messages = [];
@@ -345,7 +297,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
     final text = _input.text.trim();
     if (text.isEmpty) return;
 
-    // If there is no active session, create one automatically
     if (_selectedSessionId == null) {
       await _newSession();
       if (_selectedSessionId == null) {
@@ -362,7 +313,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
       _sending = true;
     });
 
-    // optimistic add user message
     setState(() {
       _messages.add({
         'id': 'local-${DateTime.now().microsecondsSinceEpoch}',
@@ -372,7 +322,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
       });
     });
     
-    // Save current session messages immediately
     if (_selectedSessionId != null) {
       await _saveSessionMessages(_selectedSessionId!, _messages);
     }
@@ -393,42 +342,41 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
         'session_id': _selectedSessionId,
         'message': text,
       };
-      // Call separate endpoint to get both vector and graph sections
+      
       final r = await dio.post(
         '/chat/query_separate',
         data: jsonEncode(payload),
         options: Options(headers: {'Content-Type': 'application/json'}),
       );
+      
       final resp = (r.data as Map?) ?? {};
+      final answer = (resp['answer'] ?? '').toString();
       final vector = (resp['vector'] as List?) ?? const [];
       final graph = (resp['graph'] as List?) ?? const [];
-      final content = StringBuffer();
-      content.writeln('Vector results (${resp['vector_total'] ?? vector.length}):');
-      for (final v in vector.take(3)) {
-        final txt = (v['content'] ?? '').toString();
-        if (txt.isNotEmpty) content.writeln('- ${txt.length > 160 ? txt.substring(0, 160) + '…' : txt}');
-      }
-      content.writeln('');
-      content.writeln('Graph results (${resp['graph_total'] ?? graph.length}):');
-      for (final g in graph.take(3)) {
-        final txt = (g['content'] ?? '').toString();
-        if (txt.isNotEmpty) content.writeln('- ${txt.length > 160 ? txt.substring(0, 160) + '…' : txt}');
-      }
+      final sources = (resp['sources'] as List?) ?? const [];
 
       setState(() {
         _messages.add({
           'id': 'sv-${DateTime.now().millisecondsSinceEpoch}',
           'role': 'assistant',
-          'content': content.toString().trim(),
-          'sources': const [],
+          'content': answer,
+          'sources': sources,
           'vector': vector,
           'graph': graph,
         });
       });
       
-      // Save current session messages immediately
       if (_selectedSessionId != null) {
         await _saveSessionMessages(_selectedSessionId!, _messages);
+      }
+      
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (_scroll.hasClients) {
+        _scroll.animateTo(
+          _scroll.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+        );
       }
     } catch (e) {
       print('Error sending message: $e');
@@ -441,7 +389,7 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
       setState(() {
         _sending = false;
       });
-      await _refreshSessions(); // refresh ordering and preserve messages
+      await _refreshSessions();
     }
   }
 
@@ -450,7 +398,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
       final dio = await _dio();
       final msg = _messages[messageIndex] as Map<String, dynamic>;
       
-      // Extract the content for the feedback
       final content = (msg['content'] ?? '').toString();
       
       await dio.post(
@@ -458,13 +405,12 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
         data: jsonEncode({
           'content': comment,
           'rating': rating,
-          'question': content, // Using content as question since that's what we have
-          'message_id': msg['originalMessageId'], // Include original message ID if available
+          'question': content,
+          'message_id': msg['originalMessageId'],
         }),
         options: Options(headers: {'Content-Type': 'application/json'}),
       );
 
-      // Update the message with feedback info
       setState(() {
         _messages[messageIndex] = {
           ...(_messages[messageIndex] as Map<String, dynamic>),
@@ -474,7 +420,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
         };
       });
       
-      // Save updated messages
       if (_selectedSessionId != null) {
         await _saveSessionMessages(_selectedSessionId!, _messages);
       }
@@ -513,7 +458,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
               const Text('How would you rate this response?'),
               const SizedBox(height: 16),
               
-              // Star Rating
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(5, (index) {
@@ -530,7 +474,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
               ),
               const SizedBox(height: 16),
               
-              // Comment field
               TextField(
                 controller: commentController,
                 maxLines: 3,
@@ -567,7 +510,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
       _isListening = true;
     });
 
-    // Show initial message
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -624,22 +566,18 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   Future<void> _deleteSession(int sessionId) async {
     try {
       final dio = await _dio();
-      await dio.delete('/chat-history/sessions/$sessionId');
       
-      // Remove from local list
       setState(() {
         _sessions.removeWhere((s) => s['id'] == sessionId);
         if (_selectedSessionId == sessionId) {
           _selectedSessionId = null;
           _messages = [];
-          // Select first available session
           if (_sessions.isNotEmpty) {
             _selectSession(_sessions.first['id'] as int);
           }
         }
       });
       
-      // Clear messages for deleted session and save updated sessions
       await _clearSessionMessages(sessionId);
       await _saveToLocalStorage();
       
@@ -656,34 +594,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
         );
       }
     }
-  }
-
-  void _showSessionOptions(int sessionId, String title) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Session: ${title.length > 20 ? "${title.substring(0, 20)}..." : title}'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.delete, color: Colors.red),
-              title: const Text('Delete Session'),
-              onTap: () {
-                Navigator.of(context).pop();
-                _showDeleteConfirmation(sessionId, title);
-              },
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-        ],
-      ),
-    );
   }
 
   void _showDeleteConfirmation(int sessionId, String title) {
@@ -710,46 +620,31 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
     );
   }
 
-  // ---------- Persistence Methods ----------
-  // This system ensures that:
-  // 1. Each session's messages are saved separately with unique keys
-  // 2. Messages are saved immediately when they change
-  // 3. Messages are restored when switching between sessions
-  // 4. Data persists across app refreshes and restarts
-  // 5. Data is cleared only on logout for security
-  
   Future<void> _saveToLocalStorage() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       
-      // Save sessions
       await prefs.setString(_nsKey(_sessionsKey), jsonEncode(_sessions));
       
-      // Save messages for ALL sessions, not just the current one
       for (final session in _sessions) {
         final sessionId = session['id'] as int;
         final messagesKey = _nsKey('${_messagesKey}_$sessionId');
         
-        // Get messages for this specific session
         List<dynamic> sessionMessages = [];
         if (sessionId == _selectedSessionId) {
-          // Current session - use _messages
           sessionMessages = _messages;
         } else {
-          // Other sessions - try to get from local storage first
           final existingMessagesJson = prefs.getString(messagesKey);
           if (existingMessagesJson != null) {
             sessionMessages = jsonDecode(existingMessagesJson) as List<dynamic>;
           }
         }
         
-        // Save messages for this session
         if (sessionMessages.isNotEmpty) {
           await prefs.setString(messagesKey, jsonEncode(sessionMessages));
         }
       }
       
-      // Save selected session ID
       if (_selectedSessionId != null) {
         await prefs.setInt(_nsKey(_selectedSessionKey), _selectedSessionId!);
       }
@@ -759,12 +654,9 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   }
 
   Future<void> _restoreFromLocalStorage() async {
-    // Restore chat data from local storage on app startup
-    // This provides instant access to previous chat sessions
     try {
       final prefs = await SharedPreferences.getInstance();
       
-      // Restore sessions
       final sessionsJson = prefs.getString(_nsKey(_sessionsKey));
       if (sessionsJson != null) {
         final sessions = jsonDecode(sessionsJson) as List<dynamic>;
@@ -773,14 +665,12 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
         });
       }
       
-      // Restore selected session ID
       final selectedId = prefs.getInt(_nsKey(_selectedSessionKey));
       if (selectedId != null) {
         setState(() {
           _selectedSessionId = selectedId;
         });
         
-        // Restore messages for selected session
         final messagesKey = _nsKey('${_messagesKey}_$selectedId');
         final messagesJson = prefs.getString(messagesKey);
         if (messagesJson != null) {
@@ -796,16 +686,12 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   }
 
   Future<void> _clearLocalStorage() async {
-    // Clear all chat-related data from local storage
-    // This is called on logout to ensure data security
     try {
       final prefs = await SharedPreferences.getInstance();
       
-      // Clear all chat-related data
       await prefs.remove(_nsKey(_sessionsKey));
       await prefs.remove(_nsKey(_selectedSessionKey));
       
-      // Clear messages for all sessions
       final keys = prefs.getKeys();
       for (final key in keys) {
         if (key.startsWith(_keyPrefix())) {
@@ -818,8 +704,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   }
 
   Future<void> _saveSessionMessages(int sessionId, List<dynamic> messages) async {
-    // Save messages for a specific session with a unique key
-    // This ensures each session's messages are stored separately
     try {
       final prefs = await SharedPreferences.getInstance();
       final messagesKey = _nsKey('${_messagesKey}_$sessionId');
@@ -830,8 +714,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   }
 
   Future<void> _clearSessionMessages(int sessionId) async {
-    // Remove messages for a specific session when it's deleted
-    // This prevents orphaned message data from accumulating
     try {
       final prefs = await SharedPreferences.getInstance();
       final messagesKey = _nsKey('${_messagesKey}_$sessionId');
@@ -842,17 +724,21 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   }
 
   Future<void> _refreshSessions() async {
-    // Save current session messages before refreshing sessions
-    // This ensures no messages are lost during refresh
     if (_selectedSessionId != null && _messages.isNotEmpty) {
       await _saveSessionMessages(_selectedSessionId!, _messages);
     }
     
-    // Load fresh sessions from server
+    // Store current session ID before refresh
+    final currentSessionId = _selectedSessionId;
+    
     await _loadSessionsSide();
+    
+    // Reload messages for current session after refresh
+    if (currentSessionId != null && _sessions.any((s) => s['id'] == currentSessionId)) {
+      await _loadMessages(currentSessionId);
+    }
   }
 
-  // ---------- drawer ----------
   Widget _buildDrawer() {
     final auth = ref.watch(authControllerProvider);
     return Drawer(
@@ -882,7 +768,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
               onTap: () async {
-                // Clear local storage before logout
                 await _clearLocalStorage();
                 await ref.read(authControllerProvider.notifier).logout();
                 if (context.mounted) {
@@ -896,7 +781,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
     );
   }
 
-  // ---------- UI ----------
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -923,7 +807,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
       ),
       body: Row(
         children: [
-          // Sessions sidebar
           ConstrainedBox(
             constraints: const BoxConstraints.tightFor(width: 280),
             child: Column(
@@ -963,7 +846,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
                                 final messageCount = (s['message_count'] ?? 0) as int;
                                 String title = 'Chat Session';
                                 
-                                // Generate title based on message count or use existing title
                                 if (s['title'] != null && s['title'] != 'New chat') {
                                   title = s['title'].toString();
                                 } else if (messageCount > 0) {
@@ -1010,7 +892,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
             ),
           ),
           const VerticalDivider(width: 1),
-          // Chat area
           Expanded(
             child: Column(
               children: [
@@ -1039,46 +920,156 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
                               itemBuilder: (context, i) {
                                 final m = _messages[i] as Map<String, dynamic>;
                                 final isUser = (m['role'] ?? 'user') == 'user';
-                                final sources =
-                                    (m['sources'] as List?)?.cast<dynamic>() ??
-                                        const [];
+                                final sources = (m['sources'] as List?)?.cast<dynamic>() ?? const [];
+                                final vector = (m['vector'] as List?)?.cast<dynamic>() ?? const [];
+                                final graph = (m['graph'] as List?)?.cast<dynamic>() ?? const [];
                                 final feedbackSubmitted = (m['feedbackSubmitted'] as bool?) ?? false;
                                 final feedbackRating = (m['feedbackRating'] as int?);
                                 
                                 return Align(
-                                  alignment: isUser
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
+                                  alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
                                   child: ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                        maxWidth: 720),
+                                    constraints: const BoxConstraints(maxWidth: 720),
                                     child: Card(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 6),
+                                      margin: const EdgeInsets.symmetric(vertical: 6),
                                       child: Padding(
                                         padding: const EdgeInsets.all(12),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
+                                            // Main Answer
                                             Text(
                                               (m['content'] ?? '').toString(),
                                               style: theme.textTheme.bodyMedium,
                                             ),
+                                            
+                                            // Sources Section
                                             if (sources.isNotEmpty) ...[
+                                              const SizedBox(height: 12),
+                                              const Divider(),
+                                              Text('Sources:', 
+                                                style: theme.textTheme.titleSmall?.copyWith(
+                                                  fontWeight: FontWeight.bold
+                                                )
+                                              ),
                                               const SizedBox(height: 8),
                                               Wrap(
                                                 spacing: 6,
-                                                runSpacing: -8,
-                                                children: sources
-                                                    .map((s) {
-                                                      final label = (s['title'] ?? s['source'] ?? 'source').toString();
-                                                      return Chip(label: Text(label));
-                                                    })
-                                                    .toList(),
+                                                runSpacing: 6,
+                                                children: sources.map((s) {
+                                                  final title = (s['title'] ?? s['source'] ?? 'Source').toString();
+                                                  final snippet = (s['snippet'] ?? '').toString();
+                                                  return Tooltip(
+                                                    message: snippet.isNotEmpty ? snippet : title,
+                                                    child: Chip(
+                                                      avatar: const Icon(Icons.source, size: 16),
+                                                      label: Text(
+                                                        title.length > 30 ? '${title.substring(0, 30)}...' : title,
+                                                        style: theme.textTheme.bodySmall,
+                                                      ),
+                                                    ),
+                                                  );
+                                                }).toList(),
                                               ),
                                             ],
-                                            // Add feedback section for assistant messages
+                                            
+                                            // Vector Results Section
+                                            if (!isUser && vector.isNotEmpty) ...[
+                                              const SizedBox(height: 12),
+                                              const Divider(),
+                                              ExpansionTile(
+                                                tilePadding: EdgeInsets.zero,
+                                                childrenPadding: const EdgeInsets.only(left: 16, top: 8),
+                                                title: Text(
+                                                  'Vector Search Results (${vector.length})',
+                                                  style: theme.textTheme.titleSmall?.copyWith(
+                                                    fontWeight: FontWeight.bold
+                                                  ),
+                                                ),
+                                                children: vector.take(3).map((v) {
+                                                  final content = (v['page_content'] ?? v['content'] ?? '').toString();
+                                                  final metadata = v['metadata'] ?? {};
+                                                  final source = (metadata['source'] ?? metadata['file_path'] ?? '').toString();
+                                                  
+                                                  return Card(
+                                                    margin: const EdgeInsets.only(bottom: 8),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8),
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          if (source.isNotEmpty)
+                                                            Text(
+                                                              source,
+                                                              style: theme.textTheme.bodySmall?.copyWith(
+                                                                fontWeight: FontWeight.bold,
+                                                                color: Colors.blue,
+                                                              ),
+                                                            ),
+                                                          const SizedBox(height: 4),
+                                                          Text(
+                                                            content.length > 200 
+                                                              ? '${content.substring(0, 200)}...' 
+                                                              : content,
+                                                            style: theme.textTheme.bodySmall,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            ],
+                                            
+                                            // Graph Results Section
+                                            if (!isUser && graph.isNotEmpty) ...[
+                                              const SizedBox(height: 8),
+                                              ExpansionTile(
+                                                tilePadding: EdgeInsets.zero,
+                                                childrenPadding: const EdgeInsets.only(left: 16, top: 8),
+                                                title: Text(
+                                                  'Knowledge Graph Results (${graph.length})',
+                                                  style: theme.textTheme.titleSmall?.copyWith(
+                                                    fontWeight: FontWeight.bold
+                                                  ),
+                                                ),
+                                                children: graph.take(3).map((g) {
+                                                  final content = (g['page_content'] ?? g['content'] ?? '').toString();
+                                                  final metadata = g['metadata'] ?? {};
+                                                  final source = (metadata['source'] ?? metadata['file_path'] ?? '').toString();
+                                                  
+                                                  return Card(
+                                                    margin: const EdgeInsets.only(bottom: 8),
+                                                    color: Colors.green.shade50,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8),
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          if (source.isNotEmpty)
+                                                            Text(
+                                                              source,
+                                                              style: theme.textTheme.bodySmall?.copyWith(
+                                                                fontWeight: FontWeight.bold,
+                                                                color: Colors.green.shade700,
+                                                              ),
+                                                            ),
+                                                          const SizedBox(height: 4),
+                                                          Text(
+                                                            content.length > 200 
+                                                              ? '${content.substring(0, 200)}...' 
+                                                              : content,
+                                                            style: theme.textTheme.bodySmall,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            ],
+                                            
+                                            // Feedback Section
                                             if (!isUser) ...[
                                               const SizedBox(height: 8),
                                               Row(
@@ -1098,9 +1089,8 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
                                                       ],
                                                     )
                                                   else
-                                                    const SizedBox(), // Empty space when no feedback
+                                                    const SizedBox(),
                                                   
-                                                  // Feedback button
                                                   TextButton.icon(
                                                     onPressed: () => _showFeedbackDialog(i),
                                                     icon: Icon(
@@ -1188,7 +1178,6 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
 
   @override
   void dispose() {
-    // Save current session messages before disposing
     if (_selectedSessionId != null && _messages.isNotEmpty) {
       _saveSessionMessages(_selectedSessionId!, _messages);
     }
