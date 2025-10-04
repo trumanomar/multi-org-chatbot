@@ -443,32 +443,6 @@ def get_current_session_info(
         "is_active": True
     }
 
-@router.get("/chat/sessions/{user_id}")
-def get_user_chat_sessions(
-    user_id: int, 
-    db: Session = Depends(get_db),
-    principal = Depends(get_current_principal),
-    user: User = Depends(get_current_user_db)
-):
-    """Get all chat sessions for a user"""
-    # Security check: users can only access their own sessions unless they're super_admin
-    if principal.role != "super_admin" and user.id != user_id:
-        raise HTTPException(status_code=403, detail="Access denied")
-    
-    query = db.query(ChatSession).filter(ChatSession.user_id == user_id)
-    
-    # Domain filtering for non-super_admin users
-    if principal.role != "super_admin" and principal.domain_id is not None:
-        query = query.filter(ChatSession.domain_id == principal.domain_id)
-    
-    sessions = query.order_by(ChatSession.created_at.desc()).all()
-    
-    return [{
-        "session_id": s.id,
-        "domain_id": s.domain_id,
-        "domain_name": _get_domain_scope_name(s.domain_id),
-        "created_at": s.created_at
-    } for s in sessions]
 
 @router.get("/chat/messages/{session_id}")
 def get_chat_messages(

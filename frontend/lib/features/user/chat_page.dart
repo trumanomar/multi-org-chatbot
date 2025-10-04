@@ -111,27 +111,18 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
 
     try {
       final dio = await _dio();
-      final authState = ref.read(authControllerProvider);
-      int? userId = authState.user?.id;
       
-      if (userId == null) {
-        if (!authState.isAuthed) {
-          await ref.read(authControllerProvider.notifier).hydrate();
-          final hydrated = ref.read(authControllerProvider);
-          userId = hydrated.user?.id;
-        }
-        if (userId == null) throw Exception('User not logged in');
-      }
+      print('[SESSIONS] Loading sessions from chat-history/my-sessions');
       
       Response r = await dio.get(
-        '/chat/sessions/$userId',
+        '/chat-history/my-sessions',
         queryParameters: {'limit': 50, 'offset': 0},
       );
       
       if ((r.statusCode ?? 0) == 401) {
         await ref.read(authControllerProvider.notifier).hydrate();
         r = await dio.get(
-          '/chat/sessions/$userId',
+          '/chat-history/my-sessions',
           queryParameters: {'limit': 50, 'offset': 0},
         );
       }
@@ -146,11 +137,13 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
       final sessions = list.whereType<Map>().map<Map<String, dynamic>>((e) {
         final m = Map<String, dynamic>.from(e);
         return {
-          'id': m['session_id'] ?? m['id'],
+          'id': m['id'],
           'created_at': m['created_at'],
           'domain_id': m['domain_id'],
-          'domain_name': m['domain_name'] ?? '',
-          'title': m['title'] ?? 'Chat Session',
+          'domain_name': 'Domain ${m['domain_id']}', // ChatHistoryRoute doesn't return domain_name
+          'title': 'Chat Session',
+          'message_count': m['message_count'] ?? 0,
+          'last_message_at': m['last_message_at'],
         };
       }).toList();
       
@@ -199,7 +192,7 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
 
     try {
       final dio = await _dio();
-      final r = await dio.get('/chat/messages/$sessionId');
+      final r = await dio.get('/chat-history/sessions/$sessionId/messages');
       final rawList = (r.data as List?) ?? [];
       
       final List<Map<String, dynamic>> normalized = [];
@@ -563,10 +556,39 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
     }
   }
 
-  Future<void> _deleteSession(int sessionId) async {
-    try {
-      final dio = await _dio();
-      
+void _showDeleteConfirmation(int sessionId, String title) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Delete Session'),
+      content: Text('Are you sure you want to delete "$title"? This action cannot be undone.'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            _deleteSession(sessionId);
+          },
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+          child: const Text('Delete', style: TextStyle(color: Colors.white)),
+        ),
+      ],
+    ),
+  );
+}
+
+Future<void> _deleteSession(int sessionId) async {
+  try {
+    final dio = await _dio();
+    
+    // Actually call the backend delete endpoint
+    final response = await dio.delete('/chat-history/sessions/$sessionId');
+    
+    if (response.statusCode == 200) {
+      // Only update local state if the server delete was successful
       setState(() {
         _sessions.removeWhere((s) => s['id'] == sessionId);
         if (_selectedSessionId == sessionId) {
@@ -586,40 +608,18 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
           const SnackBar(content: Text('Session deleted successfully')),
         );
       }
-    } catch (e) {
-      print('Error deleting session: $e');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to delete session: $e')),
-        );
-      }
+    } else {
+      throw Exception('Delete failed with status ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error deleting session: $e');
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete session: $e')),
+      );
     }
   }
-
-  void _showDeleteConfirmation(int sessionId, String title) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Session'),
-        content: Text('Are you sure you want to delete "$title"? This action cannot be undone.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _deleteSession(sessionId);
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-    );
-  }
-
+}
   Future<void> _saveToLocalStorage() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -724,18 +724,25 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   }
 
   Future<void> _refreshSessions() async {
-    if (_selectedSessionId != null && _messages.isNotEmpty) {
-      await _saveSessionMessages(_selectedSessionId!, _messages);
+    // Store current state before refresh
+    final currentSessionId = _selectedSessionId;
+    final currentMessages = List.from(_messages);
+    
+    // Save current messages first
+    if (currentSessionId != null && currentMessages.isNotEmpty) {
+      await _saveSessionMessages(currentSessionId, currentMessages);
     }
     
-    // Store current session ID before refresh
-    final currentSessionId = _selectedSessionId;
-    
+    // Load fresh sessions from server
     await _loadSessionsSide();
     
-    // Reload messages for current session after refresh
+    // Restore current session state without reloading from server
+    // (we already have the latest messages including the one just sent)
     if (currentSessionId != null && _sessions.any((s) => s['id'] == currentSessionId)) {
-      await _loadMessages(currentSessionId);
+      setState(() {
+        _selectedSessionId = currentSessionId;
+        _messages = currentMessages;
+      });
     }
   }
 
