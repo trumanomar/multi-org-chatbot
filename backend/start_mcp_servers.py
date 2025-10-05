@@ -45,6 +45,22 @@ def start_graph_mcp():
         print(f"❌ Failed to start Graph MCP server: {e}")
         return None
 
+def start_mysql_mcp():
+    """Start MySQL MCP server"""
+    print("🚀 Starting MySQL MCP Server on port 5002...")
+    try:
+        process = subprocess.Popen([
+            sys.executable, "-m", "uvicorn", 
+            "app.MCP.mysql_mcp_server:fastapi_app",
+            "--host", "127.0.0.1",
+            "--port", "5002",
+            "--reload"
+        ], cwd=Path(__file__).parent)
+        return process
+    except Exception as e:
+        print(f"❌ Failed to start MySQL MCP server: {e}")
+        return None
+
 def check_server_health(url: str, name: str, max_retries: int = 10) -> bool:
     """Check if server is healthy"""
     import requests
@@ -65,7 +81,7 @@ def check_server_health(url: str, name: str, max_retries: int = 10) -> bool:
     return False
 
 async def main():
-    """Main function to start both MCP servers"""
+    """Main function to start all MCP servers"""
     print("🎯 Starting Multi-Org Chatbot MCP Servers")
     print("=" * 50)
     
@@ -83,17 +99,29 @@ async def main():
             docling_process.terminate()
         return
     
+    # Start MySQL MCP server
+    mysql_process = start_mysql_mcp()
+    if not mysql_process:
+        print("❌ Failed to start MySQL MCP server")
+        if docling_process:
+            docling_process.terminate()
+        if graph_process:
+            graph_process.terminate()
+        return
+    
     # Wait for servers to start
     print("\n⏳ Waiting for servers to start...")
     
     docling_healthy = check_server_health("http://127.0.0.1:5000", "Docling MCP")
     graph_healthy = check_server_health("http://127.0.0.1:5001", "Graph MCP")
+    mysql_healthy = check_server_health("http://127.0.0.1:5002", "MySQL MCP")
     
-    if docling_healthy and graph_healthy:
-        print("\n🎉 Both MCP servers are running successfully!")
+    if docling_healthy and graph_healthy and mysql_healthy:
+        print("\n🎉 All MCP servers are running successfully!")
         print("📋 Server Status:")
         print("   - Docling MCP: http://127.0.0.1:5000")
         print("   - Graph MCP: http://127.0.0.1:5001")
+        print("   - MySQL MCP: http://127.0.0.1:5002")
         print("   - Main API: http://127.0.0.1:8000")
         print("\n💡 You can now start the main chatbot API server")
         print("   Run: python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload")
@@ -107,6 +135,7 @@ async def main():
             print("\n🛑 Stopping MCP servers...")
             docling_process.terminate()
             graph_process.terminate()
+            mysql_process.terminate()
             print("✅ MCP servers stopped")
     else:
         print("\n❌ Failed to start one or more MCP servers")
@@ -114,6 +143,8 @@ async def main():
             docling_process.terminate()
         if graph_process:
             graph_process.terminate()
+        if mysql_process:
+            mysql_process.terminate()
 
 if __name__ == "__main__":
     try:

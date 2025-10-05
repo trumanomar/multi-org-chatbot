@@ -16,7 +16,8 @@ class AppUser {
   final String? username;
   final String? email;
   final int? id;
-  AppUser({this.username, this.email, this.id});
+  final int? domainId;
+  AppUser({this.username, this.email, this.id, this.domainId});
 }
 
 class AuthState {
@@ -64,13 +65,19 @@ class AuthController extends StateNotifier<AuthState> {
     final username = prefs.getString('user_username');
     final email = prefs.getString('user_email');
     final uid = prefs.getInt('user_id');
+    
     if (token != null && token.isNotEmpty) {
       state = state.copyWith(
         jwt: Jwt(token),
         role: _mapRole(roleStr),
         domainId: domainId,
         user: (username != null || email != null || uid != null)
-            ? AppUser(username: username, email: email, id: uid)
+            ? AppUser(
+                username: username, 
+                email: email, 
+                id: uid,
+                domainId: domainId,  // ← FIXED: Now passing domainId
+              )
             : state.user,
       );
     }
@@ -130,7 +137,12 @@ class AuthController extends StateNotifier<AuthState> {
         jwt: Jwt(token, subject: usernameOut),
         role: _mapRole(roleStr),
         domainId: domainId,
-        user: AppUser(username: usernameOut, email: emailOut, id: idOut),
+        user: AppUser(
+          username: usernameOut, 
+          email: emailOut, 
+          id: idOut,
+          domainId: domainId,  // ← FIXED: Now passing domainId
+        ),
         loading: false,
       );
 
@@ -154,6 +166,9 @@ class AuthController extends StateNotifier<AuthState> {
     await prefs.remove('jwt');
     await prefs.remove('role');
     await prefs.remove('domain_id');
+    await prefs.remove('user_username');
+    await prefs.remove('user_email');
+    await prefs.remove('user_id');
     state = const AuthState();
   }
 
@@ -187,6 +202,10 @@ class AuthController extends StateNotifier<AuthState> {
     }
     if (state.user?.id != null) {
       await prefs.setInt('user_id', state.user!.id!);
+    }
+    // Keep domain_id from existing state
+    if (state.domainId != null) {
+      await prefs.setInt('domain_id', state.domainId!);
     }
 
     state = state.copyWith(jwt: Jwt(token), role: _mapRole(roleStr));

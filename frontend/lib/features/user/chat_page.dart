@@ -8,6 +8,8 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../widgets/database_analytics_widget.dart';
+import '../../widgets/database_query_widget.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
@@ -31,10 +33,15 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   bool _loadingMessages = false;
   bool _sending = false;
   String? _error;
+  bool _showDatabaseWidgets = false;
 
   static const String _sessionsKey = 'chat_sessions';
   static const String _messagesKey = 'chat_messages';
   static const String _selectedSessionKey = 'selected_session_id';
+                    int? get _userDomainId {
+  final auth = ref.read(authControllerProvider);
+  return auth.domainId ?? auth.user?.domainId;
+}
 
   String _keyPrefix() {
     final auth = ref.read(authControllerProvider);
@@ -798,6 +805,15 @@ Future<void> _deleteSession(int sessionId) async {
         title: const Text('Chat'),
         actions: [
           IconButton(
+            tooltip: 'Database Analytics',
+            onPressed: () {
+              setState(() {
+                _showDatabaseWidgets = !_showDatabaseWidgets;
+              });
+            },
+            icon: Icon(_showDatabaseWidgets ? Icons.analytics : Icons.analytics_outlined),
+          ),
+          IconButton(
             tooltip: 'New session',
             onPressed: _newSession,
             icon: const Icon(Icons.add_comment_outlined),
@@ -912,6 +928,39 @@ Future<void> _deleteSession(int sessionId) async {
                       )
                     ],
                   ),
+if (_showDatabaseWidgets) ...[
+  Expanded(
+    flex: 1,
+    child: Builder(
+      builder: (context) {
+        final auth = ref.watch(authControllerProvider);
+        final domainId = auth.domainId;
+        
+        if (domainId == null) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'Unable to determine domain ID. Please log in again.',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          );
+        }
+        
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              DatabaseAnalyticsWidget(domainId: domainId),
+              DatabaseQueryWidget(domainId: domainId),
+            ],
+          ),
+        );
+      },
+    ),
+  ),
+  const Divider(height: 1),
+],
                 Expanded(
                   child: _loadingMessages
                       ? const Center(child: CircularProgressIndicator())
