@@ -32,79 +32,6 @@
       }
     },
     {
-      "id": "chunk_530532",
-      "data": {
-        "chunk_id": 530532,
-        "content": "MedCare Hospital headquarters is in Berlin. GreenHealth Clinic headquarters is in Paris. Berlin is in Germany. Paris is in France. Germany borders France.",
-        "doc_id": 156,
-        "user_id": 30,
-        "domain_id": 3,
-        "doc_name": "locations.pdf",
-        "username": "string",
-        "domain_name": "eand",
-        "metadata": {
-          "file": "tmplle63o01.pdf",
-          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmplle63o01.pdf",
-          "total_pages": 1,
-          "pages": "1",
-          "extraction_method": "texts attribute",
-          "chunk_id": 1,
-          "total_chunks": 1,
-          "original_doc_length": 154,
-          "doc_index": 0,
-          "domain_id": 3,
-          "doc_id": 156,
-          "user_id": 30,
-          "source": "locations.pdf",
-          "file_size_mb": 0.0,
-          "processing_timestamp": 448392.39
-        },
-        "node_type": "chunk"
-      }
-    },
-    {
-      "id": "entity:MedCare Hospital",
-      "data": {
-        "node_type": "entity",
-        "label": "MedCare Hospital"
-      }
-    },
-    {
-      "id": "entity:Berlin",
-      "data": {
-        "node_type": "entity",
-        "label": "Berlin"
-      }
-    },
-    {
-      "id": "entity:GreenHealth Clinic",
-      "data": {
-        "node_type": "entity",
-        "label": "GreenHealth Clinic"
-      }
-    },
-    {
-      "id": "entity:Paris",
-      "data": {
-        "node_type": "entity",
-        "label": "Paris"
-      }
-    },
-    {
-      "id": "entity:Germany",
-      "data": {
-        "node_type": "entity",
-        "label": "Germany"
-      }
-    },
-    {
-      "id": "entity:France",
-      "data": {
-        "node_type": "entity",
-        "label": "France"
-      }
-    },
-    {
       "id": "chunk_530531",
       "data": {
         "chunk_id": 530531,
@@ -136,90 +63,34 @@
       }
     },
     {
-      "id": "entity:Dr. Alice",
+      "id": "chunk_530532",
       "data": {
-        "node_type": "entity",
-        "label": "Dr. Alice"
-      }
-    },
-    {
-      "id": "entity:Dr. Bob",
-      "data": {
-        "node_type": "entity",
-        "label": "Dr. Bob"
-      }
-    },
-    {
-      "id": "entity:Dr. Carol",
-      "data": {
-        "node_type": "entity",
-        "label": "Dr. Carol"
-      }
-    },
-    {
-      "id": "entity:2018",
-      "data": {
-        "node_type": "entity",
-        "label": "2018"
-      }
-    },
-    {
-      "id": "entity:2015",
-      "data": {
-        "node_type": "entity",
-        "label": "2015"
-      }
-    },
-    {
-      "id": "chunk_530534",
-      "data": {
-        "chunk_id": 530534,
-        "content": "MedCare Hospital provides HeartShield Therapy. HeartShield Therapy is used for treating Hypertension. GreenHealth Clinic provides EcoTherapy. EcoTherapy competes with HeartShield Therapy.",
-        "doc_id": 158,
+        "chunk_id": 530532,
+        "content": "MedCare Hospital headquarters is in Berlin. GreenHealth Clinic headquarters is in Paris. Berlin is in Germany. Paris is in France. Germany borders France.",
+        "doc_id": 156,
         "user_id": 30,
         "domain_id": 3,
-        "doc_name": "treatments.pdf",
+        "doc_name": "locations.pdf",
         "username": "string",
         "domain_name": "eand",
         "metadata": {
-          "file": "tmpqyjo84jh.pdf",
-          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpqyjo84jh.pdf",
+          "file": "tmplle63o01.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmplle63o01.pdf",
           "total_pages": 1,
           "pages": "1",
           "extraction_method": "texts attribute",
           "chunk_id": 1,
           "total_chunks": 1,
-          "original_doc_length": 187,
+          "original_doc_length": 154,
           "doc_index": 0,
           "domain_id": 3,
-          "doc_id": 158,
+          "doc_id": 156,
           "user_id": 30,
-          "source": "treatments.pdf",
+          "source": "locations.pdf",
           "file_size_mb": 0.0,
-          "processing_timestamp": 448402.671
+          "processing_timestamp": 448392.39
         },
         "node_type": "chunk"
-      }
-    },
-    {
-      "id": "entity:HeartShield Therapy",
-      "data": {
-        "node_type": "entity",
-        "label": "HeartShield Therapy"
-      }
-    },
-    {
-      "id": "entity:Hypertension",
-      "data": {
-        "node_type": "entity",
-        "label": "Hypertension"
-      }
-    },
-    {
-      "id": "entity:EcoTherapy",
-      "data": {
-        "node_type": "entity",
-        "label": "EcoTherapy"
       }
     },
     {
@@ -254,275 +125,284 @@
       }
     },
     {
-      "id": "entity:'Advances in Hypertension Treatment'",
+      "id": "chunk_530534",
       "data": {
-        "node_type": "entity",
-        "label": "'Advances in Hypertension Treatment'"
+        "chunk_id": 530534,
+        "content": "MedCare Hospital provides HeartShield Therapy. HeartShield Therapy is used for treating Hypertension. GreenHealth Clinic provides EcoTherapy. EcoTherapy competes with HeartShield Therapy.",
+        "doc_id": 158,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "treatments.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpqyjo84jh.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpqyjo84jh.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 187,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 158,
+          "user_id": 30,
+          "source": "treatments.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 448402.671
+        },
+        "node_type": "chunk"
       }
     },
     {
-      "id": "entity:'Sustainable Cardiology' by Dr. Bob",
+      "id": "chunk_530544",
       "data": {
-        "node_type": "entity",
-        "label": "'Sustainable Cardiology' by Dr. Bob"
+        "chunk_id": 530544,
+        "content": "GUEST SATISFACTION & FEEDBACK MANAGEMENT\n\nIntroduction Guest feedback is essential for maintaining our five-star rating. All feedback must be documented and addressed within 24 hours.\n\nFeedback Channels: 1. In-person at the front desk 2. Comment cards in guest rooms 3. Post-stay email surveys 4. Online review platforms (TripAdvisor, Google, Booking.com)\n\nResponse Protocol: - Positive feedback: Thank the guest, share with relevant staff - Constructive feedback: Investigate, implement improvements",
+        "doc_id": 159,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "Guest Feedback Policy.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpm7ycrgh1.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpm7ycrgh1.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 2,
+          "original_doc_length": 711,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 159,
+          "user_id": 30,
+          "source": "Guest Feedback Policy.pdf",
+          "file_size_mb": 0.02,
+          "processing_timestamp": 36780.296
+        },
+        "node_type": "chunk"
       }
     },
     {
-      "id": "entity:'Eco-friendly Therapies'",
+      "id": "chunk_530545",
       "data": {
-        "node_type": "entity",
-        "label": "'Eco-friendly Therapies'"
+        "chunk_id": 530545,
+        "content": "tive feedback: Investigate, implement improvements, respond personally - Complaints: Immediate escalation to management, offer compensation if appropriate\n\nQuality Metrics: - Target guest satisfaction: >4.5/5.0 - Response time: <24 hours - Resolution rate: >95%",
+        "doc_id": 159,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "Guest Feedback Policy.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpm7ycrgh1.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpm7ycrgh1.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 2,
+          "original_doc_length": 711,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 159,
+          "user_id": 30,
+          "source": "Guest Feedback Policy.pdf",
+          "file_size_mb": 0.02,
+          "processing_timestamp": 36780.296
+        },
+        "node_type": "chunk"
       }
     },
     {
-      "id": "entity:Global Health Conference",
+      "id": "chunk_530546",
       "data": {
-        "node_type": "entity",
-        "label": "Global Health Conference"
+        "chunk_id": 530546,
+        "content": "LUXURY GRAND HOTEL - OPERATIONS MANUAL\n\nChapter 1: Check-in Procedures The standard check-in time is 3:00 PM. Early check-in is available upon request and subject to room availability. Guests must present a valid ID and credit card. The front desk staff should verify the reservation in the PMS system, assign the room key, and explain hotel amenities including the spa, fitness center, and restaurant hours.\n\nChapter 2: Guest Services Our concierge team is available 24/7 to assist with:\n\nRestaurant",
+        "doc_id": 160,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "LUXURY GRAND HOTEL.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpj9_rac3z.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpj9_rac3z.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 4,
+          "original_doc_length": 1467,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 160,
+          "user_id": 30,
+          "source": "LUXURY GRAND HOTEL.pdf",
+          "file_size_mb": 0.03,
+          "processing_timestamp": 36789.062
+        },
+        "node_type": "chunk"
       }
     },
     {
-      "id": "entity:2022",
+      "id": "chunk_530547",
       "data": {
-        "node_type": "entity",
-        "label": "2022"
+        "chunk_id": 530547,
+        "content": "team is available 24/7 to assist with:\n\nRestaurant reservations (both in-house and external)\n\nTransportation arrangements (airport shuttle, car rental, taxi service)\n\nLocal attractions and entertainment recommendations\n\nSpecial occasion arrangements (flowers, champagne, room decorations)\n\nChapter 3: Housekeeping Standards All rooms must be cleaned to five-star standards. Daily cleaning includes:\n\nBed linen replacement\n\nBathroom sanitization\n\nVacuuming and dusting\n\nRestocking of toiletries and am",
+        "doc_id": 160,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "LUXURY GRAND HOTEL.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpj9_rac3z.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpj9_rac3z.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 4,
+          "original_doc_length": 1467,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 160,
+          "user_id": 30,
+          "source": "LUXURY GRAND HOTEL.pdf",
+          "file_size_mb": 0.03,
+          "processing_timestamp": 36789.062
+        },
+        "node_type": "chunk"
       }
     },
     {
-      "id": "entity:'Sustainable Cardiology'",
+      "id": "chunk_530548",
       "data": {
-        "node_type": "entity",
-        "label": "'Sustainable Cardiology'"
+        "chunk_id": 530548,
+        "content": "uming and dusting\n\nRestocking of toiletries and amenities\n\nTurndown service for premium suites\n\nChapter 4: Safety and Security Emergency exits are located on every floor. Fire drills are conducted quarterly. Security cameras monitor all public areas. Guest privacy is paramount - room access requires proper authorization.\n\nChapter 5: Dining Services The Grand Restaurant serves breakfast (6:30 AM - 10:30 AM), lunch (12:00 PM - 3:00 PM), and dinner (6:00 PM - 11:00 PM). Room service is available 24",
+        "doc_id": 160,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "LUXURY GRAND HOTEL.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpj9_rac3z.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpj9_rac3z.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 3,
+          "total_chunks": 4,
+          "original_doc_length": 1467,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 160,
+          "user_id": 30,
+          "source": "LUXURY GRAND HOTEL.pdf",
+          "file_size_mb": 0.03,
+          "processing_timestamp": 36789.062
+        },
+        "node_type": "chunk"
       }
     },
     {
-      "id": "entity:2021",
+      "id": "chunk_530549",
       "data": {
-        "node_type": "entity",
-        "label": "2021"
+        "chunk_id": 530549,
+        "content": "(6:00 PM - 11:00 PM). Room service is available 24/7. Our menu features international cuisine with local specialties.",
+        "doc_id": 160,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "LUXURY GRAND HOTEL.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpj9_rac3z.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpj9_rac3z.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 4,
+          "total_chunks": 4,
+          "original_doc_length": 1467,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 160,
+          "user_id": 30,
+          "source": "LUXURY GRAND HOTEL.pdf",
+          "file_size_mb": 0.03,
+          "processing_timestamp": 36789.062
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530550",
+      "data": {
+        "chunk_id": 530550,
+        "content": "LUXURY GRAND HOTEL - AMENITIES & FACILITIES\n\nSwimming Pool & Spa\n\nOlympic-size heated pool (6 AM - 10 PM)\n\nJacuzzi and sauna\n\nFull-service spa offering massages, facials, and body treatments\n\nPersonal trainers available by appointment\n\nFitness Center\n\nOpen 24/7 with key card access\n\nState-of-the-art cardio equipment\n\nFree weights and resistance machines\n\nYoga and Pilates classes daily at 7 AM and 6 PM\n\nBusiness Center\n\nHigh-speed internet and WiFi throughout property\n\nMeeting rooms for 10-200 pe",
+        "doc_id": 161,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "Hotel Amenities Guide.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpajox_fid.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpajox_fid.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 2,
+          "original_doc_length": 816,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 161,
+          "user_id": 30,
+          "source": "Hotel Amenities Guide.pdf",
+          "file_size_mb": 0.02,
+          "processing_timestamp": 36800.437
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530551",
+      "data": {
+        "chunk_id": 530551,
+        "content": "i throughout property\n\nMeeting rooms for 10-200 people\n\nVideo conferencing facilities\n\nPrinting, copying, and fax services\n\nBusiness lounge with complimentary coffee\n\nDining Options\n\nGrand Restaurant: Fine dining with international menu\n\nLobby Bar: Cocktails and light snacks\n\nRooftop Terrace: Seasonal outdoor dining with city views\n\nIn-room dining: 24-hour service",
+        "doc_id": 161,
+        "user_id": 30,
+        "domain_id": 3,
+        "doc_name": "Hotel Amenities Guide.pdf",
+        "username": "string",
+        "domain_name": "eand",
+        "metadata": {
+          "file": "tmpajox_fid.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpajox_fid.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 2,
+          "original_doc_length": 816,
+          "doc_index": 0,
+          "domain_id": 3,
+          "doc_id": 161,
+          "user_id": 30,
+          "source": "Hotel Amenities Guide.pdf",
+          "file_size_mb": 0.02,
+          "processing_timestamp": 36800.437
+        },
+        "node_type": "chunk"
       }
     }
   ],
-  "edges": [
-    {
-      "source": "entity:MedCare Hospital",
-      "target": "entity:Berlin",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "headquarters_in",
-        "weight": 1.0,
-        "source_chunk_id": 530532
-      }
-    },
-    {
-      "source": "entity:MedCare Hospital",
-      "target": "entity:GreenHealth Clinic",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "partnered_with",
-        "weight": 1.0,
-        "source_chunk_id": 530531
-      }
-    },
-    {
-      "source": "entity:MedCare Hospital",
-      "target": "entity:2015",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "located_in_year",
-        "weight": 1.0,
-        "source_chunk_id": 530531
-      }
-    },
-    {
-      "source": "entity:MedCare Hospital",
-      "target": "entity:HeartShield Therapy",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "provides",
-        "weight": 1.0,
-        "source_chunk_id": 530534
-      }
-    },
-    {
-      "source": "entity:Berlin",
-      "target": "entity:Germany",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "located_in",
-        "weight": 1.0,
-        "source_chunk_id": 530532
-      }
-    },
-    {
-      "source": "entity:GreenHealth Clinic",
-      "target": "entity:Paris",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "headquarters_in",
-        "weight": 1.0,
-        "source_chunk_id": 530532
-      }
-    },
-    {
-      "source": "entity:GreenHealth Clinic",
-      "target": "entity:Dr. Carol",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "established_by",
-        "weight": 1.0,
-        "source_chunk_id": 530531
-      }
-    },
-    {
-      "source": "entity:GreenHealth Clinic",
-      "target": "entity:2018",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "founded",
-        "weight": 1.0,
-        "source_chunk_id": 530531
-      }
-    },
-    {
-      "source": "entity:GreenHealth Clinic",
-      "target": "entity:EcoTherapy",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "provides",
-        "weight": 1.0,
-        "source_chunk_id": 530534
-      }
-    },
-    {
-      "source": "entity:Paris",
-      "target": "entity:France",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "located_in",
-        "weight": 1.0,
-        "source_chunk_id": 530532
-      }
-    },
-    {
-      "source": "entity:Germany",
-      "target": "entity:France",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "borders",
-        "weight": 1.0,
-        "source_chunk_id": 530532
-      }
-    },
-    {
-      "source": "entity:Dr. Alice",
-      "target": "entity:MedCare Hospital",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "founded",
-        "weight": 1.0,
-        "source_chunk_id": 530531
-      }
-    },
-    {
-      "source": "entity:Dr. Alice",
-      "target": "entity:'Advances in Hypertension Treatment'",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "published",
-        "weight": 1.0,
-        "source_chunk_id": 530533
-      }
-    },
-    {
-      "source": "entity:Dr. Bob",
-      "target": "entity:MedCare Hospital",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "works_at",
-        "weight": 1.0,
-        "source_chunk_id": 530531
-      }
-    },
-    {
-      "source": "entity:Dr. Carol",
-      "target": "entity:'Eco-friendly Therapies'",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "authored",
-        "weight": 1.0,
-        "source_chunk_id": 530533
-      }
-    },
-    {
-      "source": "entity:HeartShield Therapy",
-      "target": "entity:Hypertension",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "used_for",
-        "weight": 1.0,
-        "source_chunk_id": 530534
-      }
-    },
-    {
-      "source": "entity:EcoTherapy",
-      "target": "entity:HeartShield Therapy",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "competes_with",
-        "weight": 1.0,
-        "source_chunk_id": 530534
-      }
-    },
-    {
-      "source": "entity:'Advances in Hypertension Treatment'",
-      "target": "entity:'Sustainable Cardiology' by Dr. Bob",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "cites",
-        "weight": 1.0,
-        "source_chunk_id": 530533
-      }
-    },
-    {
-      "source": "entity:'Advances in Hypertension Treatment'",
-      "target": "entity:2022",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "published_in",
-        "weight": 1.0,
-        "source_chunk_id": 530533
-      }
-    },
-    {
-      "source": "entity:'Eco-friendly Therapies'",
-      "target": "entity:Global Health Conference",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "was_presented_at",
-        "weight": 1.0,
-        "source_chunk_id": 530533
-      }
-    },
-    {
-      "source": "entity:'Eco-friendly Therapies'",
-      "target": "entity:2021",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "published_in",
-        "weight": 1.0,
-        "source_chunk_id": 530533
-      }
-    },
-    {
-      "source": "entity:'Sustainable Cardiology'",
-      "target": "entity:Dr. Bob",
-      "data": {
-        "edge_type": "triplet",
-        "predicate": "authored_by",
-        "weight": 1.0,
-        "source_chunk_id": 530533
-      }
-    }
-  ]
+  "edges": []
 }

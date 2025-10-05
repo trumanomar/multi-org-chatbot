@@ -113,7 +113,7 @@ async def build_graph_manually(domain_id: int = 1, extract_triplets: bool = Fals
 
 if __name__ == "__main__":
     # Configuration
-    DOMAIN_ID = 1  # Change this to your domain ID
+    DOMAIN_ID = 3# Change this to your domain ID
     EXTRACT_TRIPLETS = False  # Set to True if you want triplet extraction (requires Ollama)
     
     # Run

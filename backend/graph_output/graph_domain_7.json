@@ -1,0 +1,606 @@
+{
+  "nodes": [
+    {
+      "id": "chunk_530557",
+      "data": {
+        "chunk_id": 530557,
+        "content": "فاتورة\n\nرقم الفاتورة\n\n: INV-2025-001\n\nتاريخ الإصدار : 31 يوليو 2025\n\nتاريخ الاستحقاق\n\n: 15 2025\n\nأغسطس\n\nمعلومات البائع :\n\nاسم الشركة\n\n: حلول التقنية المتقدمة\n\nالعنوان :\n\nشارع الابتكار، مبنى رقم 10 ، القاهرة، مصر\n\nرقم الهاتف\n\n: 01012345678\n\nالبريد الإلكتروني\n\n: info@techsolutions.com\n\nمعلومات العميل :\n\nالاسم : أحمد محمد عبد الل\n\nالعنوان :\n\nشارع النصر، مدينة نصر، القاهرة،\n\nمصر\n\nرقم الهاتف\n\n: 01123456789\n\nالبريد الإلكتروني\n\n: ahmed@example.com\n\nالوصف\n\nالكمية سعر الوحدة الإجمالي\n\nتصميم موقع إلكتروني",
+        "doc_id": 167,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "arabic_invoice.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpv2hv0m6c.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpv2hv0m6c.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 2,
+          "original_doc_length": 863,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 167,
+          "user_id": 33,
+          "source": "arabic_invoice.pdf",
+          "file_size_mb": 3.75,
+          "processing_timestamp": 38756.218
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530558",
+      "data": {
+        "chunk_id": 530558,
+        "content": "ف\n\nالكمية سعر الوحدة الإجمالي\n\nتصميم موقع إلكتروني\n\n1\n\n5,000 ج . م 5,000 ج . م\n\nاستضافة لمدة سنة\n\n1\n\n1,200 ج . م 1,200 ج . م\n\nدعم فني شهري 3( أشهر ) 3\n\n500 ج . م 1,500 ج . م\n\nالإجمالي الفرعي\n\n: 7,700 ج . م\n\nالضريبة )14%(: 1,078\n\nج . م\n\nالإجمالي الكلي\n\n: 8,778 ج . م\n\nملاحظات : يرجى سداد الفاتورة خلال 15 يوم ً ا من تاريخ الإصدار . في حال وجود أي استفسار، لا تتردد في التواصل معنا عبر البريد الإلكتروني أو الهاتف .",
+        "doc_id": 167,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "arabic_invoice.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpv2hv0m6c.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpv2hv0m6c.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 2,
+          "original_doc_length": 863,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 167,
+          "user_id": 33,
+          "source": "arabic_invoice.pdf",
+          "file_size_mb": 3.75,
+          "processing_timestamp": 38756.218
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530559",
+      "data": {
+        "chunk_id": 530559,
+        "content": "أﺿﺮار اﻟﺘﺪﺧﻴﻦ 2016 1969\n\nﺗﺼﻤﻴﻢ وﺣﺪة إدارة اﻷزﻣﺎت واﻟﻜﻮارث ﻗﻄﺎع ﺷﺌﻮن ﺧﺪﻣﺔ اﻟﻤﺠﺘﻤﻊ وﺗﻨﻤﻴﺔ اﻟﺒﻴﺌﺔ ﻛﻠﻴﺔ اﻟﻌﻠﻮم ﺟﺎﻣﻌﺔ ﻃﻨﻄﺎ\n\nCRI SIS\n\nاﻷﺿﺮار اﻟﺼﺤﻴﺔ\n\n١. اﻷﻣﺮاض اﻟﺴﺮﻃﺎﻧﻴﺔ\n\nاﻟﺘﻰ  ﺗﺸﻤﻞ  ﺳﺮﻃﺎن  اﻟﻔﻢ  واﻟﺸﻔﺘﻴﻦ واﻟﺤﻨﺠﺮة  واﻟﻤﺮئ  واﻟﻜﻠﻴﺘﻴﻦ  واﻟﻤﺜﺎﻧﺔ اﻟﻤﻮاد ﻧﺘﻴﺠﺔ  إﻣﺘﺼﺎص واﻟﺒﻨﻜﺮﻳﺎس اﻟﻘﻄﺮاﻧﻴﺔ ووﺻﻮﻟﻬﺎ إﻟﻰ ﻫﺬه اﻷﻋﻀﺎء ﻣﻊ ﺗﻴﺎر اﻟﺪم.\n\nRef. : WWW.mayoclinic.org\n\n٢. أﻣﺮاض اﻟﻘﻠﺐ واﻟﺸﺮاﻳﻴﻦ\n\nوﻫﻰ  ﻧﺎﺗﺠﺔ  ﻋﻦ  ﺗﺨﺎﻟﻒ  ﻛﻞ  ﻣﻦ  أول  اﻛﺴﻴﺪ اﻟﻜﺮﺑﻮن  واﻟﻨﻴﻜﻮﺗﻴﻦ  ﻋﻠﻰ  ﻋﻀﻠﺔ  اﻟﻘﻠﺐ  ﻓﻴﺰﻳﺪ اﻟﻨﻴﻜﻮﺗﻴﻦ ﻣﻦ ﻧﺒﺾ اﻟﻘﻠﺐ وﺣﺎﺟﺘﻪ إﻟﻰ اﻷﻛﺴﺠﻴﻦ ،",
+        "doc_id": 168,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "اضرار التدخين.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpsr7mwtfa.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpsr7mwtfa.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 8,
+          "original_doc_length": 3423,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 168,
+          "user_id": 33,
+          "source": "اضرار التدخين.pdf",
+          "file_size_mb": 1.34,
+          "processing_timestamp": 39932.484
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "entity:إدارة اﻷزﻣﺎت واﻟﻜﻮارث",
+      "data": {
+        "node_type": "entity",
+        "label": "إدارة اﻷزﻣﺎت واﻟﻜﻮارث"
+      }
+    },
+    {
+      "id": "entity:تعزيز",
+      "data": {
+        "node_type": "entity",
+        "label": "تعزيز"
+      }
+    },
+    {
+      "id": "entity:التيشمل",
+      "data": {
+        "node_type": "entity",
+        "label": "التيشمل"
+      }
+    },
+    {
+      "id": "entity:سكان الفتح والشفيطين والحنكرة والمعرى والكلية المتخصصة بالعلوم الجانية",
+      "data": {
+        "node_type": "entity",
+        "label": "سكان الفتح والشفيطين والحنكرة والمعرى والكلية المتخصصة بالعلوم الجانية"
+      }
+    },
+    {
+      "id": "entity:CRI SIS",
+      "data": {
+        "node_type": "entity",
+        "label": "CRI SIS"
+      }
+    },
+    {
+      "id": "entity:الأضرار الصحية",
+      "data": {
+        "node_type": "entity",
+        "label": "الأضرار الصحية"
+      }
+    },
+    {
+      "id": "entity:أموراض سرطانية",
+      "data": {
+        "node_type": "entity",
+        "label": "أموراض سرطانية"
+      }
+    },
+    {
+      "id": "entity:WWW.mayoclinic.org",
+      "data": {
+        "node_type": "entity",
+        "label": "WWW.mayoclinic.org"
+      }
+    },
+    {
+      "id": "entity:مرجع",
+      "data": {
+        "node_type": "entity",
+        "label": "مرجع"
+      }
+    },
+    {
+      "id": "chunk_530560",
+      "data": {
+        "chunk_id": 530560,
+        "content": "ﻓﻴﺰﻳﺪ اﻟﻨﻴﻜﻮﺗﻴﻦ ﻣﻦ ﻧﺒﺾ اﻟﻘﻠﺐ وﺣﺎﺟﺘﻪ إﻟﻰ اﻷﻛﺴﺠﻴﻦ ،  ﺑﻴﻨﻤﺎ  ﻳﻌﻤﻞ  أول  أﻛﺴﻴﺪ  اﻟﻜﺮﺑﻮن  ﻋﻠﻰ  ﺗﻘﻠﻴﻞ ﻛﻤﻴﺔ  اﻷﻛﺴﺠﻴﻦ  اﻟﺘﻰ  ﺗﺼﻞ  إﻟﻰ  اﻟﻘﻠﺐ  ،  ﻛﻤﺎ ﻳﺴﺒﺒﺎن ﺗﺮﺳﺐ اﻟﻤﻮاد اﻟﺪﻫﻨﻴﻪ واﻟﻜﻮﻟﻴﺴﺘﺮول ﻓﻰ ﺑﻄﺎﻧﺔ  اﻷوﻋﻴﺔ  اﻟﺪﻣﻮﻳﺔ  ﻣﻤﺎ  ﻳﺘﺴﺒﺐ  ﻓﻰ  ﺗﺼﻠﺐ اﻟﺸﺮاﻳﻴﻦ واﻟﺴﻜﺘﺎت اﻟﻘﻠﺒﻴﺔ اﻟﻨﺎﺗﺠﺔ ﻋﻦ ﺗﺠﻠﻂ اﻟﺪم ﻓﻰ اﻟﺸﺮاﻳﻴﻦ اﻟﺘﺎﺟﻴﺔ اﻟﻤﻐﺬﻳﺔ ﻟﻠﻘﻠﺐ.\n\n٣. اﻟﻤﻨﺎﻋﺔ وأﻣﺮاض أﺧﺮى\n\nﺗﻀﻌﻒ اﻟﺴﻴﺠﺎرة ﻣﻦ ﻣﻨﺎﻋﺔ اﻟﺠﺴﻢ وﻗﺪرﺗﻪ ﻋﻠﻰ ﻣﻘﺎوﻣﺔ اﻟﺠﺮاﺛﻴﻢ اﻟﺘﻰ ﺗﻐﺰو اﻟﻤﺴﺎﻟﻚ اﻟﺘﻨﻔﺴﻴﺔ  ، ﺣﻴﺚ  ﺗﺘﻠﻒ  ﻣﺎدة  اﻟﻘﻄﺮان  أﻫﺪاب  اﻟﺨﻼﻳﺎ اﻟﻤﺒﻄﻨﺔ ﻟﻬﺬه اﻟﻤﺴﺎﻟﻚ ﻓﺘﻘﻞ ﻗﺪرﺗﻬﺎ ﻋﻠﻰ ﺗ",
+        "doc_id": 168,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "اضرار التدخين.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpsr7mwtfa.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpsr7mwtfa.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 8,
+          "original_doc_length": 3423,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 168,
+          "user_id": 33,
+          "source": "اضرار التدخين.pdf",
+          "file_size_mb": 1.34,
+          "processing_timestamp": 39932.484
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530561",
+      "data": {
+        "chunk_id": 530561,
+        "content": "ﺪاب  اﻟﺨﻼﻳﺎ اﻟﻤﺒﻄﻨﺔ ﻟﻬﺬه اﻟﻤﺴﺎﻟﻚ ﻓﺘﻘﻞ ﻗﺪرﺗﻬﺎ ﻋﻠﻰ ﺗﻨﻘﻴﺔ اﻟﻬﻮاء ﻗﺮﺣﺔ اﻟﺴﻴﺠﺎرة ﺗﺴﺒﺐ ﻛﻤﺎ ﻟﻠﺮﺋﺘﻴﻦ اﻟﻮاﺻﻞ اﻟﻤﻌﺪة واﻟﻤﺮئ.\n\nاﻷﺿﺮار اﻹﺟﺘﻤﺎﻋﻴﺔ\n\nاﻟﺘﺪﺧﻴﻦ  ﻳﻨﻔﺮ  ﻣﻨﻚ  ﻣﻦ  ﺣﻮﻟﻚ  ،  ﻳﻌﻮق  ﺑﻨﺎء ﻋﻼﻗﺎت  إﺟﺘﻤﺎﻋﻴﺔ  ﺳﻠﻴﻤﺔ  ،  وﻳﻘﻒ  ﺣﺎﺟﺰا  ﻓﻰ ﻃﺮﻳﻖ  ﺣﺼﻮﻟﻚ  ﻋﻠﻰ  وﻇﻴﻔﺔ  ﻣﺤﺘﺮﻣﺔ  وﻳﺴﺒﺐ راﺋﺤﺔ ﻣﻨﻔﺮة ﻟﻠﻨﻔﺲ وﻛﺬﻟﻚ ﻟﻠﻤﻼﺑﺲ واﻟﻈﻬﻮر اﻟﻤﺒﻜﺮ ﻟﻠﺘﺠﺎﻋﻴﺪ واﻧﺨﻔﺎض اﻟﺪﺧﻞ وﻳﺘﺴﺒﺐ ﻓﻰ اﻟﺘﻔﻜﻚ اﻷﺳﺮى.\n\nاﻷﺿﺮار اﻟﺪﻳﻨﻴﺔ\n\nإن اﻟﺘﺪﺧﻴﻦ ﻣﺤﺮم ﺷﺮﻋﺎ ﻟﻜﻮﻧﻪ ﺧﺒﻴﺜﺎ ، وﻣﺸﺘﻤﻼ ﻋﻠﻰ أﺿﺮار  ﻛﺜﻴﺮة  ،  وﻣﻔﺎﺳﺪ  ﻋﻈﻴﻤﺔ  ،  وﷲ  ﻋﺰ  وﺟﻞ  إﻧﻤﺎ أﺑﺎح  ﻟﻌﺒﺎده  اﻟﻄﻴﺒﺎت  ﻣﻦ  اﻟﻤﻄ",
+        "doc_id": 168,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "اضرار التدخين.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpsr7mwtfa.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpsr7mwtfa.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 3,
+          "total_chunks": 8,
+          "original_doc_length": 3423,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 168,
+          "user_id": 33,
+          "source": "اضرار التدخين.pdf",
+          "file_size_mb": 1.34,
+          "processing_timestamp": 39932.484
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530562",
+      "data": {
+        "chunk_id": 530562,
+        "content": "وﷲ  ﻋﺰ  وﺟﻞ  إﻧﻤﺎ أﺑﺎح  ﻟﻌﺒﺎده  اﻟﻄﻴﺒﺎت  ﻣﻦ  اﻟﻤﻄﺎﻋﻢ  واﻟﻤﺸﺎرب  وﻏﻴﺮ . ذﻟﻚ وﺣﺮم ﻋﻠﻴﻬﻢ ﻛﻞ ﺧﺒﻴﺚ\n\nوﻣﻌﻠﻮم ﻟﺪى ﻛﻞ ﻋﺎﻗﻞ أن اﻟﺘﺪﺧﻴﻦ ﻣﻦ ﺟﻤﻠﺔ اﻟﺨﺒﺎﺋﺚ ﻟﻜﻮﻧﻪ ﻣﺸﺘﻤﻼ ﻋﻠﻰ ﻣﻮاد ﺿﺎرة وﻫﻮ ﻛﺬﻟﻚ ﺳﻢ ﻣﻦ . اﻟﺴﻤﻮم اﻟﻘﺎﺗﻠﻪ\n\nوﻗﺪ ﺳﺌﻞ اﻟﻌﻼﻣﺔ اﻟﺸﻴﺦ اﺑﻦ اﻟﺒﺎز رﺣﻤﻪ ﷲ ﻋﻦ ﺣﻜﻢ اﻟﺘﺪﺧﻴﻦ ﻓﻘﺎل : \" اﻟﺘﺪﺧﻴﻦ ﻣﺤﺮم ، ﻟﻤﺎ ﻓﻴﻪ ﻣﻦ اﻟﻤﻀﺎر اﻟﻜﺜﻴﺮة  وﻛﻞ  أﻧﻮاﻋﻪ  ﻣﺤﺮﻣﺔ  ﻓﺎﻟﻮاﺟﺐ  ﻋﻠﻰ  اﻟﻤﺴﻠﻢ . \" ﺗﺮﻛﻪ واﻟﺤﺬر ﻣﻨﻪ ، وﻋﺪم ﻣﺠﺎﻟﺴﺔ أﻫﻠﻪ\n\nﻓﻴﺠﺐ  ﻋﻠﻰ  اﻟﻤﺪﺧﻦ  ﺗﺮك  ﺗﻠﻚ  اﻟﻌﺎدة  واﻹﻗﻼع  ﻋﻦ اﻟﺘﺪﺧﻴﻦ واﻟﻤﺒﺎدرة إﻟﻰ اﻟﺘﻮﺑﺔ واﻹﻧﺎﺑﺔ إﻟﻰ ﷲ واﻟﻨﺪم . ﻋﻠﻰ اﻟﻤﻌﺼﻴﺔ وا",
+        "doc_id": 168,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "اضرار التدخين.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpsr7mwtfa.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpsr7mwtfa.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 4,
+          "total_chunks": 8,
+          "original_doc_length": 3423,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 168,
+          "user_id": 33,
+          "source": "اضرار التدخين.pdf",
+          "file_size_mb": 1.34,
+          "processing_timestamp": 39932.484
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530563",
+      "data": {
+        "chunk_id": 530563,
+        "content": "ة إﻟﻰ اﻟﺘﻮﺑﺔ واﻹﻧﺎﺑﺔ إﻟﻰ ﷲ واﻟﻨﺪم . ﻋﻠﻰ اﻟﻤﻌﺼﻴﺔ واﻟﻌﺰم ﻋﻠﻰ أﻻ ﻳﻌﻮد إﻟﻴﻬﺎ أﺑﺪا\n\nﻛﻴﻔﻴﺔ اﻹﻗﻼع ﻋﻦ اﻟﺘﺪﺧﻴﻦ\n\n١. اﻟﻌﻼج ﺑﺒﺪاﺋﻞ اﻟﻨﻴﻜﻮﺗﻴﻦ\n\nﻧﻴﻜﻮﺗﻴﻦ ﻣﻮﺻﻮف ﻃﺒﻴﺎً ﻓﻲ ﻣﺮذاذ أﻧﻔﻲ أو ﺑﺨﺎخ\n\nاﻟﻨﻴﻜﻮﺗﻴﻦ  اﻟﻤﺘﺎح  دون  وﺻﻔﺔ  ﻃﺒﻴﺔ  ﻋﻠﻰ  ﺷﻜﻞ  ﻟﺼﻘﺎت  أو ﻋﻠﻜﺔ أو أﻗﺮاص اﻟﻤﺺ\n\nاﻷدوﻳﺔ  اﻟﺨﺎﻟﻴﺔ  ﻣﻦ  اﻟﻨﻴﻜﻮﺗﻴﻦ  اﻟﻤﻮﺻﻮﻓﺔ  ﻃﺒﻴﺎ ً  ﻟﻼﻗﻼع  ﻋﻦ .( اﻟﺘﺪﺧﻴﻦ ﻣﺜﻞ ﺑﻮﺑﺮوﺑﻴﻮن )زﻳﺒﺎن( وﻓﺎرﻳﻨﻜﻼﻳﻦ )ﺷﺎﻧﺘﻜﺲ\n\n٢. ﺗﺠﻨﺐ اﻟﻤﺜﻴﺮات\n\nﻣﻦ اﻟﻤﺮﺟﺢ أن ﺗﻜﻮن اﻟﺤﺎﺟﺔ اﻟﻤﻠﺤﺔ ﻟﺘﺪﺧﻴﻦ اﻟﺘﺒﻎ ﻓﻲ أﻋﻠﻰ أو ﻣﻀﻐﺖ ﻓﻴﻬﺎ اﻟﺘﺒﻎ ﻣﺴﺘﻮﻳﺎﺗﻬﺎ ﻓﻲ اﻟﻤﻮاﻗﻒ اﻟﺘﻲ دﺧﻨﺖ ً ﻓﻲ  أﻛﺜﺮ  اﻷﺣﻴﺎ",
+        "doc_id": 168,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "اضرار التدخين.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpsr7mwtfa.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpsr7mwtfa.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 5,
+          "total_chunks": 8,
+          "original_doc_length": 3423,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 168,
+          "user_id": 33,
+          "source": "اضرار التدخين.pdf",
+          "file_size_mb": 1.34,
+          "processing_timestamp": 39932.484
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530564",
+      "data": {
+        "chunk_id": 530564,
+        "content": "ﻎ ﻣﺴﺘﻮﻳﺎﺗﻬﺎ ﻓﻲ اﻟﻤﻮاﻗﻒ اﻟﺘﻲ دﺧﻨﺖ ً ﻓﻲ  أﻛﺜﺮ  اﻷﺣﻴﺎن  ﻣﺜﻞ  اﻟﺤﻔﻼت  وﺣﺎﻧﺎت  اﻟﺸﺮب  أو  ﻋﻨﺪﻣﺎ ﺗﺘﻌﺮض  ﻟﻺﺟﻬﺎد  اﻟﻨﻔﺴﻲ  أو  ﻋﻨﺪﻣﺎ  ﺗﺸﺮب  اﻟﻘﻬﻮة.  ﺣﺪد اﻟﻤﻮاﻗﻒ اﻟﻤﺜﻴﺮة وﺿﻊ ﺧﻄﺔ ﻣﻼﺋﻤﺔ ﻟﺘﺠﻨﺒﻬﺎ ﺗﻤﺎﻣﺎ ً  أو ﺗﻌﺎﻣﻞ ﻣﻌﻬﺎ ﺑﻨﺠﺎح ﺑﺪون اﺳﺘﻌﻤﺎل اﻟﺘﺒﻎ.\n\nﻻ  ﺗﺪﻓﻊ  ﻧﻔﺴﻚ  إﻟﻰ  ﻧ ُ ﻜﺲ  اﻟﺘﺪﺧﻴﻦ.  إ ِ ذا  ﻛﻨﺖ  ﻣﻌﺘﺎدا ً  ﻋﻠﻰ اﻟﺘﺪﺧﻴﻦ ﻋﻨﺪ اﻟﺘﺤﺪث ﻋﻠﻰ اﻟﻬﺎﺗﻒ ﻋﻠﻰ ﺳﺒﻴﻞ اﻟﻤﺜﺎل اﺣﺘﻔﻆ ﺑﻘﻠﻢ  وورﻗﺔ  ﺑﻘﺮﺑﻚ  ﻟﺘ ُ ﻠﻬﻲ  ﻧﻔﺴﻚ  ﺑﺎﻟﺮﺳﻢ  اﻟﻌﺎﺑﺚ  ﺑﺪﻻ ً  ﻣﻦ اﻟﺘﺪﺧﻴﻦ.\n\n٣. اﻟﻨﺸﺎط اﻟﺒﺪﻧﻰ\n\nﺗﻔﻴﺪ  اﻷﻧﺸﻄﺔ  اﻟﺒﺪﻧﻴﺔ  ﻓﻲ  ﺻﺮف  اﻧﺘﺒﺎﻫﻚ  ﻋﻦ    اﻟﺮﻏﺒﺔ اﻟﺸﺪﻳﺪة",
+        "doc_id": 168,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "اضرار التدخين.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpsr7mwtfa.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpsr7mwtfa.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 6,
+          "total_chunks": 8,
+          "original_doc_length": 3423,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 168,
+          "user_id": 33,
+          "source": "اضرار التدخين.pdf",
+          "file_size_mb": 1.34,
+          "processing_timestamp": 39932.484
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530565",
+      "data": {
+        "chunk_id": 530565,
+        "content": "ﺔ  اﻟﺒﺪﻧﻴﺔ  ﻓﻲ  ﺻﺮف  اﻧﺘﺒﺎﻫﻚ  ﻋﻦ    اﻟﺮﻏﺒﺔ اﻟﺸﺪﻳﺪة  ﻓﻲ  اﺳﺘﻌﻤﺎل  اﻟﺘﺒﻎ  وﺗﻘﻠﻞ  ﻣﻦ  ﺷﺪﺗﻬﺎ.ﻳﻤﻜﻦ  أن ﺗﺆدي  ﺣﺘﻰ  اﻟﻔﺘﺮة  اﻟﻘﺼﻴﺮة  ﻣﻦ  اﻟﻨﺸﺎط  اﻟﺒﺪﻧﻲ  -  ﻛﺼﻌﻮد وﻧﺰول  اﻟﺴﻼﻟﻢ  ﺑﻀﻌﺔ  ﻣﺮات  -  إﻟﻰ  اﻟﺘﺨﻠﺺ  ﻣﻦ  اﻟﺮﻏﺒﺔ اﻟﺸﺪﻳﺪة ﻓﻲ اﻟﺘﺒﻎ ، ﻗﻢ ﺑﻨﺰﻫﺔ ﺻﻐﻴﺮة ﻟﻠﺘﻤﺸﻲ أو اﻟﻬﺮوﻟﺔ.\n\n. ﻣﻤﺎرﺳﺔ اﻟﺮﻳﺎﺿﺔ ﺑﺸﻜﻞ داﺋﻢ أﻳﻀﺎ ﻟﻬﺎ أﻫﻤﻴﺔ ﻛﺒﻴﺮة\n\n٤. ﻣﻤﺎرﺳﺔ أﺳﺎﻟﻴﺐ اﻹﺳﺘﺮﺧﺎء\n\nرﺑﻤﺎ ﻳﻜﻮن اﻟﺘﺪﺧﻴﻦ ﻫﻮ ﻃﺮﻳﻘﺘﻚ ﻓﻲ اﻟﺘﻌﺎﻣﻞ ﻣﻊ اﻟﺘﻮﺗﺮ. ﺑﻞ إن  ﻣﻘﺎوﻣﺔ  اﻟﺮﻏﺒﺔ  ﻓﻲ  اﻟﺘﺒﻎ  ﻗﺪ  ﺗﻜﻮن  ﻓﻲ  ﺣﺪ  ذاﺗﻬﺎ  أﻣﺮ ً ا ﻣﺴﺒﺒ ً ﺎ ﻟﻠﺘﻮﺗﺮ.\n\nﻳﻤﻜﻨﻚ ﺗﺨﻔﻴﻒ ﺣﺪة اﻟﺘﻮﺗﺮ ﻋﻦ",
+        "doc_id": 168,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "اضرار التدخين.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpsr7mwtfa.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpsr7mwtfa.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 7,
+          "total_chunks": 8,
+          "original_doc_length": 3423,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 168,
+          "user_id": 33,
+          "source": "اضرار التدخين.pdf",
+          "file_size_mb": 1.34,
+          "processing_timestamp": 39932.484
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530566",
+      "data": {
+        "chunk_id": 530566,
+        "content": "ﺮ ً ا ﻣﺴﺒﺒ ً ﺎ ﻟﻠﺘﻮﺗﺮ.\n\nﻳﻤﻜﻨﻚ ﺗﺨﻔﻴﻒ ﺣﺪة اﻟﺘﻮﺗﺮ ﻋﻦ ﻃﺮﻳﻖ ﻣﻤﺎرﺳﺔ ﺑﻌﺾ أﺳﺎﻟﻴﺐ اﻻﺳﺘﺮﺧﺎء ﻣﺜﻞ ﺗﻤﺎرﻳﻦ اﻟﺘﻨﻔﺲ اﻟﻌﻤﻴﻖ أو إرﺧﺎء اﻟﻌﻀﻼت أو اﻟﺘﺄﻣﻞ أو اﻟﺘﺪﻟﻴﻚ أو اﻻﺳﺘﻤﺎع إﻟﻰ ﻣﻮﺳﻴﻘﻰ ﻣﻬﺪﺋﺔ.\n\n٥. ﻃﻠﺐ اﻟﺘﻌﺰﻳﺰات\n\nاﻷﺷﺨﺎص ﻣﻦ واﻟﺪﻋﻢ اﻟﻤﺴﺎﻋﺪة ﻃﻠﺐ اﻟﻤﻘﺮﺑﻴﻦ ﻛﺎﻷﻫﻞ واﻷﺻﺪﻗﺎء\n\nRef. :  WWW.mayoclinic.org",
+        "doc_id": 168,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "اضرار التدخين.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpsr7mwtfa.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpsr7mwtfa.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 8,
+          "total_chunks": 8,
+          "original_doc_length": 3423,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 168,
+          "user_id": 33,
+          "source": "اضرار التدخين.pdf",
+          "file_size_mb": 1.34,
+          "processing_timestamp": 39932.484
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "entity:Dr. Alice",
+      "data": {
+        "node_type": "entity",
+        "label": "Dr. Alice"
+      }
+    },
+    {
+      "id": "entity:MedCare Hospital",
+      "data": {
+        "node_type": "entity",
+        "label": "MedCare Hospital"
+      }
+    },
+    {
+      "id": "entity:Somewhere in a developed country",
+      "data": {
+        "node_type": "entity",
+        "label": "Somewhere in a developed country"
+      }
+    },
+    {
+      "id": "entity:Tumor treatment",
+      "data": {
+        "node_type": "entity",
+        "label": "Tumor treatment"
+      }
+    },
+    {
+      "id": "entity:Treatment of Tumor",
+      "data": {
+        "node_type": "entity",
+        "label": "Treatment of Tumor"
+      }
+    },
+    {
+      "id": "entity:Surgical intervention",
+      "data": {
+        "node_type": "entity",
+        "label": "Surgical intervention"
+      }
+    },
+    {
+      "id": "entity:Radiation therapy",
+      "data": {
+        "node_type": "entity",
+        "label": "Radiation therapy"
+      }
+    },
+    {
+      "id": "entity:Chemotherapy",
+      "data": {
+        "node_type": "entity",
+        "label": "Chemotherapy"
+      }
+    },
+    {
+      "id": "entity:Immunotherapy",
+      "data": {
+        "node_type": "entity",
+        "label": "Immunotherapy"
+      }
+    },
+    {
+      "id": "entity:Targeted therapy",
+      "data": {
+        "node_type": "entity",
+        "label": "Targeted therapy"
+      }
+    },
+    {
+      "id": "entity:Dr. Bob",
+      "data": {
+        "node_type": "entity",
+        "label": "Dr. Bob"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "entity:إدارة اﻷزﻣﺎت واﻟﻜﻮارث",
+      "target": "entity:تعزيز",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "قيام",
+        "weight": 1.0,
+        "source_chunk_id": 530559
+      }
+    },
+    {
+      "source": "entity:التيشمل",
+      "target": "entity:سكان الفتح والشفيطين والحنكرة والمعرى والكلية المتخصصة بالعلوم الجانية",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "تمثل",
+        "weight": 1.0,
+        "source_chunk_id": 530559
+      }
+    },
+    {
+      "source": "entity:التيشمل",
+      "target": "entity:أموراض سرطانية",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "تمثل",
+        "weight": 1.0,
+        "source_chunk_id": 530559
+      }
+    },
+    {
+      "source": "entity:CRI SIS",
+      "target": "entity:الأضرار الصحية",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "أما",
+        "weight": 1.0,
+        "source_chunk_id": 530559
+      }
+    },
+    {
+      "source": "entity:WWW.mayoclinic.org",
+      "target": "entity:مرجع",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "مصدر",
+        "weight": 1.0,
+        "source_chunk_id": 530559
+      }
+    },
+    {
+      "source": "entity:WWW.mayoclinic.org",
+      "target": "entity:الأضرار الصحية",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "تعلق",
+        "weight": 1.0,
+        "source_chunk_id": 530559
+      }
+    },
+    {
+      "source": "entity:Dr. Alice",
+      "target": "entity:MedCare Hospital",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "founded",
+        "weight": 1.0,
+        "source_chunk_id": 530566
+      }
+    },
+    {
+      "source": "entity:MedCare Hospital",
+      "target": "entity:Somewhere in a developed country",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "located",
+        "weight": 1.0,
+        "source_chunk_id": 530566
+      }
+    },
+    {
+      "source": "entity:MedCare Hospital",
+      "target": "entity:Tumor treatment",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "provides",
+        "weight": 1.0,
+        "source_chunk_id": 530566
+      }
+    },
+    {
+      "source": "entity:Treatment of Tumor",
+      "target": "entity:Surgical intervention",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "includes",
+        "weight": 1.0,
+        "source_chunk_id": 530566
+      }
+    },
+    {
+      "source": "entity:Treatment of Tumor",
+      "target": "entity:Radiation therapy",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "includes",
+        "weight": 1.0,
+        "source_chunk_id": 530566
+      }
+    },
+    {
+      "source": "entity:Treatment of Tumor",
+      "target": "entity:Chemotherapy",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "includes",
+        "weight": 1.0,
+        "source_chunk_id": 530566
+      }
+    },
+    {
+      "source": "entity:Treatment of Tumor",
+      "target": "entity:Immunotherapy",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "includes",
+        "weight": 1.0,
+        "source_chunk_id": 530566
+      }
+    },
+    {
+      "source": "entity:Treatment of Tumor",
+      "target": "entity:Targeted therapy",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "includes",
+        "weight": 1.0,
+        "source_chunk_id": 530566
+      }
+    },
+    {
+      "source": "entity:Dr. Bob",
+      "target": "entity:MedCare Hospital",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "works_at",
+        "weight": 1.0,
+        "source_chunk_id": 530566
+      }
+    }
+  ]
+}

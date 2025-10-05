@@ -219,7 +219,7 @@ def _generate_answer_with_llm(
             context_parts.append(mysql_formatted)
             print(f"📊 [MYSQL_FORMATTED] {mysql_formatted}")
         
-        # Combined Vector + Graph context (show together)
+        # Combined Vector + Graph context (show together) - Only if relevant
         if vector_results or graph_results:
             context_parts.append("\n=== SEMANTIC & RELATIONAL CONTENT ===")
             # Vector first
@@ -362,13 +362,16 @@ async def chat_query_separate(
     secondary = routing.get("secondary_sources", [])
     all_sources = [primary] + secondary
 
-    # Always include both vector and graph for combined showing (if not already)
-    if 'vector' not in [s.value if hasattr(s, 'value') else s for s in all_sources] and 'generative' not in [s.value if hasattr(s, 'value') else s for s in all_sources]:
-        all_sources.append('vector')
-    if 'graph' not in [s.value if hasattr(s, 'value') else s for s in all_sources]:
-        all_sources.append('graph')
+    # Conditionally include vector and graph only if primary is not 'mysql'
+    primary_value = primary.value if hasattr(primary, 'value') else primary
+    if primary_value != 'mysql':
+        if 'vector' not in [s.value if hasattr(s, 'value') else s for s in all_sources] and 'generative' not in [s.value if hasattr(s, 'value') else s for s in all_sources]:
+            all_sources.append('vector')
+        if 'graph' not in [s.value if hasattr(s, 'value') else s for s in all_sources]:
+            all_sources.append('graph')
+    print(f"🔍 Final sources to query: {all_sources}")
 
-    # 🔍 STEP 2: Execute queries based on routing (now always vector + graph)
+    # 🔍 STEP 2: Execute queries based on routing
     for source in all_sources:
         source_value = source.value if hasattr(source, 'value') else source
         print(f"   Executing source: '{source_value}' (type: {type(source_value)})")
@@ -408,16 +411,22 @@ async def chat_query_separate(
             except Exception as e:
                 print(f"   ❌ Vector error: {e}")
         
-        # Graph Query - Use string comparison
+        # Graph Query - Use string comparison with enhanced logging
         if source_value == 'graph':
             print(f"🕸️  Querying Graph DB for '{q}' in domain {search_domain_id}...")
             try:
+                # Log the exact params passed to query_graph
+                print(f"   Graph params: query='{q}', domain_id={search_domain_id or 0}, max_results={k}")
                 graph_part = await graph.query_graph(
                     q, 
                     domain_id=search_domain_id or 0, 
                     max_results=k
                 )
                 print(f"   Graph raw: total_found={graph_part.get('total_found')}, results_len={len(graph_part.get('results', []))}")
+                # Log first result content for debugging
+                if graph_part.get('results'):
+                    first_content = graph_part['results'][0].get('content', 'N/A')[:100] + '...'
+                    print(f"   Graph first result preview: {first_content}")
                 graph_results = graph_part.get("results") or []
                 graph_total = int(graph_part.get("total_found") or 0)
                 print(f"   ✅ Found {graph_total} graph results")
