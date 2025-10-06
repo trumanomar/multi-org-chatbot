@@ -5,7 +5,8 @@ from tempfile import NamedTemporaryFile
 from sqlalchemy.orm import Session
 import json
 from concurrent.futures import ThreadPoolExecutor
-
+from app.GraphDB.graph_integration import GraphRAGIntegration
+import asyncio
 from app.VectorDB.DB import add_documents, persist
 from app.DB.db import get_db
 from app.Models.tables import User
@@ -82,7 +83,7 @@ async def upload_files(
         print(f"[upload] Processing file {idx+1}/{len(files)}: {file.filename}")
         
         # Save file temporarily
-        with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+        with NamedTemporaryFile (delete=False, suffix=suffix) as tmp:
             content_bytes = await file.read()
             tmp.write(content_bytes)
             tmp_path = tmp.name
@@ -168,6 +169,12 @@ async def upload_files(
                     status_code=500,
                     detail=f"Failed to save chunks to database: {str(save_error)}"
                 )
+         
+
+  
+            
+    
+
 
             # 5) Add to Vector DB in small batches
             try:
@@ -236,7 +243,8 @@ async def upload_files(
                 graph_result = await graph_client.update_graph(
                     domain_id=db_user.domain_id,
                     doc_id=doc_id,
-                    user_id=db_user.id
+                    user_id=db_user.id,
+                    
                 )
                 
                 if graph_result.get("status") == "success":

@@ -174,3 +174,4 @@ Hybrid Queries (Multiple Sources)
 "List VIP guests and describe their preferred amenities"
 "What's our satisfaction rating and what are guests saying about housekeeping?"
 "Show me revenue by room type and explain each room's features"
+

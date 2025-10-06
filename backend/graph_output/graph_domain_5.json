@@ -1,0 +1,563 @@
+{
+  "nodes": [
+    {
+      "id": "chunk_530577",
+      "data": {
+        "chunk_id": 530577,
+        "content": "فاتورة\n\nرقم الفاتورة\n\n: INV-2025-001\n\nتاريخ الإصدار : 31 يوليو 2025\n\nتاريخ الاستحقاق\n\n: 15 2025\n\nأغسطس\n\nمعلومات البائع :\n\nاسم الشركة\n\n: حلول التقنية المتقدمة\n\nالعنوان :\n\nشارع الابتكار، مبنى رقم 10 ، القاهرة، مصر\n\nرقم الهاتف\n\n: 01012345678\n\nالبريد الإلكتروني\n\n: info@techsolutions.com\n\nمعلومات العميل :\n\nالاسم : أحمد محمد عبد الل\n\nالعنوان :\n\nشارع النصر، مدينة نصر، القاهرة،\n\nمصر\n\nرقم الهاتف\n\n: 01123456789\n\nالبريد الإلكتروني\n\n: ahmed@example.com\n\nالوصف\n\nالكمية سعر الوحدة الإجمالي\n\nتصميم موقع إلكتروني",
+        "doc_id": 171,
+        "user_id": 34,
+        "domain_id": 5,
+        "doc_name": "arabic_invoice.pdf",
+        "username": "ali",
+        "domain_name": "fixed",
+        "metadata": {
+          "file": "tmpd50ptgr2.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpd50ptgr2.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 2,
+          "original_doc_length": 863,
+          "doc_index": 0,
+          "domain_id": 5,
+          "doc_id": 171,
+          "user_id": 34,
+          "source": "arabic_invoice.pdf",
+          "file_size_mb": 3.75,
+          "processing_timestamp": 1762.437
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530578",
+      "data": {
+        "chunk_id": 530578,
+        "content": "ف\n\nالكمية سعر الوحدة الإجمالي\n\nتصميم موقع إلكتروني\n\n1\n\n5,000 ج . م 5,000 ج . م\n\nاستضافة لمدة سنة\n\n1\n\n1,200 ج . م 1,200 ج . م\n\nدعم فني شهري 3( أشهر ) 3\n\n500 ج . م 1,500 ج . م\n\nالإجمالي الفرعي\n\n: 7,700 ج . م\n\nالضريبة )14%(: 1,078\n\nج . م\n\nالإجمالي الكلي\n\n: 8,778 ج . م\n\nملاحظات : يرجى سداد الفاتورة خلال 15 يوم ً ا من تاريخ الإصدار . في حال وجود أي استفسار، لا تتردد في التواصل معنا عبر البريد الإلكتروني أو الهاتف .",
+        "doc_id": 171,
+        "user_id": 34,
+        "domain_id": 5,
+        "doc_name": "arabic_invoice.pdf",
+        "username": "ali",
+        "domain_name": "fixed",
+        "metadata": {
+          "file": "tmpd50ptgr2.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpd50ptgr2.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 2,
+          "original_doc_length": 863,
+          "doc_index": 0,
+          "domain_id": 5,
+          "doc_id": 171,
+          "user_id": 34,
+          "source": "arabic_invoice.pdf",
+          "file_size_mb": 3.75,
+          "processing_timestamp": 1762.437
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530579",
+      "data": {
+        "chunk_id": 530579,
+        "content": "In 2021, MedCare Hospital hosted the Global Health Conference in Berlin. GreenHealth Clinic presented EcoTherapy at the Global Health Conference. The Global Health Conference was attended by Dr. Alice and Dr. Carol.",
+        "doc_id": 172,
+        "user_id": 34,
+        "domain_id": 5,
+        "doc_name": "events.pdf",
+        "username": "ali",
+        "domain_name": "fixed",
+        "metadata": {
+          "file": "tmpswzyjskc.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpswzyjskc.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 215,
+          "doc_index": 0,
+          "domain_id": 5,
+          "doc_id": 172,
+          "user_id": 34,
+          "source": "events.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 9258.484
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "entity:MedCare Hospital",
+      "data": {
+        "node_type": "entity",
+        "label": "MedCare Hospital"
+      }
+    },
+    {
+      "id": "entity:Global Health Conference",
+      "data": {
+        "node_type": "entity",
+        "label": "Global Health Conference"
+      }
+    },
+    {
+      "id": "entity:GreenHealth Clinic",
+      "data": {
+        "node_type": "entity",
+        "label": "GreenHealth Clinic"
+      }
+    },
+    {
+      "id": "entity:EcoTherapy",
+      "data": {
+        "node_type": "entity",
+        "label": "EcoTherapy"
+      }
+    },
+    {
+      "id": "entity:Dr. Alice",
+      "data": {
+        "node_type": "entity",
+        "label": "Dr. Alice"
+      }
+    },
+    {
+      "id": "entity:Dr. Carol",
+      "data": {
+        "node_type": "entity",
+        "label": "Dr. Carol"
+      }
+    },
+    {
+      "id": "entity:Berlin",
+      "data": {
+        "node_type": "entity",
+        "label": "Berlin"
+      }
+    },
+    {
+      "id": "chunk_530580",
+      "data": {
+        "chunk_id": 530580,
+        "content": "MedCare Hospital headquarters is in Berlin. GreenHealth Clinic headquarters is in Paris. Berlin is in Germany. Paris is in France. Germany borders France.",
+        "doc_id": 173,
+        "user_id": 34,
+        "domain_id": 5,
+        "doc_name": "locations.pdf",
+        "username": "ali",
+        "domain_name": "fixed",
+        "metadata": {
+          "file": "tmppoo9adx3.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmppoo9adx3.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 154,
+          "doc_index": 0,
+          "domain_id": 5,
+          "doc_id": 173,
+          "user_id": 34,
+          "source": "locations.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 9283.375
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "entity:Paris",
+      "data": {
+        "node_type": "entity",
+        "label": "Paris"
+      }
+    },
+    {
+      "id": "entity:Germany",
+      "data": {
+        "node_type": "entity",
+        "label": "Germany"
+      }
+    },
+    {
+      "id": "entity:France",
+      "data": {
+        "node_type": "entity",
+        "label": "France"
+      }
+    },
+    {
+      "id": "chunk_530581",
+      "data": {
+        "chunk_id": 530581,
+        "content": "Dr. Alice founded MedCare Hospital in 2015. Dr. Bob is the Head of Cardiology at MedCare Hospital. MedCare Hospital partnered with GreenHealth Clinic in 2020. GreenHealth Clinic was established by Dr. Carol in 2018.",
+        "doc_id": 174,
+        "user_id": 34,
+        "domain_id": 5,
+        "doc_name": "hospitals.pdf",
+        "username": "ali",
+        "domain_name": "fixed",
+        "metadata": {
+          "file": "tmp97bw_lj6.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmp97bw_lj6.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 215,
+          "doc_index": 0,
+          "domain_id": 5,
+          "doc_id": 174,
+          "user_id": 34,
+          "source": "hospitals.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 9293.937
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530582",
+      "data": {
+        "chunk_id": 530582,
+        "content": "Dr. Alice published 'Advances in Hypertension Treatment' in 2022. 'Advances in Hypertension Treatment' cites 'Sustainable Cardiology' by Dr. Bob. Dr. Carol authored 'Eco-friendly Therapies' in 2021. 'Eco-friendly Therapies' was presented at the Global Health Conference.",
+        "doc_id": 175,
+        "user_id": 34,
+        "domain_id": 5,
+        "doc_name": "research.pdf",
+        "username": "ali",
+        "domain_name": "fixed",
+        "metadata": {
+          "file": "tmphzhizdxn.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmphzhizdxn.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 270,
+          "doc_index": 0,
+          "domain_id": 5,
+          "doc_id": 175,
+          "user_id": 34,
+          "source": "research.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 9303.765
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "entity:'Advances in Hypertension Treatment'",
+      "data": {
+        "node_type": "entity",
+        "label": "'Advances in Hypertension Treatment'"
+      }
+    },
+    {
+      "id": "entity:'Sustainable Cardiology' by Dr. Bob",
+      "data": {
+        "node_type": "entity",
+        "label": "'Sustainable Cardiology' by Dr. Bob"
+      }
+    },
+    {
+      "id": "entity:'Eco-friendly Therapies'",
+      "data": {
+        "node_type": "entity",
+        "label": "'Eco-friendly Therapies'"
+      }
+    },
+    {
+      "id": "entity:the Global Health Conference",
+      "data": {
+        "node_type": "entity",
+        "label": "the Global Health Conference"
+      }
+    },
+    {
+      "id": "entity:2022",
+      "data": {
+        "node_type": "entity",
+        "label": "2022"
+      }
+    },
+    {
+      "id": "entity:2021",
+      "data": {
+        "node_type": "entity",
+        "label": "2021"
+      }
+    },
+    {
+      "id": "entity:Dr. Bob",
+      "data": {
+        "node_type": "entity",
+        "label": "Dr. Bob"
+      }
+    },
+    {
+      "id": "entity:'Sustainable Cardiology'",
+      "data": {
+        "node_type": "entity",
+        "label": "'Sustainable Cardiology'"
+      }
+    },
+    {
+      "id": "chunk_530583",
+      "data": {
+        "chunk_id": 530583,
+        "content": "MedCare Hospital provides HeartShield Therapy. HeartShield Therapy is used for treating Hypertension. GreenHealth Clinic provides EcoTherapy. EcoTherapy competes with HeartShield Therapy.",
+        "doc_id": 176,
+        "user_id": 34,
+        "domain_id": 5,
+        "doc_name": "treatments.pdf",
+        "username": "ali",
+        "domain_name": "fixed",
+        "metadata": {
+          "file": "tmppop39boa.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmppop39boa.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 1,
+          "original_doc_length": 187,
+          "doc_index": 0,
+          "domain_id": 5,
+          "doc_id": 176,
+          "user_id": 34,
+          "source": "treatments.pdf",
+          "file_size_mb": 0.0,
+          "processing_timestamp": 9311.187
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "entity:HeartShield Therapy",
+      "data": {
+        "node_type": "entity",
+        "label": "HeartShield Therapy"
+      }
+    },
+    {
+      "id": "entity:Hypertension",
+      "data": {
+        "node_type": "entity",
+        "label": "Hypertension"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "entity:MedCare Hospital",
+      "target": "entity:Global Health Conference",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "hosted",
+        "weight": 1.0,
+        "source_chunk_id": 530579
+      }
+    },
+    {
+      "source": "entity:MedCare Hospital",
+      "target": "entity:Berlin",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "headquarters_in",
+        "weight": 1.0,
+        "source_chunk_id": 530580
+      }
+    },
+    {
+      "source": "entity:MedCare Hospital",
+      "target": "entity:HeartShield Therapy",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "provides",
+        "weight": 1.0,
+        "source_chunk_id": 530583
+      }
+    },
+    {
+      "source": "entity:Global Health Conference",
+      "target": "entity:Dr. Alice",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "was_attended_by",
+        "weight": 1.0,
+        "source_chunk_id": 530579
+      }
+    },
+    {
+      "source": "entity:Global Health Conference",
+      "target": "entity:Dr. Carol",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "was_attended_by",
+        "weight": 1.0,
+        "source_chunk_id": 530579
+      }
+    },
+    {
+      "source": "entity:GreenHealth Clinic",
+      "target": "entity:EcoTherapy",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "provides",
+        "weight": 1.0,
+        "source_chunk_id": 530583
+      }
+    },
+    {
+      "source": "entity:GreenHealth Clinic",
+      "target": "entity:Paris",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "headquarters_in",
+        "weight": 1.0,
+        "source_chunk_id": 530580
+      }
+    },
+    {
+      "source": "entity:EcoTherapy",
+      "target": "entity:HeartShield Therapy",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "competes_with",
+        "weight": 1.0,
+        "source_chunk_id": 530583
+      }
+    },
+    {
+      "source": "entity:Dr. Alice",
+      "target": "entity:'Advances in Hypertension Treatment'",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "published",
+        "weight": 1.0,
+        "source_chunk_id": 530582
+      }
+    },
+    {
+      "source": "entity:Dr. Carol",
+      "target": "entity:'Eco-friendly Therapies'",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "authored",
+        "weight": 1.0,
+        "source_chunk_id": 530582
+      }
+    },
+    {
+      "source": "entity:Berlin",
+      "target": "entity:Germany",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "located_in",
+        "weight": 1.0,
+        "source_chunk_id": 530580
+      }
+    },
+    {
+      "source": "entity:Paris",
+      "target": "entity:France",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "located_in",
+        "weight": 1.0,
+        "source_chunk_id": 530580
+      }
+    },
+    {
+      "source": "entity:Germany",
+      "target": "entity:France",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "borders",
+        "weight": 1.0,
+        "source_chunk_id": 530580
+      }
+    },
+    {
+      "source": "entity:'Advances in Hypertension Treatment'",
+      "target": "entity:'Sustainable Cardiology' by Dr. Bob",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "cites",
+        "weight": 1.0,
+        "source_chunk_id": 530582
+      }
+    },
+    {
+      "source": "entity:'Advances in Hypertension Treatment'",
+      "target": "entity:2022",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "published_in",
+        "weight": 1.0,
+        "source_chunk_id": 530582
+      }
+    },
+    {
+      "source": "entity:'Sustainable Cardiology' by Dr. Bob",
+      "target": "entity:'Advances in Hypertension Treatment'",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "cited_by",
+        "weight": 1.0,
+        "source_chunk_id": 530582
+      }
+    },
+    {
+      "source": "entity:'Eco-friendly Therapies'",
+      "target": "entity:the Global Health Conference",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "was_presented_at",
+        "weight": 1.0,
+        "source_chunk_id": 530582
+      }
+    },
+    {
+      "source": "entity:'Eco-friendly Therapies'",
+      "target": "entity:2021",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "published_in",
+        "weight": 1.0,
+        "source_chunk_id": 530582
+      }
+    },
+    {
+      "source": "entity:Dr. Bob",
+      "target": "entity:'Sustainable Cardiology'",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "authored",
+        "weight": 1.0,
+        "source_chunk_id": 530582
+      }
+    },
+    {
+      "source": "entity:HeartShield Therapy",
+      "target": "entity:Hypertension",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "used_for_treating",
+        "weight": 1.0,
+        "source_chunk_id": 530583
+      }
+    }
+  ]
+}

@@ -28,18 +28,6 @@ class GraphQueryResponse(BaseModel):
     graph_stats: Optional[Dict[str, Any]] = None
     message: Optional[str] = None
 
-class GraphBuildRequest(BaseModel):
-    doc_id: Optional[int] = None
-    user_id: Optional[int] = None
-
-class GraphBuildResponse(BaseModel):
-    status: str
-    chunks_processed: int
-    nodes_created: int
-    edges_created: int
-    domain_id: int
-    message: Optional[str] = None
-
 # Initialize graph integration instance (reuse across requests)
 _graph_instances = {}
 
@@ -168,71 +156,6 @@ async def query_graph_post(
         db=db,
         principal=principal
     )
-
-@router.post("/build/{domain_id}", response_model=GraphBuildResponse)
-async def build_graph(
-    domain_id: int,
-    request: GraphBuildRequest = None,
-    db: Session = Depends(get_db),
-    principal: Principal = Depends(get_current_principal)
-):
-    """
-    Build or rebuild the knowledge graph for a domain
-    
-    Args:
-        domain_id: Domain ID to build graph for
-        request: Optional filters for doc_id and user_id
-    
-    Returns:
-        Graph building results
-    """
-    
-    try:
-        # Validate domain access (optional - based on your auth logic)
-        if principal.domain_id and principal.domain_id != domain_id:
-            raise HTTPException(
-                status_code=403, 
-                detail="Access denied to this domain"
-            )
-        
-        # Get graph integration instance
-        graph_integration = get_graph_integration(domain_id)
-        
-        # Build graph
-        doc_id = request.doc_id if request else None
-        user_id = request.user_id if request else None
-        
-        logger.info(f"Building graph for domain {domain_id}, doc_id: {doc_id}, user_id: {user_id}")
-        
-        result = await graph_integration.build_graph_from_chunks(
-            domain_id=domain_id,
-            doc_id=doc_id,
-            user_id=user_id
-        )
-        
-        if result["status"] == "success":
-            return GraphBuildResponse(
-                status="success",
-                chunks_processed=result["chunks_processed"],
-                nodes_created=result["nodes_created"],
-                edges_created=result["edges_created"],
-                domain_id=domain_id,
-                message="Graph built successfully"
-            )
-        else:
-            raise HTTPException(
-                status_code=500,
-                detail=f"Graph building failed: {result.get('message', 'Unknown error')}"
-            )
-    
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error building graph for domain {domain_id}: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error: {str(e)}"
-        )
 
 @router.get("/stats/{domain_id}")
 async def get_graph_statistics(
