@@ -575,7 +575,7 @@ and questions to test on backend/app/readme.md
 ## 📸 Screenshots
 
 ### Authentication
-![Login Page](./screenshots/Screenshot (220).png)
+![Login Page](./screenshots/login.png)
 *Secure authentication with username and password*
 
 ---
