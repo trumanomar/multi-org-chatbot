@@ -17,7 +17,8 @@ from app.auth.change_password import router as change_password_router
 from app.auth.reset_password import router as reset_password_router
 from app.auth.forget_password_route import router as forget_password_router
 from app.Routes.speech_to_text_route import router as sst_router
-from app.Routes.mysql_mcp_route import router as mysql_mcp_router 
+from app.Routes.mysql_mcp_route import router as mysql_mcp_router
+from app.Routes.graph_routes import router as graph_router 
 
 app = FastAPI(title="Document Chatbot API") 
 
@@ -50,4 +51,5 @@ app.include_router(forget_password_router)
 app.include_router(sst_router)                    # speech_to_text.py has prefix="/speech-to-text"
 app.include_router(chat_history_router)          # chat_history.py has prefix="/chat-history"
 app.include_router(mysql_mcp_router, prefix="/mysql-mcp")  # MySQL MCP routes
+app.include_router(graph_router)                 # graph_routes.py has prefix="/graph"
 

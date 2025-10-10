@@ -212,6 +212,103 @@ async def get_graph_statistics(
             detail=f"Internal server error: {str(e)}"
         )
 
+class GraphVisualizationRequest(BaseModel):
+    query: str
+    layout: str = "spring"
+    node_size: int = 300
+    font_size: int = 8
+
+@router.post("/visualize/{domain_id}")
+async def visualize_graph(
+    domain_id: int,
+    request: GraphVisualizationRequest,
+    db: Session = Depends(get_db),
+    principal: Principal = Depends(get_current_principal)
+):
+    """
+    Generate a graph visualization for a domain
+    
+    Args:
+        domain_id: Domain ID to visualize graph for
+        query: Query string to highlight relevant nodes
+        layout: Layout algorithm (spring, kamada_kawai, circular)
+        node_size: Size of nodes in visualization
+        font_size: Font size for labels
+    
+    Returns:
+        Visualization results with image path and stats
+    """
+    
+    try:
+        # Validate domain access (optional)
+        if principal.domain_id and principal.domain_id != domain_id:
+            raise HTTPException(
+                status_code=403, 
+                detail="Access denied to this domain"
+            )
+        
+        # Get graph integration instance
+        graph_integration = get_graph_integration(domain_id)
+        
+        # Load existing graph if not loaded
+        if graph_integration.graph.number_of_nodes() == 0:
+            logger.info(f"Loading existing graph for domain {domain_id}")
+            graph_loaded = await graph_integration.load_existing_graph(domain_id)
+            
+            if not graph_loaded:
+                logger.info(f"No existing graph found, building new graph for domain {domain_id}")
+                build_result = await graph_integration.build_graph_from_chunks(domain_id)
+                if build_result["status"] != "success":
+                    raise HTTPException(
+                        status_code=500,
+                        detail=f"Failed to build graph: {build_result.get('message', 'Unknown error')}"
+                    )
+        
+        # Generate unique filename for this visualization
+        import time
+        timestamp = int(time.time())
+        filename = f"graph_domain_{domain_id}_{timestamp}.png"
+        file_path = os.path.join(graph_integration.output_dir, filename)
+        
+        # Generate the visualization
+        logger.info(f"Generating graph visualization for domain {domain_id}")
+        result = graph_integration.draw_graph(
+            file_path=file_path,
+            layout=request.layout,
+            node_size=request.node_size,
+            font_size=request.font_size
+        )
+        
+        if result["status"] != "success":
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to generate visualization: {result.get('message', 'Unknown error')}"
+            )
+        
+        # Get graph statistics
+        graph_stats = graph_integration.get_graph_statistics()
+        
+        return {
+            "status": "success",
+            "domain_id": domain_id,
+            "query": request.query,
+            "image_path": result["path"],
+            "stats": graph_stats,
+            "nodes": result["nodes"],
+            "edges": result["edges"],
+            "layout": request.layout,
+            "message": "Graph visualization generated successfully"
+        }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating graph visualization for domain {domain_id}: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}"
+        )
+
 @router.delete("/reset/{domain_id}")
 async def reset_graph(
     domain_id: int,

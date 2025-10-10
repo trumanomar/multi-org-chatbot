@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/database_analytics_widget.dart';
 import '../../widgets/database_query_widget.dart';
+import '../../widgets/graph_visualization_widget.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
@@ -34,14 +35,20 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   bool _sending = false;
   String? _error;
   bool _showDatabaseWidgets = false;
-
+  int? get _userDomainId {
+    final auth = ref.read(authControllerProvider);
+    final domainId = auth.domainId ?? auth.user?.domainId;
+    
+    // Fallback: use first session's domain_id if available
+    if ((domainId == null || domainId <= 0) && _sessions.isNotEmpty) {
+      return _sessions.first['domain_id'] as int?;
+    }
+    
+    return domainId;
+  }
   static const String _sessionsKey = 'chat_sessions';
   static const String _messagesKey = 'chat_messages';
   static const String _selectedSessionKey = 'selected_session_id';
-                    int? get _userDomainId {
-  final auth = ref.read(authControllerProvider);
-  return auth.domainId ?? auth.user?.domainId;
-}
 
   String _keyPrefix() {
     final auth = ref.read(authControllerProvider);
@@ -51,6 +58,23 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
   }
 
   String _nsKey(String base) => '${_keyPrefix()}_$base';
+
+  bool _isGraphQuestion(String message) {
+    final graphKeywords = [
+      'graph', 'relationship', 'connection', 'network', 'visualize',
+      'show me the connections', 'how are they related', 'draw',
+      'visual', 'diagram', 'chart', 'map', 'structure'
+    ];
+    
+    final lowerMessage = message.toLowerCase();
+    return graphKeywords.any((keyword) => lowerMessage.contains(keyword));
+  }
+
+  void _debugDomainId() {
+    final auth = ref.read(authControllerProvider);
+    print('DEBUG: Auth state - domainId: ${auth.domainId}, user.domainId: ${auth.user?.domainId}');
+    print('DEBUG: _userDomainId: $_userDomainId');
+  }
 
   @override
   void initState() {
@@ -1077,6 +1101,37 @@ if (_showDatabaseWidgets) ...[
                                               ),
                                             ],
                                             
+                                            // Graph Visualization Widget (if it's a graph question)
+                                         if (!isUser && _isGraphQuestion((m['content'] ?? '').toString())) ...[
+  Builder(
+    builder: (context) {
+      final domainId = _userDomainId;
+      
+      if (domainId == null || domainId <= 0) {
+        return Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.orange.shade50,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.orange.shade200),
+          ),
+          child: Text(
+            'Graph visualization unavailable: domain not set',
+            style: TextStyle(color: Colors.orange.shade700),
+          ),
+        );
+      }
+      
+      return GraphVisualizationWidget(
+        domainId: domainId,
+        query: (m['content'] ?? '').toString(),
+        graphData: graph.isNotEmpty ? graph : null,
+        autoLoad: true,
+      );
+    },
+  ),
+  const SizedBox(height: 12),
+],
                                             // Graph Results Section
                                             if (!isUser && graph.isNotEmpty) ...[
                                               const SizedBox(height: 8),

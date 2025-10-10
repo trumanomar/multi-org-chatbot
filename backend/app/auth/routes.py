@@ -31,6 +31,13 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
         return {
             "access_token": token,
             "role": "super_admin",
+            "domain_id": None,
+            "user": {
+                "id": 0,
+                "username": SUPER_ADMIN_EMAIL,
+                "email": SUPER_ADMIN_EMAIL,
+                "domain_id": None
+            },
             "redirect": "/s/dashboard",
         }
 
@@ -47,6 +54,17 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
     )
   
     redirect = "/admin/dashboard" if user.role_based == "admin" else "/user/dashboard"
-    return {"access_token": token, "role": user.role_based, "redirect": redirect}
+    return {
+        "access_token": token, 
+        "role": user.role_based, 
+        "domain_id": user.domain_id,
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "domain_id": user.domain_id
+        },
+        "redirect": redirect
+    }
 
     

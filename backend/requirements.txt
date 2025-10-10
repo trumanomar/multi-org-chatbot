@@ -30,3 +30,4 @@ fastmcp
 docling
 PyPDF2
 datasets
+raganything
