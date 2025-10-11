@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
@@ -29,6 +31,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Mount static files for graph images
+graph_output_dir = os.getenv("GRAPH_OUTPUT_DIR", "./graph_output")
+if os.path.exists(graph_output_dir):
+    app.mount("/static/graph", StaticFiles(directory=graph_output_dir), name="graph_images")
 
 @app.get("/health")
 async def health():

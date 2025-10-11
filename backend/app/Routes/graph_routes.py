@@ -288,11 +288,16 @@ async def visualize_graph(
         # Get graph statistics
         graph_stats = graph_integration.get_graph_statistics()
         
+        # Convert file path to URL path for frontend access
+        image_filename = os.path.basename(result["path"])
+        image_url = f"/static/graph/{image_filename}"
+        
         return {
             "status": "success",
             "domain_id": domain_id,
             "query": request.query,
-            "image_path": result["path"],
+            "image_path": result["path"],  # Keep original path for backend reference
+            "image_url": image_url,        # Add URL path for frontend access
             "stats": graph_stats,
             "nodes": result["nodes"],
             "edges": result["edges"],

@@ -27,6 +27,7 @@ class _GraphVisualizationWidgetState extends State<GraphVisualizationWidget> {
   bool _isLoading = false;
   String? _error;
   String? _graphImagePath;
+  String? _graphImageUrl;
   Map<String, dynamic>? _graphStats;
   Dio? _dio;
 
@@ -58,6 +59,155 @@ Future<Dio> _getDio() async {
     ),
   );
   return _dio!;
+}
+
+void _showFullSizeImage(BuildContext context) {
+  if (_graphImageUrl == null) return;
+  
+  showDialog(
+    context: context,
+    builder: (context) => Dialog(
+      backgroundColor: Colors.transparent,
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.9,
+          maxHeight: MediaQuery.of(context).size.height * 0.9,
+        ),
+        child: Stack(
+          children: [
+            // Full-size image
+            Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    _getFullImageUrl(_graphImageUrl!),
+                    fit: BoxFit.contain,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        width: 400,
+                        height: 300,
+                        color: Colors.grey.shade100,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                              const SizedBox(height: 16),
+                              Text('Loading image...'),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 400,
+                        height: 300,
+                        color: Colors.grey.shade100,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.error_outline,
+                                size: 64,
+                                color: Colors.red.shade400,
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Failed to load image',
+                                style: TextStyle(color: Colors.red.shade600),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                _graphImageUrl!,
+                                style: TextStyle(
+                                  color: Colors.grey.shade500,
+                                  fontSize: 12,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            // Close button
+            Positioned(
+              top: 16,
+              right: 16,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                  tooltip: 'Close',
+                ),
+              ),
+            ),
+            // Image info
+            Positioned(
+              bottom: 16,
+              left: 16,
+              right: 16,
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'Graph Visualization - Domain ${widget.domainId}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+String _getFullImageUrl(String imageUrl) {
+  final base = dotenv.env['API_BASE_URL'] ?? 'http://127.0.0.1:8000';
+  // If imageUrl already starts with http, return as is
+  if (imageUrl.startsWith('http')) {
+    return imageUrl;
+  }
+  // Otherwise, prepend the base URL
+  return '$base$imageUrl';
 }
 
   Future<void> _generateGraphVisualization() async {
@@ -95,6 +245,7 @@ Future<Dio> _getDio() async {
         final data = response.data;
         setState(() {
           _graphImagePath = data['image_path'];
+          _graphImageUrl = data['image_url'] ?? data['image_path']; // Use URL if available, fallback to path
           _graphStats = data['stats'];
         });
       } else {
@@ -268,37 +419,87 @@ Future<Dio> _getDio() async {
                   borderRadius: BorderRadius.circular(8),
                   child: Column(
                     children: [
-                      // Image placeholder - in a real app, you'd load the actual image
+                      // Actual graph visualization image
                       Container(
                         height: 400,
-                        color: Colors.grey.shade100,
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.account_tree,
-                                size: 64,
-                                color: Colors.grey.shade400,
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Graph Visualization',
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Colors.grey.shade600,
+                        child: _graphImageUrl != null
+                            ? Image.network(
+                                _getFullImageUrl(_graphImageUrl!),
+                                fit: BoxFit.contain,
+                                loadingBuilder: (context, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: loadingProgress.expectedTotalBytes != null
+                                          ? loadingProgress.cumulativeBytesLoaded /
+                                              loadingProgress.expectedTotalBytes!
+                                          : null,
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: Colors.grey.shade100,
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.error_outline,
+                                            size: 64,
+                                            color: Colors.red.shade400,
+                                          ),
+                                          const SizedBox(height: 16),
+                                          Text(
+                                            'Failed to load graph image',
+                                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                              color: Colors.red.shade600,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            'URL: $_graphImageUrl',
+                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                              color: Colors.grey.shade500,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              )
+                            : Container(
+                                color: Colors.grey.shade100,
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.account_tree,
+                                        size: 64,
+                                        color: Colors.grey.shade400,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        'Graph Visualization',
+                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Image path: $_graphImagePath',
+                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: Colors.grey.shade500,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Image path: $_graphImagePath',
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey.shade500,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
                       ),
                       // Controls
                       Container(
@@ -325,23 +526,9 @@ Future<Dio> _getDio() async {
                             ),
                             const Spacer(),
                             TextButton.icon(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => Dialog(
-                                    child: Container(
-                                      width: 600,
-                                      height: 500,
-                                      child: Center(
-                                        child: Text(
-                                          'Full-size graph visualization would be displayed here',
-                                          style: Theme.of(context).textTheme.bodyLarge,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
+                              onPressed: _graphImageUrl != null ? () {
+                                _showFullSizeImage(context);
+                              } : null,
                               icon: const Icon(Icons.fullscreen),
                               label: const Text('View Full Size'),
                             ),
