@@ -449,6 +449,632 @@
         "node_type": "entity",
         "label": "Dr. Bob"
       }
+    },
+    {
+      "id": "chunk_530584",
+      "data": {
+        "chunk_id": 530584,
+        "content": "LUXURY GRAND HOTEL - AMENITIES & FACILITIES\n\nSwimming Pool & Spa\n\nOlympic-size heated pool (6 AM - 10 PM)\n\nJacuzzi and sauna\n\nFull-service spa offering massages, facials, and body treatments\n\nPersonal trainers available by appointment\n\nFitness Center\n\nOpen 24/7 with key card access\n\nState-of-the-art cardio equipment\n\nFree weights and resistance machines\n\nYoga and Pilates classes daily at 7 AM and 6 PM\n\nBusiness Center\n\nHigh-speed internet and WiFi throughout property\n\nMeeting rooms for 10-200 pe",
+        "doc_id": 177,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "Hotel Amenities Guide.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpjgzqed4i.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpjgzqed4i.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 2,
+          "original_doc_length": 816,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 177,
+          "user_id": 33,
+          "source": "Hotel Amenities Guide.pdf",
+          "file_size_mb": 0.02,
+          "processing_timestamp": 210893.203
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530585",
+      "data": {
+        "chunk_id": 530585,
+        "content": "i throughout property\n\nMeeting rooms for 10-200 people\n\nVideo conferencing facilities\n\nPrinting, copying, and fax services\n\nBusiness lounge with complimentary coffee\n\nDining Options\n\nGrand Restaurant: Fine dining with international menu\n\nLobby Bar: Cocktails and light snacks\n\nRooftop Terrace: Seasonal outdoor dining with city views\n\nIn-room dining: 24-hour service",
+        "doc_id": 177,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "Hotel Amenities Guide.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpjgzqed4i.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpjgzqed4i.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 2,
+          "original_doc_length": 816,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 177,
+          "user_id": 33,
+          "source": "Hotel Amenities Guide.pdf",
+          "file_size_mb": 0.02,
+          "processing_timestamp": 210893.203
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530586",
+      "data": {
+        "chunk_id": 530586,
+        "content": "LUXURY GRAND HOTEL - OPERATIONS MANUAL\n\nChapter 1: Check-in Procedures The standard check-in time is 3:00 PM. Early check-in is available upon request and subject to room availability. Guests must present a valid ID and credit card. The front desk staff should verify the reservation in the PMS system, assign the room key, and explain hotel amenities including the spa, fitness center, and restaurant hours.\n\nChapter 2: Guest Services Our concierge team is available 24/7 to assist with:\n\nRestaurant",
+        "doc_id": 178,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "LUXURY GRAND HOTEL.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpnis4kkbq.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpnis4kkbq.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 4,
+          "original_doc_length": 1467,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 178,
+          "user_id": 33,
+          "source": "LUXURY GRAND HOTEL.pdf",
+          "file_size_mb": 0.03,
+          "processing_timestamp": 210936.015
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "entity:LUXURY GRAND HOTEL",
+      "data": {
+        "node_type": "entity",
+        "label": "LUXURY GRAND HOTEL"
+      }
+    },
+    {
+      "id": "entity:OPERATIONS MANUAL",
+      "data": {
+        "node_type": "entity",
+        "label": "OPERATIONS MANUAL"
+      }
+    },
+    {
+      "id": "entity:Check-in time",
+      "data": {
+        "node_type": "entity",
+        "label": "Check-in time"
+      }
+    },
+    {
+      "id": "entity:3:00 PM",
+      "data": {
+        "node_type": "entity",
+        "label": "3:00 PM"
+      }
+    },
+    {
+      "id": "entity:Early check-in",
+      "data": {
+        "node_type": "entity",
+        "label": "Early check-in"
+      }
+    },
+    {
+      "id": "entity:upon request and subject to room availability",
+      "data": {
+        "node_type": "entity",
+        "label": "upon request and subject to room availability"
+      }
+    },
+    {
+      "id": "entity:Guests",
+      "data": {
+        "node_type": "entity",
+        "label": "Guests"
+      }
+    },
+    {
+      "id": "entity:valid ID and credit card",
+      "data": {
+        "node_type": "entity",
+        "label": "valid ID and credit card"
+      }
+    },
+    {
+      "id": "entity:Front desk staff",
+      "data": {
+        "node_type": "entity",
+        "label": "Front desk staff"
+      }
+    },
+    {
+      "id": "entity:reservation in PMS system",
+      "data": {
+        "node_type": "entity",
+        "label": "reservation in PMS system"
+      }
+    },
+    {
+      "id": "entity:Room key",
+      "data": {
+        "node_type": "entity",
+        "label": "Room key"
+      }
+    },
+    {
+      "id": "entity:front desk staff",
+      "data": {
+        "node_type": "entity",
+        "label": "front desk staff"
+      }
+    },
+    {
+      "id": "entity:Hotel amenities",
+      "data": {
+        "node_type": "entity",
+        "label": "Hotel amenities"
+      }
+    },
+    {
+      "id": "entity:spa and fitness center and restaurant hours",
+      "data": {
+        "node_type": "entity",
+        "label": "spa and fitness center and restaurant hours"
+      }
+    },
+    {
+      "id": "entity:Concierge team",
+      "data": {
+        "node_type": "entity",
+        "label": "Concierge team"
+      }
+    },
+    {
+      "id": "entity:24/7",
+      "data": {
+        "node_type": "entity",
+        "label": "24/7"
+      }
+    },
+    {
+      "id": "entity:Restaurant",
+      "data": {
+        "node_type": "entity",
+        "label": "Restaurant"
+      }
+    },
+    {
+      "id": "entity:concierge team",
+      "data": {
+        "node_type": "entity",
+        "label": "concierge team"
+      }
+    },
+    {
+      "id": "chunk_530587",
+      "data": {
+        "chunk_id": 530587,
+        "content": "team is available 24/7 to assist with:\n\nRestaurant reservations (both in-house and external)\n\nTransportation arrangements (airport shuttle, car rental, taxi service)\n\nLocal attractions and entertainment recommendations\n\nSpecial occasion arrangements (flowers, champagne, room decorations)\n\nChapter 3: Housekeeping Standards All rooms must be cleaned to five-star standards. Daily cleaning includes:\n\nBed linen replacement\n\nBathroom sanitization\n\nVacuuming and dusting\n\nRestocking of toiletries and am",
+        "doc_id": 178,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "LUXURY GRAND HOTEL.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpnis4kkbq.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpnis4kkbq.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 4,
+          "original_doc_length": 1467,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 178,
+          "user_id": 33,
+          "source": "LUXURY GRAND HOTEL.pdf",
+          "file_size_mb": 0.03,
+          "processing_timestamp": 210936.015
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "entity:team",
+      "data": {
+        "node_type": "entity",
+        "label": "team"
+      }
+    },
+    {
+      "id": "entity:Restaurant reservations",
+      "data": {
+        "node_type": "entity",
+        "label": "Restaurant reservations"
+      }
+    },
+    {
+      "id": "entity:Transportation arrangements",
+      "data": {
+        "node_type": "entity",
+        "label": "Transportation arrangements"
+      }
+    },
+    {
+      "id": "entity:Local attractions and entertainment recommendations",
+      "data": {
+        "node_type": "entity",
+        "label": "Local attractions and entertainment recommendations"
+      }
+    },
+    {
+      "id": "entity:Special occasion arrangements",
+      "data": {
+        "node_type": "entity",
+        "label": "Special occasion arrangements"
+      }
+    },
+    {
+      "id": "entity:All rooms",
+      "data": {
+        "node_type": "entity",
+        "label": "All rooms"
+      }
+    },
+    {
+      "id": "entity:five-star standards",
+      "data": {
+        "node_type": "entity",
+        "label": "five-star standards"
+      }
+    },
+    {
+      "id": "entity:Daily cleaning",
+      "data": {
+        "node_type": "entity",
+        "label": "Daily cleaning"
+      }
+    },
+    {
+      "id": "entity:Bed linen replacement",
+      "data": {
+        "node_type": "entity",
+        "label": "Bed linen replacement"
+      }
+    },
+    {
+      "id": "entity:Bathroom sanitization",
+      "data": {
+        "node_type": "entity",
+        "label": "Bathroom sanitization"
+      }
+    },
+    {
+      "id": "entity:Vacuuming and dusting",
+      "data": {
+        "node_type": "entity",
+        "label": "Vacuuming and dusting"
+      }
+    },
+    {
+      "id": "entity:Restocking of toiletries",
+      "data": {
+        "node_type": "entity",
+        "label": "Restocking of toiletries"
+      }
+    },
+    {
+      "id": "chunk_530588",
+      "data": {
+        "chunk_id": 530588,
+        "content": "uming and dusting\n\nRestocking of toiletries and amenities\n\nTurndown service for premium suites\n\nChapter 4: Safety and Security Emergency exits are located on every floor. Fire drills are conducted quarterly. Security cameras monitor all public areas. Guest privacy is paramount - room access requires proper authorization.\n\nChapter 5: Dining Services The Grand Restaurant serves breakfast (6:30 AM - 10:30 AM), lunch (12:00 PM - 3:00 PM), and dinner (6:00 PM - 11:00 PM). Room service is available 24",
+        "doc_id": 178,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "LUXURY GRAND HOTEL.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpnis4kkbq.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpnis4kkbq.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 3,
+          "total_chunks": 4,
+          "original_doc_length": 1467,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 178,
+          "user_id": 33,
+          "source": "LUXURY GRAND HOTEL.pdf",
+          "file_size_mb": 0.03,
+          "processing_timestamp": 210936.015
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "chunk_530589",
+      "data": {
+        "chunk_id": 530589,
+        "content": "(6:00 PM - 11:00 PM). Room service is available 24/7. Our menu features international cuisine with local specialties.",
+        "doc_id": 178,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "LUXURY GRAND HOTEL.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpnis4kkbq.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpnis4kkbq.pdf",
+          "total_pages": 2,
+          "pages": "1,2",
+          "extraction_method": "texts attribute",
+          "chunk_id": 4,
+          "total_chunks": 4,
+          "original_doc_length": 1467,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 178,
+          "user_id": 33,
+          "source": "LUXURY GRAND HOTEL.pdf",
+          "file_size_mb": 0.03,
+          "processing_timestamp": 210936.015
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "entity:Room service",
+      "data": {
+        "node_type": "entity",
+        "label": "Room service"
+      }
+    },
+    {
+      "id": "entity:Menu",
+      "data": {
+        "node_type": "entity",
+        "label": "Menu"
+      }
+    },
+    {
+      "id": "entity:international cuisine with local specialties",
+      "data": {
+        "node_type": "entity",
+        "label": "international cuisine with local specialties"
+      }
+    },
+    {
+      "id": "chunk_530590",
+      "data": {
+        "chunk_id": 530590,
+        "content": "GUEST SATISFACTION & FEEDBACK MANAGEMENT\n\nIntroduction Guest feedback is essential for maintaining our five-star rating. All feedback must be documented and addressed within 24 hours.\n\nFeedback Channels: 1. In-person at the front desk 2. Comment cards in guest rooms 3. Post-stay email surveys 4. Online review platforms (TripAdvisor, Google, Booking.com)\n\nResponse Protocol: - Positive feedback: Thank the guest, share with relevant staff - Constructive feedback: Investigate, implement improvements",
+        "doc_id": 179,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "Guest Feedback Policy.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpprbtegzo.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpprbtegzo.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 1,
+          "total_chunks": 2,
+          "original_doc_length": 711,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 179,
+          "user_id": 33,
+          "source": "Guest Feedback Policy.pdf",
+          "file_size_mb": 0.02,
+          "processing_timestamp": 210943.14
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "entity:Guest",
+      "data": {
+        "node_type": "entity",
+        "label": "Guest"
+      }
+    },
+    {
+      "id": "entity:Feedback",
+      "data": {
+        "node_type": "entity",
+        "label": "Feedback"
+      }
+    },
+    {
+      "id": "entity:Five-star rating",
+      "data": {
+        "node_type": "entity",
+        "label": "Five-star rating"
+      }
+    },
+    {
+      "id": "entity:Documented",
+      "data": {
+        "node_type": "entity",
+        "label": "Documented"
+      }
+    },
+    {
+      "id": "entity:Addressed within 24 hours",
+      "data": {
+        "node_type": "entity",
+        "label": "Addressed within 24 hours"
+      }
+    },
+    {
+      "id": "entity:In-person at the front desk",
+      "data": {
+        "node_type": "entity",
+        "label": "In-person at the front desk"
+      }
+    },
+    {
+      "id": "entity:Feedback Channel",
+      "data": {
+        "node_type": "entity",
+        "label": "Feedback Channel"
+      }
+    },
+    {
+      "id": "entity:Comment cards in guest rooms",
+      "data": {
+        "node_type": "entity",
+        "label": "Comment cards in guest rooms"
+      }
+    },
+    {
+      "id": "entity:Feedback Channels",
+      "data": {
+        "node_type": "entity",
+        "label": "Feedback Channels"
+      }
+    },
+    {
+      "id": "entity:Post-stay email surveys",
+      "data": {
+        "node_type": "entity",
+        "label": "Post-stay email surveys"
+      }
+    },
+    {
+      "id": "entity:Online review platforms (TripAdvisor, Google, Booking.com)",
+      "data": {
+        "node_type": "entity",
+        "label": "Online review platforms (TripAdvisor, Google, Booking.com)"
+      }
+    },
+    {
+      "id": "entity:Positive feedback",
+      "data": {
+        "node_type": "entity",
+        "label": "Positive feedback"
+      }
+    },
+    {
+      "id": "entity:Thanking the guest and sharing with relevant staff",
+      "data": {
+        "node_type": "entity",
+        "label": "Thanking the guest and sharing with relevant staff"
+      }
+    },
+    {
+      "id": "entity:Constructive feedback",
+      "data": {
+        "node_type": "entity",
+        "label": "Constructive feedback"
+      }
+    },
+    {
+      "id": "entity:Investigating and implementing improvements",
+      "data": {
+        "node_type": "entity",
+        "label": "Investigating and implementing improvements"
+      }
+    },
+    {
+      "id": "chunk_530591",
+      "data": {
+        "chunk_id": 530591,
+        "content": "tive feedback: Investigate, implement improvements, respond personally - Complaints: Immediate escalation to management, offer compensation if appropriate\n\nQuality Metrics: - Target guest satisfaction: >4.5/5.0 - Response time: <24 hours - Resolution rate: >95%",
+        "doc_id": 179,
+        "user_id": 33,
+        "domain_id": 7,
+        "doc_name": "Guest Feedback Policy.pdf",
+        "username": "tete",
+        "domain_name": "booking",
+        "metadata": {
+          "file": "tmpprbtegzo.pdf",
+          "file_path": "C:\\Users\\youss\\AppData\\Local\\Temp\\tmpprbtegzo.pdf",
+          "total_pages": 1,
+          "pages": "1",
+          "extraction_method": "texts attribute",
+          "chunk_id": 2,
+          "total_chunks": 2,
+          "original_doc_length": 711,
+          "doc_index": 0,
+          "domain_id": 7,
+          "doc_id": 179,
+          "user_id": 33,
+          "source": "Guest Feedback Policy.pdf",
+          "file_size_mb": 0.02,
+          "processing_timestamp": 210943.14
+        },
+        "node_type": "chunk"
+      }
+    },
+    {
+      "id": "entity:Target guest satisfaction",
+      "data": {
+        "node_type": "entity",
+        "label": "Target guest satisfaction"
+      }
+    },
+    {
+      "id": "entity:>4.5/5.0",
+      "data": {
+        "node_type": "entity",
+        "label": ">4.5/5.0"
+      }
+    },
+    {
+      "id": "entity:Response time",
+      "data": {
+        "node_type": "entity",
+        "label": "Response time"
+      }
+    },
+    {
+      "id": "entity:<24 hours",
+      "data": {
+        "node_type": "entity",
+        "label": "<24 hours"
+      }
+    },
+    {
+      "id": "entity:Resolution rate",
+      "data": {
+        "node_type": "entity",
+        "label": "Resolution rate"
+      }
+    },
+    {
+      "id": "entity:>95%",
+      "data": {
+        "node_type": "entity",
+        "label": ">95%"
+      }
     }
   ],
   "edges": [
@@ -519,7 +1145,7 @@
         "edge_type": "triplet",
         "predicate": "founded",
         "weight": 1.0,
-        "source_chunk_id": 530566
+        "source_chunk_id": 530586
       }
     },
     {
@@ -540,6 +1166,46 @@
         "predicate": "provides",
         "weight": 1.0,
         "source_chunk_id": 530566
+      }
+    },
+    {
+      "source": "entity:MedCare Hospital",
+      "target": "entity:Dr. Bob",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "has_doctor",
+        "weight": 1.0,
+        "source_chunk_id": 530586
+      }
+    },
+    {
+      "source": "entity:MedCare Hospital",
+      "target": "entity:LUXURY GRAND HOTEL",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "located_in",
+        "weight": 1.0,
+        "source_chunk_id": 530586
+      }
+    },
+    {
+      "source": "entity:MedCare Hospital",
+      "target": "entity:team",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "has_team",
+        "weight": 1.0,
+        "source_chunk_id": 530587
+      }
+    },
+    {
+      "source": "entity:MedCare Hospital",
+      "target": "entity:Five-star rating",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "maintains",
+        "weight": 1.0,
+        "source_chunk_id": 530590
       }
     },
     {
@@ -599,7 +1265,337 @@
         "edge_type": "triplet",
         "predicate": "works_at",
         "weight": 1.0,
-        "source_chunk_id": 530566
+        "source_chunk_id": 530586
+      }
+    },
+    {
+      "source": "entity:LUXURY GRAND HOTEL",
+      "target": "entity:OPERATIONS MANUAL",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "has_operation_manual",
+        "weight": 1.0,
+        "source_chunk_id": 530586
+      }
+    },
+    {
+      "source": "entity:Check-in time",
+      "target": "entity:3:00 PM",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "is",
+        "weight": 1.0,
+        "source_chunk_id": 530586
+      }
+    },
+    {
+      "source": "entity:Early check-in",
+      "target": "entity:upon request and subject to room availability",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "available",
+        "weight": 1.0,
+        "source_chunk_id": 530586
+      }
+    },
+    {
+      "source": "entity:Guests",
+      "target": "entity:valid ID and credit card",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "must_present",
+        "weight": 1.0,
+        "source_chunk_id": 530586
+      }
+    },
+    {
+      "source": "entity:Front desk staff",
+      "target": "entity:reservation in PMS system",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "should_verify",
+        "weight": 1.0,
+        "source_chunk_id": 530586
+      }
+    },
+    {
+      "source": "entity:Room key",
+      "target": "entity:front desk staff",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "assigned_by",
+        "weight": 1.0,
+        "source_chunk_id": 530586
+      }
+    },
+    {
+      "source": "entity:Hotel amenities",
+      "target": "entity:spa and fitness center and restaurant hours",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "include",
+        "weight": 1.0,
+        "source_chunk_id": 530586
+      }
+    },
+    {
+      "source": "entity:Concierge team",
+      "target": "entity:24/7",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "available",
+        "weight": 1.0,
+        "source_chunk_id": 530586
+      }
+    },
+    {
+      "source": "entity:Restaurant",
+      "target": "entity:concierge team",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "assisted_by",
+        "weight": 1.0,
+        "source_chunk_id": 530586
+      }
+    },
+    {
+      "source": "entity:team",
+      "target": "entity:24/7",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "is_available",
+        "weight": 1.0,
+        "source_chunk_id": 530587
+      }
+    },
+    {
+      "source": "entity:team",
+      "target": "entity:Restaurant reservations",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "assists_with",
+        "weight": 1.0,
+        "source_chunk_id": 530587
+      }
+    },
+    {
+      "source": "entity:team",
+      "target": "entity:Transportation arrangements",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "assists_with",
+        "weight": 1.0,
+        "source_chunk_id": 530587
+      }
+    },
+    {
+      "source": "entity:team",
+      "target": "entity:Local attractions and entertainment recommendations",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "assists_with",
+        "weight": 1.0,
+        "source_chunk_id": 530587
+      }
+    },
+    {
+      "source": "entity:team",
+      "target": "entity:Special occasion arrangements",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "assists_with",
+        "weight": 1.0,
+        "source_chunk_id": 530587
+      }
+    },
+    {
+      "source": "entity:All rooms",
+      "target": "entity:five-star standards",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "must_be_cleaned",
+        "weight": 1.0,
+        "source_chunk_id": 530587
+      }
+    },
+    {
+      "source": "entity:Daily cleaning",
+      "target": "entity:Bed linen replacement",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "includes",
+        "weight": 1.0,
+        "source_chunk_id": 530587
+      }
+    },
+    {
+      "source": "entity:Daily cleaning",
+      "target": "entity:Bathroom sanitization",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "includes",
+        "weight": 1.0,
+        "source_chunk_id": 530587
+      }
+    },
+    {
+      "source": "entity:Daily cleaning",
+      "target": "entity:Vacuuming and dusting",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "includes",
+        "weight": 1.0,
+        "source_chunk_id": 530587
+      }
+    },
+    {
+      "source": "entity:Daily cleaning",
+      "target": "entity:Restocking of toiletries",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "includes",
+        "weight": 1.0,
+        "source_chunk_id": 530587
+      }
+    },
+    {
+      "source": "entity:Room service",
+      "target": "entity:24/7",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "is_available",
+        "weight": 1.0,
+        "source_chunk_id": 530589
+      }
+    },
+    {
+      "source": "entity:Menu",
+      "target": "entity:international cuisine with local specialties",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "features",
+        "weight": 1.0,
+        "source_chunk_id": 530589
+      }
+    },
+    {
+      "source": "entity:Guest",
+      "target": "entity:Feedback",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "provides",
+        "weight": 1.0,
+        "source_chunk_id": 530590
+      }
+    },
+    {
+      "source": "entity:Feedback",
+      "target": "entity:Documented",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "must_be",
+        "weight": 1.0,
+        "source_chunk_id": 530590
+      }
+    },
+    {
+      "source": "entity:Feedback",
+      "target": "entity:Addressed within 24 hours",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "must_be",
+        "weight": 1.0,
+        "source_chunk_id": 530590
+      }
+    },
+    {
+      "source": "entity:In-person at the front desk",
+      "target": "entity:Feedback Channel",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "is_a",
+        "weight": 1.0,
+        "source_chunk_id": 530590
+      }
+    },
+    {
+      "source": "entity:Comment cards in guest rooms",
+      "target": "entity:Feedback Channels",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "are",
+        "weight": 1.0,
+        "source_chunk_id": 530590
+      }
+    },
+    {
+      "source": "entity:Post-stay email surveys",
+      "target": "entity:Feedback Channels",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "are",
+        "weight": 1.0,
+        "source_chunk_id": 530590
+      }
+    },
+    {
+      "source": "entity:Online review platforms (TripAdvisor, Google, Booking.com)",
+      "target": "entity:Feedback Channels",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "are",
+        "weight": 1.0,
+        "source_chunk_id": 530590
+      }
+    },
+    {
+      "source": "entity:Positive feedback",
+      "target": "entity:Thanking the guest and sharing with relevant staff",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "is_handled_by",
+        "weight": 1.0,
+        "source_chunk_id": 530590
+      }
+    },
+    {
+      "source": "entity:Constructive feedback",
+      "target": "entity:Investigating and implementing improvements",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "is_handled_by",
+        "weight": 1.0,
+        "source_chunk_id": 530590
+      }
+    },
+    {
+      "source": "entity:Target guest satisfaction",
+      "target": "entity:>4.5/5.0",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "target",
+        "weight": 1.0,
+        "source_chunk_id": 530591
+      }
+    },
+    {
+      "source": "entity:Response time",
+      "target": "entity:<24 hours",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "target",
+        "weight": 1.0,
+        "source_chunk_id": 530591
+      }
+    },
+    {
+      "source": "entity:Resolution rate",
+      "target": "entity:>95%",
+      "data": {
+        "edge_type": "triplet",
+        "predicate": "target",
+        "weight": 1.0,
+        "source_chunk_id": 530591
       }
     }
   ]

@@ -195,9 +195,60 @@ def _save_chat_sources(db: Session, message_id: int, sources: List[Dict[str, str
     except Exception as e:
         db.rollback()
 
+def _build_context_components(
+    query: str,
+    vector_results: list,
+    graph_results: list,
+    mysql_results: list,
+    routing_info: Dict
+) -> Dict[str, Any]:
+    """Builds shared context string and metadata for prompts and judge."""
+    # Build comprehensive context
+    context_parts = []
+
+    # MySQL Database context
+    if mysql_results:
+        context_parts.append("=== DATABASE INFORMATION ===")
+        mysql_formatted = format_mysql_results(mysql_results)
+        context_parts.append(mysql_formatted)
+        print(f"📊 [MYSQL_FORMATTED] {mysql_formatted}")
+
+    # Combined Vector + Graph context (show together)
+    if vector_results or graph_results:
+        context_parts.append("\n=== SEMANTIC & RELATIONAL CONTENT ===")
+        if vector_results:
+            for i, v in enumerate(vector_results[:3], 1):
+                content = v.get("page_content") or v.get("content") or ""
+                metadata = v.get("metadata", {})
+                source = metadata.get("source", "Unknown")
+                context_parts.append(f"[Vector Doc {i} - {source}]\n{content}")
+        if graph_results:
+            for i, g in enumerate(graph_results[:3], 1):
+                content = g.get("page_content") or g.get("content") or ""
+                context_parts.append(f"[Graph Rel {i}]\n{content}")
+
+    context_str = "\n\n".join(context_parts)[:4000]
+
+    primary_source = routing_info.get("primary_source", "unknown")
+    if hasattr(primary_source, 'value'):
+        primary_source = primary_source.value
+
+    available_sources = ', '.join([
+        s for s, data in [
+            ('MySQL', bool(mysql_results)),
+            ('Vector+Graph', bool(vector_results or graph_results))
+        ] if data
+    ])
+
+    return {
+        "context_str": context_str,
+        "primary_source": primary_source,
+        "available_sources": available_sources
+    }
+
 def _generate_answer_with_llm(
-    query: str, 
-    vector_results: list, 
+    query: str,
+    vector_results: list,
     graph_results: list,
     mysql_results: list,
     routing_info: Dict
@@ -209,57 +260,27 @@ def _generate_answer_with_llm(
         if total_context_items == 0:
             return "I couldn't find relevant information in the available data sources (Vector DB, Knowledge Graph, MySQL). Please rephrase or provide more details."
 
-        # Build comprehensive context
-        context_parts = []
-        
-        # MySQL Database context
-        if mysql_results:
-            context_parts.append("=== DATABASE INFORMATION ===")
-            mysql_formatted = format_mysql_results(mysql_results)
-            context_parts.append(mysql_formatted)
-            print(f"📊 [MYSQL_FORMATTED] {mysql_formatted}")
-        
-        # Combined Vector + Graph context (show together) - Only if relevant
-        if vector_results or graph_results:
-            context_parts.append("\n=== SEMANTIC & RELATIONAL CONTENT ===")
-            # Vector first
-            if vector_results:
-                for i, v in enumerate(vector_results[:3], 1):
-                    content = v.get("page_content") or v.get("content") or ""
-                    metadata = v.get("metadata", {})
-                    source = metadata.get("source", "Unknown")
-                    context_parts.append(f"[Vector Doc {i} - {source}]\n{content}")
-            # Then Graph
-            if graph_results:
-                for i, g in enumerate(graph_results[:3], 1):
-                    content = g.get("page_content") or g.get("content") or ""
-                    context_parts.append(f"[Graph Rel {i}]\n{content}")
+        components = _build_context_components(
+            query, vector_results, graph_results, mysql_results, routing_info
+        )
 
-        context_str = "\n\n".join(context_parts)[:4000]
-
-        # Enhanced prompt with routing context
-        primary_source = routing_info.get("primary_source", "unknown")
-        if hasattr(primary_source, 'value'):
-            primary_source = primary_source.value
-            
-        available_sources = ', '.join([s for s, data in [('MySQL', bool(mysql_results)), ('Vector+Graph', bool(vector_results or graph_results)) ] if data])
         user_prompt = f"""Query Routing:
-- Primary Source: {primary_source}
+- Primary Source: {components['primary_source']}
 - Confidence: {routing_info.get('confidence', 0):.2f}
 - Reasoning: {routing_info.get('reasoning', 'N/A')}
 
-Available Context Sources: {available_sources}
+Available Context Sources: {components['available_sources']}
 If context is limited, note that in your response.
 
 Context:
-{context_str}
+{components['context_str']}
 
 User Question: {query}
 
 Please provide a clear answer based on the context above."""
 
-        print(f"🧭 [ROUTING] Primary: {primary_source}, Confidence: {routing_info.get('confidence', 0):.2f}")
-        print(f"📝 [CONTEXT] Length: {len(context_str)} chars")
+        print(f"🧭 [ROUTING] Primary: {components['primary_source']}, Confidence: {routing_info.get('confidence', 0):.2f}")
+        print(f"📝 [CONTEXT] Length: {len(components['context_str'])} chars")
 
         response = openai_client.chat.completions.create(
             model=os.getenv("LLM_MODEL", "llama3.1:8b-instruct-q4_K_M"),
@@ -278,6 +299,71 @@ Please provide a clear answer based on the context above."""
         import traceback
         print(f"[LLM] Full traceback: {traceback.format_exc()}")
         return "I couldn't generate an answer due to an internal error."
+
+def _judge_answer_with_llm(
+    question: str,
+    answer: str,
+    context_str: str,
+    primary_source: str
+) -> Dict[str, Any]:
+    """Use LLM as a judge to evaluate answer quality. Prints JSON to console and returns it."""
+    try:
+        judge_instructions = (
+            "You are a strict evaluator. Score the assistant's answer against the user's question and the provided context."
+            " Return a compact JSON object with fields: relevance (0-1), groundedness (0-1), completeness (0-1),"
+            " correctness (0-1), follows_routing (0-1), issues (short array of strings), and verdict ('pass'|'fail')."
+            " Definitions: relevance=how well it addresses the question; groundedness=backed by context; completeness=covers key points;"
+            " correctness=factually correct per context; follows_routing=uses the primary source {primary_source} when appropriate."
+            " If context is empty, set groundedness=0 and add issue 'no context provided'."
+        )
+
+        user_block = (
+            f"Context:\n{context_str[:4000]}\n\n"
+            f"Question: {question}\n\n"
+            f"Assistant Answer: {answer}"
+        )
+
+        response = openai_client.chat.completions.create(
+            model=os.getenv("LLM_MODEL", "llama3.1:8b-instruct-q4_K_M"),
+            messages=[
+                {"role": "system", "content": judge_instructions},
+                {"role": "user", "content": user_block},
+            ],
+            temperature=0.0,
+        )
+
+        raw = response.choices[0].message.content.strip()
+        try:
+            report = json.loads(raw)
+        except Exception:
+            # Attempt to extract JSON if model added prose
+            start = raw.find('{')
+            end = raw.rfind('}')
+            report = json.loads(raw[start:end+1]) if start != -1 and end != -1 else {
+                "relevance": None,
+                "groundedness": None,
+                "completeness": None,
+                "correctness": None,
+                "follows_routing": None,
+                "issues": ["Could not parse judge output"],
+                "verdict": "fail"
+            }
+
+        print("🧑\u200d⚖️ [JUDGE] " + json.dumps(report, ensure_ascii=False))
+        return report
+    except Exception as e:
+        print(f"[JUDGE] Evaluation failed: {e}")
+        import traceback
+        print(f"[JUDGE] Full traceback: {traceback.format_exc()}")
+        return {
+            "relevance": None,
+            "groundedness": None,
+            "completeness": None,
+            "correctness": None,
+            "follows_routing": None,
+            "issues": ["judge error"],
+            "verdict": "fail"
+        }
 
 # ---------- Main Chat Endpoint ----------
 @router.post("/chat/query_separate", response_model=ChatSeparateResponse)
@@ -462,6 +548,18 @@ async def chat_query_separate(
         q, vector_results, graph_results, mysql_results, routing
     )
     print(f"   ✅ Answer generated ({len(generated_answer)} chars)\n")
+
+    # 🧑‍⚖️ STEP 3.1: Evaluate the generated answer (prints compact JSON to console)
+    try:
+        components = _build_context_components(q, vector_results, graph_results, mysql_results, routing)
+        _ = _judge_answer_with_llm(
+            question=q,
+            answer=generated_answer,
+            context_str=components.get("context_str", ""),
+            primary_source=components.get("primary_source", "unknown")
+        )
+    except Exception as e:
+        print(f"[JUDGE] Skipped due to error: {e}")
 
     # Save message to database
     message = _save_message_to_session(db, session, user, q, generated_answer)
